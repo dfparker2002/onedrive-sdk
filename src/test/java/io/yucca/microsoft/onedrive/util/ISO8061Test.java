@@ -25,9 +25,6 @@ import java.util.TimeZone;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author yucca.io
- */
 public class ISO8061Test {
 
     private static final String ISO8601_DATETIME = "2015-01-01T12:00:00.10+0000";
