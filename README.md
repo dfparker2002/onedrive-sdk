@@ -1,5 +1,9 @@
 # OneDrive API Java SDK
 
+This SDK allows for quick and easy usage of Microsoft OneDrive in Java 
+applications. The [OneDrive RESTful API](https://dev.onedrive.com/index.htm) 
+is thereby used to access Microsoft OneDrive. 
+
 ## Build
 
 To build the jar use:
@@ -54,63 +58,5 @@ To run the test save the created configuration file under path:
     
 and invoke:
  
-     mvn failsafe:integration-test 
-
-
-## Examples
-
-
-
-## TODO
-
-### OneDriveAPIConnection
-
-Upload: multipart upload
-Upload: URL upload
-Thumbnails: retreive and uploading of (custom) thumbnails
-Throttling: https://dev.onedrive.com/README.htm
-
-### ConfigurationUtil
-
-Multithreaded access: implement lock/unlock when multithreaded access is active
-
-### Client
-
-Fix header warning on resumable upload
-Sep 02, 2015 4:35:51 PM org.glassfish.jersey.client.HttpUrlConnector setOutboundHeaders
-WARNING: Attempt to send restricted header(s) while the [sun.net.http.allowRestrictedHeaders] system property not set. Header(s) will possibly be ignored.
-
-
-Set a retry handler to handle read timeouts java.net.SocketTimeoutException
-https://java.net/jira/browse/JERSEY-2139?jql=text%20~%20%22retry%20handler%22
-http://www.nailedtothex.org/roller/kyle/entry/articles-test-wiremockunstable
-
-
-## Publish
-
-http://datumedge.blogspot.nl/2012/05/publishing-from-github-to-maven-central.html
-https://veithen.github.io/2013/05/26/github-bintray-maven-release-plugin.html
-
-## Mapper
-
-http://www.baeldung.com/jackson-serialize-enums
-http://gotoanswer.com/?q=Jersey+2+LoggingFilter
-https://dzone.com/articles/whats-new-jax-rs-20
-http://www.chrisellsworth.com/blogs/devblog/archive/2006/10/31/Java-Concurrency-API-Example.aspx
-https://stackoverflow.com/questions/14410344/jersey-rest-support-resume-media-streaming
-
-## InputStream
-
-http://usabilityetc.com/articles/size-input-streams/
-
-## TLS HTTP Apache
-http://w3facility.org/question/how-to-select-cipher-suites-in-jersey-2-using-apacheconnector/
-https://github.com/jersey/jersey/blob/master/examples/sse-item-store-webapp/src/test/java/org/glassfish/jersey/examples/sseitemstore/ItemStoreResourceTest.java
-
-## BITS
-
-### BITS Upload Protocol
-https://msdn.microsoft.com/en-us/library/aa362828(v=vs.85).aspx
-
-### Uploading large files to OneDrive by using BITS
-https://msdn.microsoft.com/en-us/library/dn858877.aspx?f=255&MSPPError=-2147217396
+     mvn failsafe:integration-test
+ 
