@@ -16,6 +16,8 @@
 package io.yucca.microsoft.onedrive.resources;
 
 /**
+ * UploadStatus
+ *
  * @author yucca.io
  */
 public class UploadStatus {
