@@ -34,9 +34,6 @@ import io.yucca.microsoft.onedrive.QueryParameters.Builder;
 import io.yucca.microsoft.onedrive.resources.Order;
 import io.yucca.microsoft.onedrive.resources.Relationship;
 
-/**
- * @author yucca.io
- */
 public class QueryParametersTest {
 
     @Test
