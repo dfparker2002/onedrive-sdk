@@ -1,0 +1,29 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Maven
+log/
+target/
+
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# ant file for local deployment
+build.xml
+private/
+*TestLocal.java
+
+# Integration properties
+src/test/resources/onedrive-integrationtest.properties
+src/test/resources/onedrive-test.properties
