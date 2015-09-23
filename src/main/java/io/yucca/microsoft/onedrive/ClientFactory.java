@@ -24,6 +24,7 @@ import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -72,6 +73,7 @@ public final class ClientFactory {
             .build();
         client.register(OneDriveContentMessageBodyReader.class);
         client.register(OneDriveContentMessageBodyWriter.class);
+        client.register(MultiPartWriter.class);
         client.register(JacksonFeature.class);
         client.property(ApacheClientProperties.CONNECTION_MANAGER,
                         connectionManager);

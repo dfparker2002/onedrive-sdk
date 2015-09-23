@@ -35,6 +35,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.glassfish.jersey.client.oauth2.TokenResult;
 import org.glassfish.jersey.filter.LoggingFilter;
+import org.glassfish.jersey.media.multipart.BodyPart;
+import org.glassfish.jersey.media.multipart.MultiPart;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +45,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
+import io.yucca.microsoft.onedrive.facets.FileFacet;
 import io.yucca.microsoft.onedrive.facets.FolderFacet;
 import io.yucca.microsoft.onedrive.facets.PermissionFacet;
 import io.yucca.microsoft.onedrive.resources.AsyncOperationStatus;
@@ -78,6 +82,9 @@ public class OneDriveAPIConnection {
     public static final String HEADER_IF_MATCH = "if-match";
 
     public static final String HEADER_IF_NONE_MATCH = "if-none-match";
+
+    public static final MediaType MULTIPART_RELATED_TYPE = new MediaType("multipart",
+                                                                         "related");
 
     private final OneDriveConfiguration configuration;
 
@@ -979,8 +986,8 @@ public class OneDriveAPIConnection {
 
         Status[] successCodes = { Status.CREATED, Status.OK };
         Response response = getClient().target(ONEDRIVE_URL)
-            .path("/drive/root:/{path}/{filename}:/content")
-            .resolveTemplateFromEncoded("path", parentPath)
+            .path("/drive/root:/{item-path}/{filename}:/content")
+            .resolveTemplateFromEncoded("item-path", parentPath)
             .resolveTemplateFromEncoded("filename", content.getName())
             .queryParam("@name.conflictBehavior", conflictBehavior)
             .request(MediaType.TEXT_PLAIN)
@@ -1048,6 +1055,7 @@ public class OneDriveAPIConnection {
     }
 
     /**
+     * Upload an Item with resuming support
      * 
      * <pre>
      * 1. retry on 500, 502, 503, 504 with exponential backoff strategy: done
@@ -1084,6 +1092,77 @@ public class OneDriveAPIConnection {
     }
 
     /**
+     * Upload an Item as multipart
+     * 
+     * @param content OneDriveFile to upload
+     * @param parentId String id of parent folder
+     * @param behavior ConflictBehavior behaviour if a naming conflict occurs
+     * @return Item uploaded content
+     */
+    public Item uploadMultipartByParentId(OneDriveFile content, String parentId,
+                                          ConflictBehavior behavior) {
+        // TODO add check for file above 100MB
+        MultiPart multipart = createOneDriveFileMultipart(content, behavior);
+        Status[] successCodes = { Status.CREATED };
+        Response response = getClient().target(ONEDRIVE_URL)
+            .path("/drive/items/{item-id}/children")
+            .resolveTemplateFromEncoded("item-id", parentId).request()
+            .post(Entity.entity(multipart, MULTIPART_RELATED_TYPE));
+        handleError(response, successCodes,
+                    "Failure uploading  file: " + content.getName()
+                                            + " as multipart into folder: "
+                                            + parentId);
+        return response.readEntity(Item.class);
+    }
+
+    /**
+     * Upload an Item as multipart
+     * 
+     * @param content OneDriveFile to upload
+     * @param parentPath String path of parent folder
+     * @param behavior ConflictBehavior behaviour if a naming conflict occurs
+     * @return Item uploaded content
+     */
+    public Item uploadMultipartByParentPath(OneDriveFile content,
+                                            String parentPath,
+                                            ConflictBehavior behavior) {
+        // TODO add check for file above 100MB
+        MultiPart multipart = createOneDriveFileMultipart(content, behavior);
+        Status[] successCodes = { Status.CREATED };
+        Response response = getClient().target(ONEDRIVE_URL)
+            .path("/drive/root:/{item-path}:/children")
+            .resolveTemplateFromEncoded("item-path", parentPath).request()
+            .post(Entity.entity(multipart, MULTIPART_RELATED_TYPE));
+        handleError(response, successCodes,
+                    "Failure uploading  file: " + content.getName()
+                                            + " as multipart into folder: "
+                                            + parentPath);
+        return response.readEntity(Item.class);
+    }
+
+    /**
+     * Create a MultiPart for an OneDriveFile
+     * 
+     * @param content OneDriveFile
+     * @param behavior behaviour if a naming conflict occurs
+     * @return MultiPart
+     */
+    public MultiPart createOneDriveFileMultipart(OneDriveFile content,
+                                                 ConflictBehavior behavior) {
+        MultiPart multipart = new MultiPart();
+        BodyPart metadataPart = new BodyPart(mapToJson(newMetadataMultiPartBody(content
+            .getName(), behavior)), MediaType.APPLICATION_JSON_TYPE);
+        metadataPart.getHeaders().putSingle("Content-ID", "<metadata>");
+        multipart.bodyPart(metadataPart);
+
+        FileDataBodyPart contentPart = new FileDataBodyPart("file", content
+            .getFile().toFile());
+        contentPart.getHeaders().putSingle("Content-ID", "<content>");
+        multipart.bodyPart(contentPart);
+        return multipart;
+    }
+
+    /**
      * Closes the client and all webTargets
      */
     public void close() {
@@ -1109,7 +1188,7 @@ public class OneDriveAPIConnection {
         if (equalsStatus(response, successStatus) == false) {
             OneDriveError e = response.readEntity(OneDriveError.class);
             throw new OneDriveException(formatError(response.getStatus(),
-                                                    errorMessage),
+                                                    errorMessage, e),
                                         e);
         }
     }
@@ -1128,7 +1207,7 @@ public class OneDriveAPIConnection {
         }
         OneDriveError e = response.readEntity(OneDriveError.class);
         throw new OneDriveException(formatError(response.getStatus(),
-                                                errorMessage),
+                                                errorMessage, e),
                                     e);
     }
 
@@ -1175,7 +1254,21 @@ public class OneDriveAPIConnection {
     /**
      * Format a status code and error message
      * 
-     * @param status int code
+     * @param status int
+     * @param message String
+     * @param cause OneDriveError
+     * @return String
+     */
+    String formatError(int status, String message, OneDriveError cause) {
+        throw new OneDriveException(message + ", reason: " + status + " "
+                                    + ErrorCodes.getMessage(status)
+                                    + ", cause: " + cause);
+    }
+
+    /**
+     * Format a status code and error message
+     * 
+     * @param status int
      * @param message String
      * @return String
      */
@@ -1229,6 +1322,25 @@ public class OneDriveAPIConnection {
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
         map.put("folder", new FolderFacet());
+        map.put("@name.conflictBehavior", conflictBehavior);
+        return map;
+    }
+
+    /**
+     * Create a metadata body for multipart upload
+     * 
+     * @param name String
+     * @param behaviour ConflictBehavior
+     * @return Map<String, Object>
+     */
+    private Map<String, Object> newMetadataMultiPartBody(String name,
+                                                         ConflictBehavior behaviour) {
+        String conflictBehavior = (behaviour == null)
+            ? ConflictBehavior.FAIL.getName() : behaviour.getName();
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("file", new FileFacet());
+        map.put("@content.sourceUrl", "cid:content");
         map.put("@name.conflictBehavior", conflictBehavior);
         return map;
     }
