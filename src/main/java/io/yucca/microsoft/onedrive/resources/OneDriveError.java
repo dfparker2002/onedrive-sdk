@@ -93,6 +93,14 @@ public class OneDriveError {
             return innererror;
         }
 
+        public String toString() {
+            return "code: " + code + ", message: " + message;
+        }
+
+    }
+
+    public String toString() {
+        return error.toString();
     }
 
 }
