@@ -61,6 +61,11 @@ public class TestMother {
     }
 
     public static Item createAPITestFolder(OneDriveAPIConnection api) {
+        try {
+            api.deleteByPath(TestMother.FOLDER_APITEST);
+        } catch (OneDriveException e) {
+            // ignore 404 if folder did not exist
+        }
         return api.createFolderByPath(TestMother.FOLDER_APITEST, "",
                                       ConflictBehavior.FAIL);
     }
