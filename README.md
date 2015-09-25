@@ -6,7 +6,7 @@ is thereby used to access Microsoft OneDrive.
 
 ## Build
 
-To build the jar use:
+To build the jar invoke:
 
     mvn package 
 
@@ -45,18 +45,25 @@ Now run the following command to interactively create the configuration file:
  
 When finished the file onedrive.properties is created. When using the OneDrive 
 SDK this configuration file will be updated with the refresh token used by the
-OAUTH2.0 flow. This file also holds some other properties which may be changed
-to suit your needs. 
+OAUTH2.0 flow. This file also holds other properties which may be changed to 
+suit your needs. 
 
 
 ## Integration Testing
 
-The integration tests are runned against a active OneDrive. For this a valid
+The integration tests are ran against an active OneDrive For this a valid
 configuration for a OneDrive must be provided as created in the section above.
 To run the test save the created configuration file under path:   
     'src/test/resources/onedrive-integrationtest.properties' 
     
-and invoke:
+first run the units by invoking:
+
+    mvn test
+ 	 
+then run the integration test by invoking:
+
+    mvn failsafe:integration-test
  
-     mvn failsafe:integration-test
+
+*The integration test are not ran when building the package, this is a manual step.* 
  
