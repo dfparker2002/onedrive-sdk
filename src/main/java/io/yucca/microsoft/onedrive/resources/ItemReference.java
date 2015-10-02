@@ -54,7 +54,7 @@ public class ItemReference {
      *            "/drive/root:/". If null/empty the root folder is assumed.
      */
     public void setPath(String path) {
-        this.path = "/drive/root:/" + path;
+        this.path = path;
     }
 
     public String toString() {
