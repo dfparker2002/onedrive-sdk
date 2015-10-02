@@ -25,9 +25,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.SpecialFolder;
-
 public class OneDriveItemIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
@@ -40,83 +37,61 @@ public class OneDriveItemIT {
 
     private OneDriveFile file;
 
-    private OneDriveFolder apitest;
+    private OneDriveFolder apitestFolder;
+
+    private OneDriveFolder movedFolder;
+
+    private OneDriveItem uploaded;
 
     @Before
     public void setUp() throws FileNotFoundException, ConfigurationException {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
         this.api = new OneDriveAPIConnection(configuration);
 
-        // create test directory and file
-        TestMother.createAPITestFolder(api);
-        TestMother.uploadTestItem(api);
-
+        TestMother.deleteAPITestFolder(api);
+        this.drive = OneDrive.defaultDrive(api);
+        this.apitestFolder = drive.createFolder(TestMother.FOLDER_APITEST);
         this.file = new OneDriveFile(Paths.get(TestMother.ITEM_UPLOAD_1_PATH),
                                      TestMother.ITEM_UPLOAD_1);
-        this.drive = OneDrive.defaultDrive(api);
-        this.apitest = drive.getFolder(TestMother.FOLDER_APITEST);
+        this.uploaded = apitestFolder.upload(file);
     }
 
     @Test
     public void testCopy() {
-        OneDriveItem uploaded = apitest.upload(file);
-        OneDriveItem copyItem = uploaded.copy(apitest,
+        OneDriveItem copyItem = uploaded.copy(apitestFolder,
                                               TestMother.ITEM_UPLOAD_1_COPY);
         assertNotNull(copyItem);
-        copyItem.delete();
-        uploaded.delete();
     }
 
     @Test
     public void testDownload() throws FileNotFoundException {
-        apitest.upload(file);
-        OneDriveItem uploaded = drive.getItem(TestMother.FOLDER_APITEST + "/"
-                                              + TestMother.ITEM_UPLOAD_1);
-        assertNotNull(uploaded);
-        OneDriveContent odf = uploaded.download();
-        assertNotNull(odf);
-        uploaded.delete();
+        assertNotNull(uploaded.download());
     }
 
     // disabled see javadoc @Test(expected = NotModifiedException.class)
     public void testDownloadNotModified() throws FileNotFoundException {
-        OneDriveItem uploaded = apitest.upload(file);
-        assertNotNull(uploaded);
-        OneDriveContent odf = uploaded.download();
-        assertNotNull(odf);
-        uploaded.delete();
+        assertNotNull(uploaded.download());
     }
 
     @Test
     public void testGetItem() throws FileNotFoundException {
-        OneDriveItem uploaded = apitest.upload(file);
-        assertNotNull(uploaded);
-        Item item = uploaded.getItem();
-        assertNotNull(item);
-        uploaded.delete();
+        assertNotNull(uploaded.getItem());
     }
 
     @Test
     public void testMove() throws FileNotFoundException {
-        OneDriveItem uploaded = apitest.upload(file);
-        assertNotNull(uploaded);
-        OneDriveItem moved = uploaded
-            .move(drive.getSpecialFolder(SpecialFolder.DOCUMENTS, null));
-        assertNotNull(moved);
-        moved.delete();
+        movedFolder = apitestFolder.createFolder(TestMother.FOLDER_MOVED);
+        assertNotNull(uploaded.move(movedFolder));
     }
 
     @Test
     public void testRename() throws FileNotFoundException {
-        OneDriveItem uploaded = apitest.upload(file);
-        assertNotNull(uploaded);
         uploaded.rename(TestMother.ITEM_UPLOAD_1_COPY);
-        uploaded.delete();
     }
 
     @After
     public void tearDown() {
-        apitest.delete();
+        apitestFolder.delete();
         api.close();
     }
 }
