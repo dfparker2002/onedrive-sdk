@@ -43,6 +43,7 @@ public class QueryParameters {
     public static final String ORDERBY = "orderby";
     public static final String TOP = "top";
     public static final String TOKEN = "token";
+    public static final String CONFLICT_BEHAVIOR = "@name.conflictBehavior";
 
     private static final String[] MANDATORY_FIELDS = new String[] { "id",
                                                                     "file",
@@ -78,7 +79,7 @@ public class QueryParameters {
      * the URI of the current target instance.
      * 
      * @param target WebTarget instance
-     * @param unAllowedQueryParameters String[] query parameter that are not
+     * @param unAllowedQueryParameters String[] query parameters that are not
      *            allowed for the API call and must be removed
      * @return WebTarget a new target instance.
      * @throws OneDriveException if encoding of a parameter fails
@@ -120,6 +121,14 @@ public class QueryParameters {
 
         private Builder() {
             this.qp = new QueryParameters();
+        }
+
+        private Builder(QueryParameters qp) {
+            this.qp = qp;
+        }
+
+        public static Builder expandQueryParameters(QueryParameters qp) {
+            return new Builder(qp);
         }
 
         public static Builder newQueryParameters() {
