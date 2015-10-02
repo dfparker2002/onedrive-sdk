@@ -426,7 +426,7 @@ public class Item {
     }
 
     /**
-     * Get absolute path of this item
+     * Get absolute path of this item, like "/drive/root:/Folder/file.txt"
      * 
      * @return String
      */
@@ -436,8 +436,8 @@ public class Item {
     }
 
     /**
-     * Get path relative to the root folder. "/drive/root:/Folder/file.txt"
-     * returns Folder/file.txt
+     * Get path relative to the root folder, for "/drive/root:/Folder/file.txt"
+     * "Folder/file.txt" is returned
      * 
      * @return String
      */
