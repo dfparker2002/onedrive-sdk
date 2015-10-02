@@ -21,6 +21,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.yucca.microsoft.onedrive.ItemAddress;
+import io.yucca.microsoft.onedrive.PathUtil;
+import io.yucca.microsoft.onedrive.actions.Addressing;
 import io.yucca.microsoft.onedrive.facets.AudioFacet;
 import io.yucca.microsoft.onedrive.facets.DeletedFacet;
 import io.yucca.microsoft.onedrive.facets.FileFacet;
@@ -417,10 +420,32 @@ public class Item {
         return (deleted != null);
     }
 
+    @JsonIgnore
+    public ItemAddress getItemAddress() {
+        return new ItemAddress(id, Addressing.ID);
+    }
+
     /**
-     * Unknown properties public URL getContextUrl() { return contextUrl; }
-     * public void setContextUrl(URL contextUrl) { this.contextUrl = contextUrl;
-     * } public URL getChildrenUrl() { return childrenUrl; } public void
-     * setChildrenUrl(URL childrenUrl) { this.childrenUrl = childrenUrl; }
+     * Get absolute path of this item
+     * 
+     * @return String
      */
+    @JsonIgnore
+    public String getAbsolutePath() {
+        return parentReference.getPath() + "/" + name;
+    }
+
+    /**
+     * Get path relative to the root folder. "/drive/root:/Folder/file.txt"
+     * returns Folder/file.txt
+     * 
+     * @return String
+     */
+    @JsonIgnore
+    public String getRelativePath() {
+        String rel = getParentReference().getPath()
+            .replaceAll(PathUtil.DRIVE_ROOT + ":\\/?", "");
+        return rel.isEmpty() ? name : rel + "/" + name;
+    }
+
 }
