@@ -15,6 +15,7 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,16 +30,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SyncResponse extends ItemCollection {
 
     @JsonProperty("@odata.deltaLink")
-    private String deltaLink;
+    private URL deltaLink;
 
     @JsonProperty("@delta.token")
     private String token;
 
-    public void setDeltaLink(String deltaLink) {
+    public void setDeltaLink(URL deltaLink) {
         this.deltaLink = deltaLink;
     }
 
-    public String getDeltaLink() {
+    public URL getDeltaLink() {
         return deltaLink;
     }
 
