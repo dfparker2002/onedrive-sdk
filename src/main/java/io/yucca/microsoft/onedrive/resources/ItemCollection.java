@@ -15,10 +15,12 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
+import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -30,12 +32,18 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
  */
 public class ItemCollection implements ItemIterable {
 
+    /**
+     * <pre>
+     * Needed to prevent a org.codehaus.jackson.map.JsonMappingException: Conflicting setter definitions for property "config"....
+     * </pre>
+     */
+    @JsonIgnore
     protected OneDriveAPIConnection api;
 
     private LinkedList<Item> value;
 
     @JsonProperty("@odata.nextLink")
-    private String nextLink;
+    private URL nextLink;
 
     public List<Item> getValue() {
         return value;
@@ -46,16 +54,17 @@ public class ItemCollection implements ItemIterable {
     }
 
     @Override
-    public String getNextLink() {
+    public URL getNextLink() {
         return nextLink;
     }
 
-    public void setNextLink(String nextLink) {
+    public void setNextLink(URL nextLink) {
         this.nextLink = nextLink;
     }
 
+    @JsonIgnore
     @Override
-    public ItemIterable setApi(final OneDriveAPIConnection api) {
+    public ItemIterable setApi(OneDriveAPIConnection api) {
         this.api = api;
         return this;
     }
@@ -75,7 +84,7 @@ public class ItemCollection implements ItemIterable {
 
     @Override
     public boolean hasNextCollection() {
-        return !(this.nextLink == null || this.nextLink.isEmpty());
+        return !(this.nextLink == null || this.nextLink.toString().isEmpty());
     }
 
 }

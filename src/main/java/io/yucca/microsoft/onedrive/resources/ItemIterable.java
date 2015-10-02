@@ -15,6 +15,7 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
+import java.net.URL;
 import java.util.Iterator;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -29,9 +30,9 @@ public interface ItemIterable extends Iterable<Item> {
     /**
      * Get the link to next page
      * 
-     * @return String
+     * @return URL
      */
-    String getNextLink();
+    URL getNextLink();
 
     /**
      * Get Iterator for the paged collection

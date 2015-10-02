@@ -15,13 +15,24 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
+import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
 
 /**
  * ItemIterator, allows iterating over an ItemIterable
+ *
+ * <pre>
+ * When the top parameter is set a queryparameter on a view.search 
+ * then second last page contains a nextLink URL, when loading this 
+ * page this contains zero items which hogs the iterating logic, 
+ * because not valid item can be returned a NoSuchElementException 
+ * is thrown. Could be circumvented by checking if the page is valid
+ * in hasNextCollection()
+ * </pre>
  * 
  * @author yucca.io
  */
@@ -70,7 +81,12 @@ public class ItemIterator implements Iterator<Item> {
     }
 
     private void loadNextCollection(final ItemIterable collection) {
-        this.page = api.listChildren(collection.getNextLink());
+        try {
+            this.page = ListChildrenAction
+                .byURI(api, collection.getNextLink().toURI());
+        } catch (URISyntaxException e) {
+            throw new NoSuchElementException("URL for next collection is invalid");
+        }
         this.innerIterator = page.innerIterator();
     }
 
