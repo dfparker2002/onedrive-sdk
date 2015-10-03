@@ -41,7 +41,18 @@ public class ItemTest {
 
     @Test
     public void testGetRelativePath() {
-        assertEquals("/APITest", item.getRelativePath());
+        assertEquals("APITest", item.getRelativePath());
+    }
+
+    @Test
+    public void testGetRelativePath2() {
+        item = new Item();
+        item.setName("movedFolder");
+        item.setId("101");
+        ItemReference parentReference = new ItemReference();
+        parentReference.setPath("/drive/root:/APITest");
+        item.setParentReference(parentReference);
+        assertEquals("APITest/movedFolder", item.getRelativePath());
     }
 
 }

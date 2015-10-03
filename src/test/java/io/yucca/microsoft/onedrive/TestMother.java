@@ -18,6 +18,9 @@ package io.yucca.microsoft.onedrive;
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 
+import io.yucca.microsoft.onedrive.actions.CreateAction;
+import io.yucca.microsoft.onedrive.actions.DeleteAction;
+import io.yucca.microsoft.onedrive.actions.UploadAction;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.Order;
@@ -60,21 +63,46 @@ public class TestMother {
             .orderby("name", Order.ASC).build();
     }
 
+    public static QueryParameters listChildrenQueryParameters() {
+        return QueryParameters.Builder.newQueryParameters()
+            .select(new String[] { "name", "createdBy" }).top(10)
+            .orderby("name", Order.ASC).build();
+    }
+
+    public static QueryParameters searchQueryParameters() {
+        return QueryParameters.Builder.newQueryParameters()
+            .expand(Relationship.CHILDREN)
+            .select(new String[] { "name", "createdBy" })
+            .orderby("name", Order.ASC).build();
+    }
+
     public static Item createAPITestFolder(OneDriveAPIConnection api) {
+        deleteAPITestFolder(api);
+        CreateAction action = new CreateAction(api, TestMother.FOLDER_APITEST,
+                                               ItemAddress.rootAddress(),
+                                               ConflictBehavior.FAIL);
+        return action.call();
+    }
+
+    public static void deleteAPITestFolder(OneDriveAPIConnection api) {
+        ItemAddress itemAddress = ItemAddress
+            .pathBased(TestMother.FOLDER_APITEST);
         try {
-            api.deleteByPath(TestMother.FOLDER_APITEST);
+            new DeleteAction(api, itemAddress).call();
         } catch (OneDriveException e) {
             // ignore 404 if folder did not exist
         }
-        return api.createFolderByPath(TestMother.FOLDER_APITEST, "",
-                                      ConflictBehavior.FAIL);
     }
 
     public static Item uploadTestItem(OneDriveAPIConnection api)
         throws FileNotFoundException {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_1_PATH), TestMother.ITEM_UPLOAD_1);
-        return api.uploadByPath(file, TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = ItemAddress
+            .pathBased(TestMother.FOLDER_APITEST);
+        UploadAction action = new UploadAction(api, file, parentAddress,
+                                               ConflictBehavior.FAIL);
+        return action.call();
     }
 
 }

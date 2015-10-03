@@ -13,44 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive;
-
-import static org.junit.Assert.assertNotNull;
+package io.yucca.microsoft.onedrive.actions;
 
 import java.io.FileNotFoundException;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.glassfish.jersey.client.oauth2.TokenResult;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
-public class OneDriveAPIConnectionIT {
+import io.yucca.microsoft.onedrive.ConfigurationUtil;
+import io.yucca.microsoft.onedrive.ItemAddress;
+import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
+import io.yucca.microsoft.onedrive.OneDriveConfiguration;
+import io.yucca.microsoft.onedrive.TestMother;
+
+public abstract class AbstractActionIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private OneDriveAPIConnection api;
+    protected OneDriveAPIConnection api;
 
-    private OneDriveConfiguration configuration;
+    protected OneDriveConfiguration configuration;
+
+    protected String uploadedItemId;
+
+    protected String apiTestFolderId;
 
     @Before()
     public void setUp() throws FileNotFoundException, ConfigurationException {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
         this.api = new OneDriveAPIConnection(configuration);
+        this.apiTestFolderId = TestMother.createAPITestFolder(api).getId();
+        this.uploadedItemId = TestMother.uploadTestItem(api).getId();
     }
 
-    @Test
-    public void testGetToken() {
-        TokenResult token = api.getAccessToken();
-        assertNotNull(token);
-        assertNotNull(token.getAccessToken());
-        assertNotNull(token.getExpiresIn());
-        assertNotNull(token.getRefreshToken());
-        assertNotNull(token.getTokenType());
+    @After
+    public void tearDown() {
+        if (apiTestFolderId != null) {
+            new DeleteAction(api, ItemAddress.idBased(apiTestFolderId)).call();
+        }
+        api.close();
     }
-
-    @Test
-    public void testLogout() {
-        api.logOut();
-    }
-
 }

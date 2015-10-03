@@ -15,6 +15,7 @@
  */
 package io.yucca.microsoft.onedrive;
 
+import io.yucca.microsoft.onedrive.resources.ErrorCodes;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
@@ -64,6 +65,13 @@ public class OneDriveException extends RuntimeException {
         this.error = error;
     }
 
+    public OneDriveException(String message, int status, OneDriveError error) {
+        super(message + ", reason: " + status + " "
+              + ErrorCodes.getMessage(status) + ", cause: "
+              + error.getError().getMessage());
+        this.error = error;
+    }
+
     public OneDriveException(Throwable cause) {
         super(cause);
     }
@@ -76,4 +84,5 @@ public class OneDriveException extends RuntimeException {
     public OneDriveError getError() {
         return error;
     }
+
 }

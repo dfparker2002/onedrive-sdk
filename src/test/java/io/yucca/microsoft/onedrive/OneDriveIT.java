@@ -40,7 +40,7 @@ public class OneDriveIT {
 
     private OneDrive drive;
 
-    private OneDriveFolder apitest;
+    private OneDriveFolder apitestFolder;
 
     @Before()
     public void setUp() throws FileNotFoundException, ConfigurationException {
@@ -50,9 +50,9 @@ public class OneDriveIT {
         // create test directory and file
         TestMother.createAPITestFolder(api);
         TestMother.uploadTestItem(api);
-        
+
         this.drive = OneDrive.defaultDrive(api);
-        this.apitest = drive.getFolder(TestMother.FOLDER_APITEST);
+        this.apitestFolder = drive.getFolder(TestMother.FOLDER_APITEST);
     }
 
     @Test
@@ -78,16 +78,11 @@ public class OneDriveIT {
 
     @Test
     public void testGetItem() throws FileNotFoundException {
-        OneDrive drive = OneDrive.defaultDrive(api);
-        assertNotNull(drive);
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_1_PATH), TestMother.ITEM_UPLOAD_1);
-        drive.getFolder(TestMother.FOLDER_APITEST).upload(file);
-        OneDriveItem uploadedItem = drive
-            .getFolder(TestMother.FOLDER_APITEST + "/"
-                       + TestMother.ITEM_UPLOAD_1);
-        assertNotNull(uploadedItem);
-        uploadedItem.delete();
+        OneDriveItem uploaded = drive.upload(file);
+        assertNotNull(apitestFolder.getItem(TestMother.ITEM_UPLOAD_1));
+        uploaded.delete();
     }
 
     @Test
@@ -113,7 +108,7 @@ public class OneDriveIT {
         OneDrive drive = OneDrive.defaultDrive(api);
         assertNotNull(drive);
         Collection<OneDriveItem> children = drive
-            .listChildren(TestMother.fullQueryParameters());
+            .listChildren(TestMother.listChildrenQueryParameters());
         assertNotNull(children);
         assertTrue(children.size() > 0);
     }
@@ -123,14 +118,23 @@ public class OneDriveIT {
         OneDrive drive = OneDrive.defaultDrive(api);
         assertNotNull(drive);
         Collection<OneDriveItem> children = drive
-            .search("e", TestMother.fullQueryParameters());
+            .search("e", TestMother.searchQueryParameters());
         assertNotNull(children);
         assertTrue(children.size() > 0);
     }
 
+    @Test
+    public void testUpload() throws FileNotFoundException {
+        OneDriveFile file = new OneDriveFile(Paths
+            .get(TestMother.ITEM_UPLOAD_1_PATH), TestMother.ITEM_UPLOAD_1);
+        OneDriveItem uploaded = drive.upload(file);
+        assertNotNull(uploaded);
+        uploaded.delete();
+    }
+
     @After
     public void tearDown() {
-        apitest.delete();
+        apitestFolder.delete();
         api.close();
     }
 }

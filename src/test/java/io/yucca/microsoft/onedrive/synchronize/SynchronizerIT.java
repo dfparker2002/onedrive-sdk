@@ -40,7 +40,7 @@ public class SynchronizerIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private static final String ROOT_DOCUMENTS = "root/Documents";
+    private static final String ROOT_DOCUMENTS = "root/APITest";
 
     private OneDriveAPIConnection api;
 
@@ -57,7 +57,7 @@ public class SynchronizerIT {
         this.tmpFolderPath = Paths.get(testFolder.getRoot().getAbsolutePath());
     }
 
-    @Test
+    // @Test
     public void testSynchronizeDrive()
         throws IOException, ConfigurationException {
         OneDrive remoteDrive = OneDrive.defaultDrive(api);

@@ -15,6 +15,12 @@
  */
 package io.yucca.microsoft.onedrive;
 
+import io.yucca.microsoft.onedrive.actions.CopyAction;
+import io.yucca.microsoft.onedrive.actions.DeleteAction;
+import io.yucca.microsoft.onedrive.actions.DownloadAction;
+import io.yucca.microsoft.onedrive.actions.MetadataAction;
+import io.yucca.microsoft.onedrive.actions.MoveAction;
+import io.yucca.microsoft.onedrive.actions.UpdateAction;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
@@ -56,15 +62,16 @@ public class OneDriveItem {
      * @return OneDriveItem copied item
      */
     public OneDriveItem copy(OneDriveFolder destination, String name) {
-        return new OneDriveItem(api, api.copyById(itemId, name,
-                                                  destination.getParentRef()));
+        CopyAction action = new CopyAction(api, getAddress(), name,
+                                           destination.getAddress());
+        return new OneDriveItem(api, action.call());
     }
 
     /**
      * Delete this item
      */
     public void delete() {
-        api.deleteById(itemId, getEtag());
+        new DeleteAction(api, getAddress(), getEtag()).call();
     }
 
     /**
@@ -76,7 +83,7 @@ public class OneDriveItem {
      * @return OneDriveContent
      */
     public OneDriveContent download() {
-        return api.downloadById(itemId, null);
+        return new DownloadAction(api, getAddress()).call();
     }
 
     /**
@@ -86,8 +93,9 @@ public class OneDriveItem {
      * @return OneDriveItem moved item
      */
     public OneDriveItem move(OneDriveFolder destination) {
-        return new OneDriveItem(api, api.moveById(itemId, null,
-                                                  destination.getParentRef()));
+        MoveAction action = new MoveAction(api, getAddress(), null,
+                                           destination.getAddress());
+        return new OneDriveItem(api, action.call());
     }
 
     /**
@@ -98,7 +106,7 @@ public class OneDriveItem {
     public void rename(String name) {
         Item changed = (item == null) ? changed = new Item(itemId) : item;
         changed.setName(name);
-        this.item = api.update(changed, getEtag());
+        this.item = new UpdateAction(api, item).call();
     }
 
     public String getItemId() {
@@ -106,17 +114,28 @@ public class OneDriveItem {
     }
 
     /**
-     * Get the (cached) item resource or update if it was changed
+     * Get the (cached) item resource or update them item if it was changed
      * 
      * @return Item
      */
     public Item getItem() {
         try {
-            this.item = api.getMetadataById(itemId, getEtag(), null);
+            MetadataAction action = new MetadataAction(api, getAddress(), getEtag(),
+                                                       null);
+            this.item = action.call();
         } catch (NotModifiedException e) {
             // do nothing return cached item
         }
         return item;
+    }
+
+    /**
+     * Get ItemAddress
+     * 
+     * @return ItemAddress
+     */
+    public ItemAddress getAddress() {
+        return ItemAddress.idBased(itemId);
     }
 
     /**

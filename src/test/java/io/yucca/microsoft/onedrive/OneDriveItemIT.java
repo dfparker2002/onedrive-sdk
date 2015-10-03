@@ -41,7 +41,7 @@ public class OneDriveItemIT {
 
     private OneDriveFolder movedFolder;
 
-    private OneDriveItem uploaded;
+    private OneDriveItem uploadedFile;
 
     @Before
     public void setUp() throws FileNotFoundException, ConfigurationException {
@@ -53,40 +53,40 @@ public class OneDriveItemIT {
         this.apitestFolder = drive.createFolder(TestMother.FOLDER_APITEST);
         this.file = new OneDriveFile(Paths.get(TestMother.ITEM_UPLOAD_1_PATH),
                                      TestMother.ITEM_UPLOAD_1);
-        this.uploaded = apitestFolder.upload(file);
+        this.uploadedFile = apitestFolder.upload(file);
     }
 
     @Test
     public void testCopy() {
-        OneDriveItem copyItem = uploaded.copy(apitestFolder,
+        OneDriveItem copyItem = uploadedFile.copy(apitestFolder,
                                               TestMother.ITEM_UPLOAD_1_COPY);
         assertNotNull(copyItem);
     }
 
     @Test
     public void testDownload() throws FileNotFoundException {
-        assertNotNull(uploaded.download());
+        assertNotNull(uploadedFile.download());
     }
 
     // disabled see javadoc @Test(expected = NotModifiedException.class)
     public void testDownloadNotModified() throws FileNotFoundException {
-        assertNotNull(uploaded.download());
+        assertNotNull(uploadedFile.download());
     }
 
     @Test
     public void testGetItem() throws FileNotFoundException {
-        assertNotNull(uploaded.getItem());
+        assertNotNull(uploadedFile.getItem());
     }
 
     @Test
     public void testMove() throws FileNotFoundException {
         movedFolder = apitestFolder.createFolder(TestMother.FOLDER_MOVED);
-        assertNotNull(uploaded.move(movedFolder));
+        assertNotNull(uploadedFile.move(movedFolder));
     }
 
     @Test
     public void testRename() throws FileNotFoundException {
-        uploaded.rename(TestMother.ITEM_UPLOAD_1_COPY);
+        uploadedFile.rename(TestMother.ITEM_UPLOAD_1_COPY);
     }
 
     @After

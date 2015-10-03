@@ -19,16 +19,22 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.yucca.microsoft.onedrive.actions.CreateAction;
+import io.yucca.microsoft.onedrive.actions.DriveAction;
+import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
+import io.yucca.microsoft.onedrive.actions.MetadataAction;
+import io.yucca.microsoft.onedrive.actions.SearchAction;
+import io.yucca.microsoft.onedrive.actions.SpecialFolderAction;
+import io.yucca.microsoft.onedrive.actions.UploadAction;
 import io.yucca.microsoft.onedrive.facets.QuotaFacet;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Drive;
 import io.yucca.microsoft.onedrive.resources.Identity;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.ItemReference;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 /**
- * OneDrive represent a drive in OneDrive
+ * OneDrive represents a drive in OneDrive
  *
  * @author yucca.io
  */
@@ -61,7 +67,8 @@ public class OneDrive {
      * @return OneDrive
      */
     public static OneDrive defaultDrive(OneDriveAPIConnection api) {
-        return new OneDrive(api, api.getDefaultDrive());
+        DriveAction action = new DriveAction(api);
+        return new OneDrive(api, action.call());
     }
 
     /**
@@ -69,12 +76,14 @@ public class OneDrive {
      * 
      * @param name String name of the folder
      * @param behaviour ConflictBehavior behaviour if a naming conflict occurs,
-     *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
+     *            if {@code null} then defaulting to
+     *            {@link ConflictBehavior#FAIL}
      * @return OneDriveFolder created folder
      */
     public OneDriveFolder createFolder(String name,
                                        ConflictBehavior behaviour) {
-        return new OneDriveFolder(api, api.createFolderInRoot(name, behaviour));
+        return new OneDriveFolder(api, CreateAction
+            .createFolderInRoot(api, name, behaviour));
     }
 
     /**
@@ -85,16 +94,17 @@ public class OneDrive {
      * @return created folder
      */
     public OneDriveFolder createFolder(String name) {
-        return createFolder(name, null);
+        return createFolder(name, ConflictBehavior.FAIL);
     }
 
     /**
-     * Get a root folder in this drive
+     * Get the root folder of this drive
      * 
      * @return OneDriveFolder
      */
     public OneDriveFolder getRootFolder() {
-        return new OneDriveFolder(api, api.getMetadataByPath("", null, null));
+        MetadataAction action = new MetadataAction(api, getAddress());
+        return new OneDriveFolder(api, action.call());
     }
 
     /**
@@ -107,28 +117,52 @@ public class OneDrive {
      */
     public OneDriveFolder getSpecialFolder(SpecialFolder folder,
                                            QueryParameters parameters) {
-        return new OneDriveFolder(api,
-                                  api.getSpecialFolder(folder, parameters));
+        SpecialFolderAction action = new SpecialFolderAction(api, folder,
+                                                             parameters);
+        return new OneDriveFolder(api, action.call());
+    }
+
+    /**
+     * Get a folder by address
+     * 
+     * @param address ItemAddress address of Item
+     * @return OneDriveFolder
+     */
+    private OneDriveFolder getFolder(ItemAddress address) {
+        MetadataAction action = new MetadataAction(api, address);
+        return new OneDriveFolder(api, action.call());
     }
 
     /**
      * Get a folder by path
      * 
-     * @param path String path to folder relative to the root folder
+     * @param path String path to a folder relative to the drive root i.e.
+     *            "Documents"
      * @return OneDriveFolder
      */
     public OneDriveFolder getFolder(String path) {
-        return new OneDriveFolder(api, api.getMetadataByPath(path, null, null));
+        return getFolder(ItemAddress.pathBased(path));
+    }
+
+    /**
+     * Get an item by address
+     * 
+     * @param address ItemAddress address of Item
+     * @return OneDriveItem
+     */
+    private OneDriveItem getItem(ItemAddress address) {
+        MetadataAction action = new MetadataAction(api, address);
+        return new OneDriveItem(api, action.call());
     }
 
     /**
      * Get an item by path
      * 
-     * @param path String path to item relative to the root folder
+     * @param path String path to item relative to the drive root
      * @return OneDriveItem
      */
     public OneDriveItem getItem(String path) {
-        return new OneDriveItem(api, api.getMetadataByPath(path, null, null));
+        return getItem(ItemAddress.pathBased(path));
     }
 
     /**
@@ -140,7 +174,8 @@ public class OneDrive {
      */
     public Collection<OneDriveItem> listChildren(QueryParameters parameters) {
         List<OneDriveItem> children = new LinkedList<>();
-        for (Item item : api.listChildrenInRoot(parameters)) {
+        ListChildrenAction action = new ListChildrenAction(api, parameters);
+        for (Item item : action.call()) {
             children.add(OneDriveItemFactory.build(api, item));
         }
         return children;
@@ -165,24 +200,48 @@ public class OneDrive {
      */
     public List<OneDriveItem> search(String query, QueryParameters parameters) {
         List<OneDriveItem> children = new LinkedList<>();
-        for (Item item : api.searchInRoot(query, parameters)) {
+        SearchAction action = new SearchAction(api, getAddress(), query,
+                                               parameters);
+        for (Item item : action.call()) {
             children.add(OneDriveItemFactory.build(api, item));
         }
         return children;
     }
 
     /**
-     * Get ItemReference for this Folder
+     * Upload the content into this folder
      * 
-     * @return ItemReference based on root path
+     * @param content OneDriveContent
+     * @param name String name of the folder
+     * @param behaviour ConflictBehavior behaviour if a naming conflict occurs,
+     *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
+     * @return OneDriveItem uploaded item
      */
-    ItemReference getParentRef() {
-        ItemReference ref = new ItemReference();
-        ref.setPath("/drive/root");
-        // ONEDRIVE BUG using ref.setId(driveId); does not work, gives a
-        // {"error":{"code":"invalidRequest","message":"ObjectHandle is
-        // Invalid","innererror":{"code":"invalidResourceId"}}}
-        return ref;
+    public OneDriveItem upload(OneDriveContent content,
+                               ConflictBehavior behavior) {
+        UploadAction action = new UploadAction(api, content, getAddress(),
+                                               behavior);
+        return new OneDriveItem(api, action.call());
+    }
+
+    /**
+     * Upload the content into this folder, if the file already exist uploading
+     * fails
+     * 
+     * @param content OneDriveContent
+     * @return OneDriveItem uploaded item
+     */
+    public OneDriveItem upload(OneDriveContent content) {
+        return upload(content, ConflictBehavior.FAIL);
+    }
+
+    /**
+     * Get ItemAddress
+     * 
+     * @return ItemAddress
+     */
+    public ItemAddress getAddress() {
+        return ItemAddress.rootAddress();
     }
 
     /**
@@ -191,7 +250,7 @@ public class OneDrive {
      * @return Drive
      */
     public Drive getDrive() {
-        return api.getDrive(driveId);
+        return new DriveAction(api, driveId).call();
     }
 
     /**
@@ -222,6 +281,6 @@ public class OneDrive {
     }
 
     public String toString() {
-        return "OneDrive: " + driveId + " user: " + getUser().getDisplayName();
+        return "OneDrive: " + driveId + ", user: " + getUser().getDisplayName();
     }
 }

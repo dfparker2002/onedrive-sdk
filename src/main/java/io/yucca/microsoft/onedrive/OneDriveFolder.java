@@ -19,6 +19,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.yucca.microsoft.onedrive.actions.CopyAction;
+import io.yucca.microsoft.onedrive.actions.CreateAction;
+import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
+import io.yucca.microsoft.onedrive.actions.MetadataAction;
+import io.yucca.microsoft.onedrive.actions.MoveAction;
+import io.yucca.microsoft.onedrive.actions.SearchAction;
+import io.yucca.microsoft.onedrive.actions.UploadAction;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.ItemReference;
@@ -55,8 +62,9 @@ public class OneDriveFolder extends OneDriveItem {
      * @return OneDriveFolder copied folder
      */
     public OneDriveFolder copy(OneDriveFolder destination, String name) {
-        return new OneDriveFolder(api, api
-            .copyById(itemId, name, destination.getParentRef()));
+        CopyAction action = new CopyAction(api, getAddress(), name,
+                                           destination.getAddress());
+        return new OneDriveFolder(api, action.call());
     }
 
     /**
@@ -69,12 +77,13 @@ public class OneDriveFolder extends OneDriveItem {
      * @return OneDriveFolder created folder
      */
     public OneDriveFolder createFolder(String name, ConflictBehavior behavior) {
-        return new OneDriveFolder(api,
-                                  api.createFolderById(name, itemId, behavior));
+        CreateAction action = new CreateAction(api, name, getAddress(),
+                                               behavior);
+        return new OneDriveFolder(api, action.call());
     }
 
     /**
-     * Create a new folder inside this folder, if the folder already exist
+     * Create a new folder inside this folder, if the folder already exists
      * creation fails
      * 
      * @param name String name of the folder
@@ -85,13 +94,45 @@ public class OneDriveFolder extends OneDriveItem {
     }
 
     /**
-     * Get an item by path
+     * Get a folder located inside this folder
      * 
-     * @param path String path to item relative to the root folder
+     * @param address ItemAddress address of Item, relative to this folder
+     * @return OneDriveFolder
+     */
+    private OneDriveFolder getFolder(ItemAddress address) {
+        MetadataAction action = new MetadataAction(api, address, getEtag());
+        return new OneDriveFolder(api, action.call());
+    }
+
+    /**
+     * Get a folder located inside this folder
+     * 
+     * @param path String name or path of folder, relative to this folder
+     * @return OneDriveFolder
+     */
+    public OneDriveFolder getFolder(String path) {
+        return getFolder(ItemAddress.pathBased(getItem(), path));
+    }
+
+    /**
+     * Get an item inside this folder
+     * 
+     * @param path String name or path of item, relative to this folder
+     * @return OneDriveItem
+     */
+    private OneDriveItem getItem(ItemAddress address) {
+        MetadataAction action = new MetadataAction(api, address, getEtag());
+        return new OneDriveItem(api, action.call());
+    }
+
+    /**
+     * Get an item inside this folder
+     * 
+     * @param path String name or path of item, relative to this folder
      * @return OneDriveItem
      */
     public OneDriveItem getItem(String path) {
-        return new OneDriveItem(api, api.getMetadataByPath(path, null, null));
+        return getItem(ItemAddress.pathBased(getItem(), path));
     }
 
     /**
@@ -103,7 +144,9 @@ public class OneDriveFolder extends OneDriveItem {
      */
     public Collection<OneDriveItem> listChildren(QueryParameters parameters) {
         List<OneDriveItem> children = new LinkedList<>();
-        for (Item item : api.listChildrenInRoot(parameters)) {
+        ListChildrenAction action = new ListChildrenAction(api, getAddress(),
+                                                           null, parameters);
+        for (Item item : action.call()) {
             children.add(OneDriveItemFactory.build(api, item));
         }
         return children;
@@ -132,8 +175,9 @@ public class OneDriveFolder extends OneDriveItem {
      * @return Item moved item
      */
     public OneDriveFolder move(OneDriveFolder destination) {
-        return new OneDriveFolder(api, api
-            .moveById(itemId, null, destination.getParentRef()));
+        MoveAction action = new MoveAction(api, getAddress(), null,
+                                           destination.getAddress());
+        return new OneDriveFolder(api, action.call());
     }
 
     /**
@@ -143,9 +187,9 @@ public class OneDriveFolder extends OneDriveItem {
      * @return Item moved item
      */
     public OneDriveFolder move(SpecialFolder destination) {
-        ItemReference ref = new ItemReference();
-        ref.setPath(destination.getPath());
-        return new OneDriveFolder(api, api.moveById(itemId, null, ref));
+        MoveAction action = new MoveAction(api, getAddress(), null,
+                                           destination.getPath());
+        return new OneDriveFolder(api, action.call());
     }
 
     /**
@@ -155,8 +199,9 @@ public class OneDriveFolder extends OneDriveItem {
      * @return Item moved item
      */
     public OneDriveFolder move(OneDrive destination) {
-        return new OneDriveFolder(api, api
-            .moveById(itemId, null, destination.getParentRef()));
+        MoveAction action = new MoveAction(api, getAddress(), null,
+                                           destination.getAddress());
+        return new OneDriveFolder(api, action.call());
     }
 
     /**
@@ -178,7 +223,9 @@ public class OneDriveFolder extends OneDriveItem {
      */
     public List<OneDriveItem> search(String query, QueryParameters parameters) {
         List<OneDriveItem> children = new LinkedList<>();
-        for (Item item : api.searchById(itemId, query, parameters)) {
+        SearchAction action = new SearchAction(api, getAddress(), query,
+                                               parameters);
+        for (Item item : action.call()) {
             children.add(OneDriveItemFactory.build(api, item));
         }
         return children;
@@ -195,8 +242,9 @@ public class OneDriveFolder extends OneDriveItem {
      */
     public OneDriveItem upload(OneDriveContent content,
                                ConflictBehavior behavior) {
-        return new OneDriveItem(api, api.uploadByParentId(content, itemId,
-                                                          behavior));
+        UploadAction action = new UploadAction(api, content, getAddress(),
+                                               behavior);
+        return new OneDriveItem(api, action.call());
     }
 
     /**
@@ -207,7 +255,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @return OneDriveItem uploaded item
      */
     public OneDriveItem upload(OneDriveContent content) {
-        return upload(content, null);
+        return upload(content, ConflictBehavior.FAIL);
     }
 
     /**

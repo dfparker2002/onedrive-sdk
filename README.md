@@ -60,10 +60,13 @@ first run the units by invoking:
 
     mvn test
  	 
-then run the integration test by invoking:
+then run the integration tests by invoking:
 
     mvn failsafe:integration-test
  
+to run a single integration test invoke:
+
+    mvn -DskipUTs=true -Dit.test=DriveActionIT verify
 
 *The integration test are not ran when building the package, this is a manual step.* 
  
