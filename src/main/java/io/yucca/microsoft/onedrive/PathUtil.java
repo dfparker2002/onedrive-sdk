@@ -79,7 +79,8 @@ public final class PathUtil {
      * @return String path
      */
     public static String buildAddressPath(String action, Addressing method) {
-        String base = getBasePath(method) + addressParameter(method);
+        String base = getBasePath(method) + seperatorStart(method)
+                      + "{item-address}";
         if (action != null) {
             base += seperatorEnd(method) + action;
         }
@@ -96,7 +97,7 @@ public final class PathUtil {
      */
     public static String buildAddressPathWithFilename(String action,
                                                       Addressing method) {
-        String base = getBasePath(method)
+        String base = getBasePath(method) + seperatorStart(method)
                       + addressWithFilenameParameter(method);
         if (action != null) {
             base += ":/" + action;
@@ -104,28 +105,15 @@ public final class PathUtil {
         return base;
     }
 
-    static String addressParameter(Addressing method) {
-        switch (method) {
-        case ID:
-            return "/{item-address}";
-        case PATH:
-        case ROOT:
-        case SPECIAL:
-            return ":{item-address}";
-        default:
-            throw new IllegalArgumentException("Invalid addressing method");
-        }
-    }
-
     static String addressWithFilenameParameter(Addressing method) {
         switch (method) {
         case ID:
-            return "/{item-address}:/{filename}";
+            return "{item-address}:/{filename}";
         case ROOT:
-            return ":{item-address}{filename}";
+            return "{item-address}{filename}";
         case PATH:
         case SPECIAL:
-            return ":{item-address}/{filename}";
+            return "{item-address}/{filename}";
         default:
             throw new IllegalArgumentException("Invalid addressing method");
         }
@@ -140,33 +128,12 @@ public final class PathUtil {
     static String getBasePath(Addressing method) {
         switch (method) {
         case ID:
-            return "/drive/items";
-        case PATH:
-            return "/drive/root";
-        case ROOT:
-            return "/drive/root";
-        case SPECIAL:
-            return "/drive/special/{special-folder-name}";
-        default:
-            throw new IllegalArgumentException("Invalid addressing method");
-        }
-    }
-
-    /**
-     * Get end seperator
-     * 
-     * @param method Addressing
-     * @param
-     * @return String
-     */
-    static String seperatorEnd(Addressing method) {
-        switch (method) {
-        case ID:
-            return "/";
+            return DRIVE_ITEMS;
         case PATH:
         case ROOT:
+            return DRIVE_ROOT;
         case SPECIAL:
-            return ":/";
+            return DRIVE_SPECIAL + "/{special-folder-name}";
         default:
             throw new IllegalArgumentException("Invalid addressing method");
         }
@@ -176,7 +143,6 @@ public final class PathUtil {
      * Get start seperator
      * 
      * @param method Addressing
-     * @param
      * @return String
      */
     static String seperatorStart(Addressing method) {
@@ -187,6 +153,25 @@ public final class PathUtil {
         case ROOT:
         case SPECIAL:
             return ":";
+        default:
+            throw new IllegalArgumentException("Invalid addressing method");
+        }
+    }
+
+    /**
+     * Get end seperator
+     * 
+     * @param method Addressing
+     * @return String
+     */
+    static String seperatorEnd(Addressing method) {
+        switch (method) {
+        case ID:
+            return "/";
+        case PATH:
+        case ROOT:
+        case SPECIAL:
+            return ":/";
         default:
             throw new IllegalArgumentException("Invalid addressing method");
         }
