@@ -22,5 +22,5 @@ package io.yucca.microsoft.onedrive.actions;
  */
 public enum Addressing {
 
-    ID, PATH, ROOT, SPECIAL;
+    ID, DRIVE, PATH, ROOT, SPECIAL;
 }
