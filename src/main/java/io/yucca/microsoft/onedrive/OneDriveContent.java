@@ -33,6 +33,7 @@ public interface OneDriveContent extends Closeable {
     /**
      * Get an InputStream to the content
      * 
+     * @return InputStream
      * @throws IOException
      */
     InputStream getInputStream() throws IOException;
@@ -56,7 +57,7 @@ public interface OneDriveContent extends Closeable {
      * See if content length is larger than
      * 
      * @param length long threshold
-     * @return true if larger
+     * @return boolean true if larger
      * @throws IOException
      */
     boolean isLarger(long length) throws IOException;
