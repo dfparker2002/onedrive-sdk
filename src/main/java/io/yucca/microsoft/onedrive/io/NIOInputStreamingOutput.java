@@ -54,9 +54,8 @@ public class NIOInputStreamingOutput implements StreamingOutput, Closeable {
     }
 
     /**
-     * Streams the content from the InputStream using a , so complete content is
-     * not loaded into RAM. The InputStream is closed after writing, the
-     * OutputStream must be closed by the caller
+     * Streams the content from the InputStream. The InputStream is closed after
+     * writing, the OutputStream must be closed by the caller
      * <p>
      * bucket based on http://www.javapractices.com/topic/TopicAction.do?Id=246
      * </p>
