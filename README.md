@@ -12,7 +12,7 @@ To build the jar invoke:
 
 ## Usage
 
-### Configuration file 
+### Create a Configuration File 
 
 Before connecting to the OneDrive API with this SDK a configuration file
 must be generated holding the various connection parameters used for 
@@ -35,7 +35,7 @@ To generate the configuration file follow the understanding procedure:
  
 In the APP Settings section the "Client ID" and "Client Secret (v1)" for your 
 application can be found. These are used in creating the authorization code to 
-complete the OAUTH2.0 flow 
+complete the OAuth2.0 flow 
 
 2. Generate the configuration file
 
@@ -48,6 +48,49 @@ SDK this configuration file will be updated with the refresh token used by the
 OAUTH2.0 flow. This file also holds other properties which may be changed to 
 suit your needs. 
 
+
+## Example  
+
+To use the SDK a valid configuration file must exist. Creating this configuration 
+is explained in [Creating a Configuration](#create-a-configuration-file)
+
+### Connecting to OneDrive
+
+A connection to the OneDrive API is represented by an OneDriveAPIConnection 
+instance. In constructing this object the OneDrive, the configuration file 
+holding the various parameters for a User Drive or App Drive are passed.  
+
+This connection instance is the startpoint in performing various actions on 
+the OneDrive API.
+  
+    OneDriveConfiguration configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
+    OneDriveAPIConnection api = new OneDriveAPIConnection(configuration);
+   
+### Getting Drive information
+
+To use a drive, first request an OneDrive instance, this can be the default 
+or specific drive identified by id.
+
+    OneDrive drive = OneDrive.defaultDrive(api);
+    System.out.println("Hello user: " + drive.getUser().getDisplayName());   
+
+or by drive identifier 
+ 
+    OneDrive drive = OneDrive.byDriveId(api, "0123456789abc");
+    System.out.println("Hello user: " + drive.getUser().getDisplayName());
+    
+### Listing all folders in the Drive
+
+Requesting all all folders in a drive is done as following.
+ 
+    OneDrive drive = OneDrive.defaultDrive(api);
+    for (OneDriveItem item : drive.listChildren()) {
+        if (item instanceof OneDriveFolder) {
+           System.out.format(" %s", item.getItem().getName());
+        }
+    }    
+
+For more information see the examples in "src/examples/java or the documentation.
 
 ## Integration Testing
 
@@ -64,9 +107,8 @@ then run the integration tests by invoking:
 
     mvn failsafe:integration-test
  
-to run a single integration test invoke:
+to run a single integration test and skip unit tests invoke:
 
     mvn -DskipUTs=true -Dit.test=DriveActionIT verify
 
 *The integration test are not ran when building the package, this is a manual step.* 
- 
