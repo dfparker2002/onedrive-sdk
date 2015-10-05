@@ -55,7 +55,7 @@ public class OneDriveAPIConnection {
 
     private ObjectMapper mapper;
 
-    private OneDriveOAuthHelper oauthHelper;
+    private OneDriveSession session;
 
     /**
      * Constructs the connection to the OneDrive API, the authorization is
@@ -79,7 +79,7 @@ public class OneDriveAPIConnection {
         this.mapper = ClientFactory.createMapper(configuration,
                                                  jacksonProvider);
         this.client = ClientFactory.create(configuration, jacksonProvider);
-        this.oauthHelper = new OneDriveOAuthHelper(configuration, client);
+        this.session = new OneDriveSession(configuration, client);
         if (configuration.isDebugLogging()) {
             this.client.register(new LoggingFilter(new JulFacade(LOG), true));
         }
@@ -91,8 +91,8 @@ public class OneDriveAPIConnection {
      * @return TokenResult
      */
     TokenResult getAccessToken() {
-        oauthHelper.requestAccessToken();
-        return oauthHelper.getAccessToken();
+        session.requestAccessToken();
+        return session.getAccessToken();
     }
 
     /**
@@ -101,7 +101,7 @@ public class OneDriveAPIConnection {
      * @return Client
      */
     public Client getClient() {
-        return oauthHelper.getClient();
+        return session.getClient();
     }
 
     /**
@@ -113,7 +113,7 @@ public class OneDriveAPIConnection {
      * @return WebTarget
      */
     public WebTarget webTarget() {
-        return oauthHelper.getClient().target(ONEDRIVE_URL);
+        return session.getClient().target(ONEDRIVE_URL);
     }
 
     /**
@@ -123,7 +123,7 @@ public class OneDriveAPIConnection {
      * @return WebTarget
      */
     public WebTarget webTarget(URI uri) {
-        return oauthHelper.getClient().target(uri);
+        return session.getClient().target(uri);
     }
 
     /**
@@ -137,7 +137,7 @@ public class OneDriveAPIConnection {
      * Logout from OneDrive API
      */
     public void logOut() {
-        oauthHelper.logOut();
+        session.logOut();
     }
 
     /**

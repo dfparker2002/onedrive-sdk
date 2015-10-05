@@ -73,8 +73,8 @@ public class ConfigurationBuilder {
             configuration.setClientSecret(br.readLine());
             ClientIdentifier id = new ClientIdentifier(configuration
                 .getClientId(), configuration.getClientSecret());
-            OAuth2CodeGrantFlow flow = OneDriveOAuthHelper
-                .buildFlow(id, OneDriveOAuthHelper.DEFAULT_SCOPE);
+            OAuth2CodeGrantFlow flow = OneDriveSession
+                .buildFlow(id, OneDriveSession.DEFAULT_SCOPE);
 
             LOG.info("3. Enter the following URL in a browser and accept the permissions question.");
             System.out.println(flow.start());
@@ -84,7 +84,7 @@ public class ConfigurationBuilder {
             LOG.info("4. Now Paste the redirection URL code you received in the browser to extract the authorization code.");
             System.out.print(">> ");
 
-            configuration.setAuthorizationCode(OneDriveOAuthHelper
+            configuration.setAuthorizationCode(OneDriveSession
                 .extractAuthorizationCodeFromTokenURL(br.readLine()));
             LOG.info("Succesfully extracted the authorization code from the URL.");
             ConfigurationUtil.save(configuration);
