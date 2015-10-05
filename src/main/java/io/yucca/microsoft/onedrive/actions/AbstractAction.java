@@ -22,6 +22,8 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -184,4 +186,17 @@ public abstract class AbstractAction {
         return (etag == null || etag.isEmpty()) ? null : new EntityTag(etag);
     }
 
+    /**
+     * Maps a Map<String, Object> to JSON
+     * 
+     * @param map Map<String, Object>
+     * @return String json
+     */
+    public String toJson(Map<String, Object> map) {
+        try {
+            return api.getMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new OneDriveException("Failure mapping to JSON", e);
+        }
+    }
 }

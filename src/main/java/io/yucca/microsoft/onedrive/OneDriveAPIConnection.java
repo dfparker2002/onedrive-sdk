@@ -17,7 +17,6 @@ package io.yucca.microsoft.onedrive;
 
 import java.io.FileNotFoundException;
 import java.net.URI;
-import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -28,7 +27,6 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
@@ -146,20 +144,6 @@ public class OneDriveAPIConnection {
      */
     public ObjectMapper getMapper() {
         return mapper;
-    }
-
-    /**
-     * Maps a Map<String, Object> to JSON
-     * 
-     * @param map Map<String, Object>
-     * @return String json
-     */
-    public String mapToJson(Map<String, Object> map) {
-        try {
-            return mapper.writeValueAsString(map);
-        } catch (JsonProcessingException e) {
-            throw new OneDriveException("Failure mapping to JSON", e);
-        }
     }
 
 }

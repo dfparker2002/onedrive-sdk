@@ -86,7 +86,7 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
-            .request().post(Entity.json(api.mapToJson(map)));
+            .request().post(Entity.json(toJson(map)));
         handleError(response, Status.CREATED,
                     "Failure creating folder: " + name + " in parent folder: "
                                               + address);

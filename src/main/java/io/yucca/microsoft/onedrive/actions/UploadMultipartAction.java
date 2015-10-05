@@ -117,9 +117,8 @@ public class UploadMultipartAction extends AbstractAction
     public MultiPart createMultipart(OneDriveFile content,
                                      ConflictBehavior behavior) {
         MultiPart multipart = new MultiPart();
-        BodyPart metadataPart = new BodyPart(api
-            .mapToJson(newMetadataMultiPartBody(content.getName(), behavior)),
-                                             MediaType.APPLICATION_JSON_TYPE);
+        BodyPart metadataPart = new BodyPart(toJson(newMetadataMultiPartBody(content
+            .getName(), behavior)), MediaType.APPLICATION_JSON_TYPE);
         metadataPart.getHeaders().putSingle("Content-ID", "<metadata>");
         multipart.bodyPart(metadataPart);
 

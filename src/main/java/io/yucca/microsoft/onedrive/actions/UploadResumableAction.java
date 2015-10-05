@@ -180,7 +180,7 @@ public class UploadResumableAction extends AbstractAction
         Map<String, Object> map = newCreateSessionBody(content, behavior);
         String address = parentAddress.getAddress();
         Response response = createUploadTarget(address, content.getName())
-            .request().post(Entity.json(api.mapToJson(map)));
+            .request().post(Entity.json(toJson(map)));
         handleError(response, Status.OK,
                     "Failure creating session to upload item: "
                                          + content.getName() + " into folder: "
