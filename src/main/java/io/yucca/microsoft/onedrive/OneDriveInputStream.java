@@ -43,7 +43,6 @@ public class OneDriveInputStream implements OneDriveContent {
      * 
      * @param stream InputStream represent the stream to read the contents
      * @param name String name of the content
-     * @param length long length is set to 0
      */
     public OneDriveInputStream(InputStream stream, String name) {
         this.stream = stream;
@@ -58,10 +57,10 @@ public class OneDriveInputStream implements OneDriveContent {
      * @param name String name of the content
      * @param length long length of the content
      */
-    public OneDriveInputStream(InputStream stream, String name, long size) {
+    public OneDriveInputStream(InputStream stream, String name, long length) {
         this.stream = stream;
         this.name = name;
-        this.length = size;
+        this.length = length;
     }
 
     @Override
