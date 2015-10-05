@@ -69,6 +69,13 @@ public final class ClientFactory {
         connectionManager.setMaxTotal(100);
         connectionManager.setDefaultMaxPerRoute(20);
 
+        /**
+         * Allow restricted headers to be set. Prevents a warning in 
+         * {@link UploadResumableAction} which specifies Content-Length 
+         * {@link https://jersey.java.net/documentation/latest/client.html#d0e4832}
+         */
+        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+
         Client client = ClientBuilder.newBuilder().withConfig(clientConfig)
             .build();
         client.register(OneDriveContentMessageBodyReader.class);
