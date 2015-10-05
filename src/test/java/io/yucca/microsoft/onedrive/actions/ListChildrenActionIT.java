@@ -24,6 +24,8 @@ import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.QueryParameters.Builder;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.ItemIterable;
 import io.yucca.microsoft.onedrive.resources.Order;
@@ -38,7 +40,7 @@ public class ListChildrenActionIT extends AbstractActionIT {
 
     @Test
     public void testListChildrenByPath() throws NotModifiedException {
-        ItemAddress parentAddress = ItemAddress.pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         QueryParameters params = Builder.newQueryParameters()
             .orderby("name", Order.ASC).build();
         ListChildrenAction action = new ListChildrenAction(api, parentAddress,
@@ -48,7 +50,7 @@ public class ListChildrenActionIT extends AbstractActionIT {
 
     @Test(expected = NotModifiedException.class)
     public void testListChildrenByIdETagMatch() throws NotModifiedException {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         MetadataAction caction = new MetadataAction(api, parentAddress);
         Item folder = caction.call();
 

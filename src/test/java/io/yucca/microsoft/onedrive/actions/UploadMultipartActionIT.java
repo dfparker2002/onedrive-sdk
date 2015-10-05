@@ -26,6 +26,8 @@ import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveFile;
 import io.yucca.microsoft.onedrive.OneDriveResumableUploadException;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 
 public class UploadMultipartActionIT extends AbstractActionIT {
@@ -35,7 +37,7 @@ public class UploadMultipartActionIT extends AbstractActionIT {
         throws FileNotFoundException, OneDriveResumableUploadException {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_3_PATH), TestMother.ITEM_UPLOAD_3);
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         UploadMultipartAction action = new UploadMultipartAction(api, file,
                                                                  parentAddress,
                                                                  ConflictBehavior.FAIL);
@@ -47,8 +49,7 @@ public class UploadMultipartActionIT extends AbstractActionIT {
         throws FileNotFoundException, OneDriveResumableUploadException {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_3_PATH), TestMother.ITEM_UPLOAD_3);
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         UploadMultipartAction action = new UploadMultipartAction(api, file,
                                                                  parentAddress,
                                                                  ConflictBehavior.FAIL);

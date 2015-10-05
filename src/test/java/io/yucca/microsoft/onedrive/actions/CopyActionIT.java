@@ -17,35 +17,51 @@ package io.yucca.microsoft.onedrive.actions;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
+import io.yucca.microsoft.onedrive.resources.Item;
 
 public class CopyActionIT extends AbstractActionIT {
 
     @Test
     public void testCopyById() throws URISyntaxException {
-        ItemAddress itemAddress = ItemAddress.idBased(uploadedItemId);
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress itemAddress = new IdAddress(uploadedItemId);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         CopyAction action = new CopyAction(api, itemAddress, "copied1.docx",
                                            parentAddress);
-        assertNotNull(action.call());
+        URI jobLocation = action.call();
+        assertNotNull(jobLocation);
+        PollAction pollAction = new PollAction(api,
+                                                                         jobLocation,
+                                                                         itemAddress,
+                                                                         UploadFromURLAction.ACTION);
+        Item uploaded = pollAction.call();
+        assertNotNull(uploaded);
     }
 
     @Test
     public void testCopyByPath() throws URISyntaxException {
-        ItemAddress itemAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST + "/"
-                       + TestMother.ITEM_UPLOAD_1);
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST
+                                                  + "/"
+                                                  + TestMother.ITEM_UPLOAD_1);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         CopyAction action = new CopyAction(api, itemAddress, "copied1.docx",
                                            parentAddress);
-        assertNotNull(action.call());
+        URI jobLocation = action.call();
+        assertNotNull(jobLocation);
+        PollAction pollAction = new PollAction(api,
+                                                                         jobLocation,
+                                                                         itemAddress,
+                                                                         UploadFromURLAction.ACTION);
+        Item uploaded = pollAction.call();
+        assertNotNull(uploaded);
     }
 
 }

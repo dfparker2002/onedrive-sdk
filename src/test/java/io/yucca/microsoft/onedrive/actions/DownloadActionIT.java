@@ -23,21 +23,22 @@ import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 public class DownloadActionIT extends AbstractActionIT {
 
     @Test
     public void testDownloadById() throws NotModifiedException {
-        ItemAddress itemAddress = ItemAddress.idBased(uploadedItemId);
+        ItemAddress itemAddress = new IdAddress(uploadedItemId);
         DownloadAction action = new DownloadAction(api, itemAddress);
         assertNotNull(action.call());
     }
 
     @Test
     public void testDownloadByPath() throws NotModifiedException {
-        ItemAddress itemAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST + "/"
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST + "/"
                        + TestMother.ITEM_UPLOAD_1);
         DownloadAction action = new DownloadAction(api, itemAddress);
         assertNotNull(action.call());
@@ -45,14 +46,14 @@ public class DownloadActionIT extends AbstractActionIT {
 
     @Test(expected = OneDriveException.class)
     public void testDownloadError() throws NotModifiedException {
-        ItemAddress itemAddress = ItemAddress.pathBased("Unknown.docx");
+        ItemAddress itemAddress = new PathAddress("Unknown.docx");
         DownloadAction action = new DownloadAction(api, itemAddress);
         action.call();
     }
 
     @Test(expected = NotModifiedException.class)
     public void testDownloadByIdETagMatch() throws NotModifiedException {
-        ItemAddress itemAddress = ItemAddress.idBased(uploadedItemId);
+        ItemAddress itemAddress = new IdAddress(uploadedItemId);
         Item item = new MetadataAction(api, itemAddress).call();
         assertNotNull(item);
         DownloadAction action = new DownloadAction(api, itemAddress,

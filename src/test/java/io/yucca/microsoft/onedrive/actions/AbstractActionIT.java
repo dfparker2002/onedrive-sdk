@@ -22,10 +22,10 @@ import org.junit.After;
 import org.junit.Before;
 
 import io.yucca.microsoft.onedrive.ConfigurationUtil;
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
 
 public abstract class AbstractActionIT {
 
@@ -50,7 +50,7 @@ public abstract class AbstractActionIT {
     @After
     public void tearDown() {
         if (apiTestFolderId != null) {
-            new DeleteAction(api, ItemAddress.idBased(apiTestFolderId)).call();
+            new DeleteAction(api, new IdAddress(apiTestFolderId)).call();
         }
         api.close();
     }

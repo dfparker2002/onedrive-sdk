@@ -26,7 +26,7 @@ import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
@@ -92,12 +92,12 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
      * @return Item updated Item
      */
     private Item update() {
-        ItemAddress itemAddress = ItemAddress.idBased(item.getId());
+        ItemAddress itemAddress = new IdAddress(item.getId());
         if (item.getParentReference() != null) {
             item.setParentReference(null);
         }
         Response response = api.webTarget().path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request().header(HEADER_IF_MATCH, createEtag(eTag))
             // patch method is not default available in jersey 2, so use a

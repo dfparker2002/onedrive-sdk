@@ -21,6 +21,8 @@ import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.ItemIterable;
 
@@ -28,15 +30,14 @@ public class SearchActionIT extends AbstractActionIT {
 
     @Test
     public void testSearchById() {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         SearchAction action = new SearchAction(api, parentAddress, "is");
         assertNotNull(action.call());
     }
 
     @Test
     public void testSearchByPath() {
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         SearchAction action = new SearchAction(api, parentAddress, "is");
         assertNotNull(action.call());
     }

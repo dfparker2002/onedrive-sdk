@@ -16,37 +16,26 @@
 package io.yucca.microsoft.onedrive.actions;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
-import io.yucca.microsoft.onedrive.resources.AsyncOperationStatus;
-import io.yucca.microsoft.onedrive.resources.Item;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 
 /**
  * Action to copy an Item to a folder
  * 
  * @author yucca.io
  */
-public class CopyAction extends AbstractAction implements Callable<Item> {
+public class CopyAction extends AbstractAction implements Callable<URI> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CopyAction.class);
-
-    public static final String COPY_ACTION = "action.copy";
-
-    public static final int POLL_WAIT_SEC_DEFAULT = 2;
+    public static final String ACTION = "action.copy";
 
     private final ItemAddress itemAddress;
 
@@ -61,7 +50,7 @@ public class CopyAction extends AbstractAction implements Callable<Item> {
      * @param itemAddress ItemAddress of item to be copied
      * @param name String optional new name of copied item, if left empty the
      *            original name is used
-     * @param parentPath ItemAddress of parent folder to which the item is
+     * @param parentAddress ItemAddress of parent folder to which the item is
      *            copied
      */
     public CopyAction(OneDriveAPIConnection api, ItemAddress itemAddress,
@@ -87,96 +76,37 @@ public class CopyAction extends AbstractAction implements Callable<Item> {
         super(api);
         this.itemAddress = itemAddress;
         this.name = name;
-        this.parentAddress = ItemAddress.pathBased(parentPath);
+        this.parentAddress = new PathAddress(parentPath);
     }
 
     /**
      * Copy Item to a folder
      * 
-     * @return Item copied Item
+     * @return URI location to get of asynchronous job status, used in polling
      */
     @Override
-    public Item call() throws OneDriveException {
+    public URI call() throws OneDriveException {
         return copy();
     }
 
     /**
      * Copy Item to a folder
      * 
-     * @return Item copied Item
+     * @return URI location to get of asynchronous job status, used in polling
      */
-    private Item copy() {
+    private URI copy() {
         String address = itemAddress.getAddress();
         Map<String, Object> map = newParentRefBody(name, parentAddress
             .getItemReference());
         Response response = api.webTarget()
-            .path(itemAddress.getPathWithAddress(COPY_ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .path(itemAddress.getPathWithAddress(ACTION))
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request().header(HEADER_PREFER, RESPOND_ASYNC)
             .post(Entity.json(map));
         handleError(response,
                     Status.ACCEPTED, "Failed to copy item: " + address + " to: "
                                      + parentAddress.getPathWithAddress());
-        try {
-            return pollForCompletion(response.getLocation(), address,
-                                     COPY_ACTION, POLL_WAIT_SEC_DEFAULT,
-                                     TimeUnit.SECONDS);
-        } catch (URISyntaxException e) {
-            throw new OneDriveException("Result URI of copy.action is invalid",
-                                        e);
-        }
-    }
-
-    /**
-     * Poll an URL for completion of an server-side asynchronous action.
-     * Preferably this should done in a background task with callbacks
-     * 
-     * @param uri URI monitoring URI to action operation status
-     * @param itemId String id of item on which action is performed
-     * @param duration long duration between poll requests
-     * @param unit TimeUnit duration unit
-     * @return Item copied folder
-     */
-    private Item pollForCompletion(URI uri, String itemId, String action,
-                                   long duration, TimeUnit unit)
-                                       throws URISyntaxException {
-        int errorcount = 5;
-        while (true) {
-            Response response = api.webTarget(uri).request().get();
-            if (equalsStatus(response, Status.ACCEPTED)) {
-                AsyncOperationStatus status = response
-                    .readEntity(AsyncOperationStatus.class);
-                LOG.info(status.toString());
-            } else if (equalsStatus(response, Status.SEE_OTHER)) {
-                // 303 See Other is never returned on completion instead 200 Ok
-                // with the Item as response body. Understanding is untested XXX
-                LOG.info("Operation: {} for item: {} completed.", action,
-                         itemId);
-                return MetadataAction.byURI(response.getLocation(), api);
-            } else if (equalsStatus(response, Status.OK)) {
-                LOG.info("Operation: {} for item: {} completed.", action,
-                         itemId);
-                return response.readEntity(Item.class);
-            } else if (equalsStatus(response, Status.INTERNAL_SERVER_ERROR)) {
-                AsyncOperationStatus status = response
-                    .readEntity(AsyncOperationStatus.class);
-                throw new OneDriveException(formatError(response.getStatus(),
-                                                        status.toString()));
-            } else {
-                if (--errorcount < 0) {
-                    throw new OneDriveException(formatError(response
-                        .getStatus(), "Too many polling errors, aborting the polling for the completion of action: "
-                                      + action + " on item:" + itemId));
-                }
-                LOG.debug("Poll for completion of action: {} on item: {} failed, retrying.",
-                          action, itemId);
-            }
-            try {
-                Thread.sleep(unit.toMillis(duration));
-            } catch (InterruptedException e) {
-                // do nothing
-            }
-        }
+        return response.getLocation();
     }
 
 }

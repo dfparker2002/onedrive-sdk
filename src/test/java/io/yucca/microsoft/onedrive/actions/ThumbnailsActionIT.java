@@ -20,12 +20,13 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
 
 public class ThumbnailsActionIT extends AbstractActionIT {
 
     @Test
     public void testThumbnailsById() {
-        ItemAddress itemAddress = ItemAddress.idBased(uploadedItemId);
+        ItemAddress itemAddress = new IdAddress(uploadedItemId);
         ThumbnailsAction action = new ThumbnailsAction(api, itemAddress);
         assertNotNull(action.call());
     }

@@ -25,7 +25,6 @@ import javax.ws.rs.core.Response.Status;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 
 /**
  * Action to delete an item
@@ -80,7 +79,7 @@ public class DeleteAction extends AbstractAction implements Callable<Void> {
         String address = itemAddress.getAddress();
         EntityTag tag = createEtag(eTag);
         Response response = api.webTarget().path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request(MediaType.APPLICATION_JSON_TYPE)
             .header(HEADER_IF_MATCH, tag).delete();
         handleError(response, Status.NO_CONTENT,

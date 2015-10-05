@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response.Status;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.resources.ThumbnailSet;
 
 /**
@@ -42,7 +41,8 @@ public class ThumbnailsAction extends AbstractAction
     /**
      * Constructor
      * 
-     * @param folder SpecialFolder
+     * @param api OneDriveAPIConnection
+     * @param itemAddress ItemAddress
      */
     public ThumbnailsAction(OneDriveAPIConnection api,
                             ItemAddress itemAddress) {
@@ -63,14 +63,13 @@ public class ThumbnailsAction extends AbstractAction
     /**
      * Get Thumbnails
      * 
-     * @param ItemId String identifier of item
      * @return ThumbnailSet
      */
-    public ThumbnailSet thumbnails() {
+    private ThumbnailSet thumbnails() {
         String address = itemAddress.getAddress();
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request().get();
         handleError(response, Status.OK,
                     "Failure acquiring thumbnails for item: " + address);

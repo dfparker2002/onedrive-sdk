@@ -47,13 +47,13 @@ import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.OneDriveFolder;
 import io.yucca.microsoft.onedrive.OneDriveItem;
-import io.yucca.microsoft.onedrive.actions.Addressing;
 import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DeleteAction;
 import io.yucca.microsoft.onedrive.actions.DownloadAction;
 import io.yucca.microsoft.onedrive.actions.SyncAction;
 import io.yucca.microsoft.onedrive.actions.UpdateAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.SyncResponse;
@@ -160,7 +160,7 @@ public class Synchronizer {
     public void synchronize(boolean deltaSynchronization) {
         String deltaToken = getDeltaToken(deltaSynchronization);
         readLocalDriveState(deltaSynchronization, deltaToken);
-        ItemAddress address = ItemAddress.idBased(remoteFolder.getItemId());
+        ItemAddress address = new IdAddress(remoteFolder.getItemId());
         SyncAction action = new SyncAction(api, address, deltaToken, null);
         SyncResponse syncResponse = action.call();
         walkTree(syncResponse.asMap(), (deltaToken != null));
@@ -301,9 +301,7 @@ public class Synchronizer {
         for (LocalItem local : savedState) {
             try {
                 if (items.containsKey(local.getId()) == false) {
-                    new DeleteAction(api, new ItemAddress(local.getId(),
-                                                          Addressing.ID))
-                                                              .call();
+                    new DeleteAction(api, new IdAddress(local.getId())).call();
                     // remove deleted item from delta list to prevent a possible
                     // re-creation of the item
                     deltaMap.remove(local.getId());
@@ -327,8 +325,7 @@ public class Synchronizer {
                 Item uploaded = null;
                 LocalResource parent = getParentResource(local.getParentId());
                 if (ResourceType.FILE.equals(local.type())) {
-                    ItemAddress parentAddress = ItemAddress
-                        .idBased(parent.getId());
+                    ItemAddress parentAddress = new IdAddress(parent.getId());
                     UploadAction action = new UploadAction(api,
                                                            ((LocalFile)local)
                                                                .getOneDriveContent(),
@@ -336,8 +333,7 @@ public class Synchronizer {
                                                            ConflictBehavior.FAIL);
                     uploaded = action.call();
                 } else {
-                    ItemAddress parentAddress = new ItemAddress(parent.getId(),
-                                                                Addressing.ID);
+                    ItemAddress parentAddress = new IdAddress(parent.getId());
                     CreateAction action = new CreateAction(api, local
                         .getName(), parentAddress, ConflictBehavior.FAIL);
                     uploaded = action.call();
@@ -357,8 +353,7 @@ public class Synchronizer {
         try {
             if (ResourceType.FILE.equals(local.type())
                 && local.isContentModified(item)) {
-                ItemAddress parentAddress = ItemAddress
-                    .idBased(local.getParentId());
+                ItemAddress parentAddress = new IdAddress(local.getParentId());
                 UploadAction action = new UploadAction(api,
                                                        ((LocalFile)local)
                                                            .getOneDriveContent(),
@@ -395,7 +390,7 @@ public class Synchronizer {
             }
             OneDriveContent content = null;
             if (updated.isFile()) {
-                ItemAddress address = ItemAddress.idBased(updated.getId());
+                ItemAddress address = new IdAddress(updated.getId());
                 content = new DownloadAction(api, address).call();
             }
             LocalResource parent = getParentResource(updated
@@ -421,7 +416,7 @@ public class Synchronizer {
             OneDriveContent content = null;
             if (ResourceType.FILE.equals(local.type())
                 && local.isContentModified(updated)) {
-                ItemAddress address = ItemAddress.idBased(updated.getId());
+                ItemAddress address = new IdAddress(updated.getId());
                 content = new DownloadAction(api, address).call();
             }
             LocalResource parent = getParentResource(local.getParentId());

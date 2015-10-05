@@ -28,7 +28,6 @@ import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
@@ -81,7 +80,7 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
 
     /**
      * Upload an Item with content size below 100MB, larger files should be
-     * uploaded with {@see UploadResumableAction}
+     * uploaded with {@link UploadResumableAction}
      * 
      * <pre>
      * on uploading of a new file the statuscode 201 CREATED is returned 
@@ -91,17 +90,16 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
      * 
      * @return Item representing uploaded content
      */
-    public Item upload() {
+    private Item upload() {
         String address = parentAddress.getAddress();
         String conflictBehavior = (behavior == null)
             ? null : behavior.getName();
 
-        String path = parentAddress.getPathWithAddressAndFilename(ACTION);         
+        String path = parentAddress.getPathWithAddressAndFilename(ACTION);
         Status[] successCodes = { Status.CREATED, Status.OK };
-        Response response = api.webTarget()
-            .path(path)
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
-            .resolveTemplateFromEncoded(PathUtil.FILENAME, content.getName())
+        Response response = api.webTarget().path(path)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.FILENAME, content.getName())
             .queryParam(QueryParameters.CONFLICT_BEHAVIOR, conflictBehavior)
             .request(MediaType.TEXT_PLAIN)
             .put(Entity.entity(content, MediaType.APPLICATION_OCTET_STREAM));

@@ -68,7 +68,7 @@ public class AsyncOperationStatus {
 
     public String toString() {
         return "Operation: " + this.operation + ", percentageComplete = "
-               + this.percentageComplete + " status: " + this.status.getName()
-               + " description: " + this.statusDescription;
+               + this.percentageComplete + ", status: " + this.status.getName()
+               + ", description: " + this.statusDescription;
     }
 }

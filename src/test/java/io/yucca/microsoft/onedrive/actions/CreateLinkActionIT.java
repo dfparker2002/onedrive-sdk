@@ -23,22 +23,24 @@ import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.LinkType;
 
 public class CreateLinkActionIT extends AbstractActionIT {
 
     @Test
     public void testCreateLinkById() throws URISyntaxException {
-        ItemAddress itemAddress = ItemAddress.idBased(uploadedItemId);
+        ItemAddress itemAddress = new IdAddress(uploadedItemId);
         CreateLink action = new CreateLink(api, itemAddress, LinkType.VIEW);
         assertNotNull(action.call());
     }
 
     @Test
     public void testCreateLinkByPath() throws URISyntaxException {
-        ItemAddress itemAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST + "/"
-                       + TestMother.ITEM_UPLOAD_1);
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST
+                                                  + "/"
+                                                  + TestMother.ITEM_UPLOAD_1);
         CreateLink action = new CreateLink(api, itemAddress, LinkType.VIEW);
         assertNotNull(action.call());
     }

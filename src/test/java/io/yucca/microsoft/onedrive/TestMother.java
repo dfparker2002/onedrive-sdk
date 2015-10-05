@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DeleteAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.Order;
@@ -79,14 +81,13 @@ public class TestMother {
     public static Item createAPITestFolder(OneDriveAPIConnection api) {
         deleteAPITestFolder(api);
         CreateAction action = new CreateAction(api, TestMother.FOLDER_APITEST,
-                                               ItemAddress.rootAddress(),
+                                               new RootAddress(),
                                                ConflictBehavior.FAIL);
         return action.call();
     }
 
     public static void deleteAPITestFolder(OneDriveAPIConnection api) {
-        ItemAddress itemAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
         try {
             new DeleteAction(api, itemAddress).call();
         } catch (OneDriveException e) {
@@ -98,8 +99,7 @@ public class TestMother {
         throws FileNotFoundException {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_1_PATH), TestMother.ITEM_UPLOAD_1);
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         UploadAction action = new UploadAction(api, file, parentAddress,
                                                ConflictBehavior.FAIL);
         return action.call();

@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 public class UpdateActionIT extends AbstractActionIT {
@@ -29,7 +30,7 @@ public class UpdateActionIT extends AbstractActionIT {
 
     @Test
     public void testUpdate() throws NotModifiedException {
-        ItemAddress parentAddress = ItemAddress.idBased(uploadedItemId);
+        ItemAddress parentAddress = new IdAddress(uploadedItemId);
         Item item = new MetadataAction(api, parentAddress).call();
         assertNotNull(item);
         item.setName(DOCUMENT_NEWNAME);
@@ -47,7 +48,7 @@ public class UpdateActionIT extends AbstractActionIT {
      */
     // @Test(expected = OneDriveException.class)
     public void testUpdateETagUnMatched() throws NotModifiedException {
-        ItemAddress parentAddress = ItemAddress.idBased(uploadedItemId);
+        ItemAddress parentAddress = new IdAddress(uploadedItemId);
         Item item = new MetadataAction(api, parentAddress).call();
         assertNotNull(item);
 

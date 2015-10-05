@@ -22,10 +22,10 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.resources.ErrorCodes;
 import io.yucca.microsoft.onedrive.resources.ItemReference;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
@@ -58,7 +58,7 @@ public abstract class AbstractAction {
      * Handles a error if successCode is not returned
      * 
      * @param response Response
-     * @param successCode Status indicating success response
+     * @param successStatus Status indicating success response
      * @param errorMessage String in case of failure
      */
     protected void handleError(Response response, Status successStatus,
@@ -75,12 +75,12 @@ public abstract class AbstractAction {
      * Handles a error if one of the successCode is not returned
      * 
      * @param response Response
-     * @param successCodes Status[] status indicating success response
+     * @param successStatus Status[] status indicating success response
      * @param errorMessage String in case of failure
      */
-    protected void handleError(Response response, Status[] successCodes,
+    protected void handleError(Response response, Status[] successStatus,
                                String errorMessage) {
-        if (equalsStatus(response, successCodes)) {
+        if (equalsStatus(response, successStatus)) {
             return;
         }
         OneDriveError e = response.readEntity(OneDriveError.class);
@@ -107,7 +107,7 @@ public abstract class AbstractAction {
      * Determine if statusCode of Response equals a status
      * 
      * @param response Response
-     * @param Status status
+     * @param status Status
      * @return true if equal
      */
     protected boolean equalsStatus(Response response, Status status) {
@@ -118,11 +118,11 @@ public abstract class AbstractAction {
      * Determine if statusCode of Response equals one of the status codes
      * 
      * @param response Response
-     * @param successCodes Status[]
+     * @param successStatus Status[]
      * @return true if equal
      */
-    protected boolean equalsStatus(Response response, Status[] successCodes) {
-        for (Status code : successCodes) {
+    protected boolean equalsStatus(Response response, Status[] successStatus) {
+        for (Status code : successStatus) {
             if (response.getStatus() == code.getStatusCode()) {
                 return true;
             }
@@ -167,7 +167,7 @@ public abstract class AbstractAction {
     protected Map<String, Object> newParentRefBody(String name,
                                                    ItemReference parentRef) {
         Map<String, Object> map = new HashMap<>();
-        map.put(PathUtil.PARENT_REFERENCE, parentRef);
+        map.put(ItemAddress.PARENT_REFERENCE, parentRef);
         if (name != null && !name.isEmpty()) {
             map.put("name", name);
         }

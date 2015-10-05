@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response;
 /**
  * OneDriveInputStream, content represented by an InputStream. When the
  * OneDriveInputStream is acquired via a call to
- * {@link Response#readEntity(InputStream)} or by using
+ * {@link Response#readEntity(Class)} or by using
  * {@link OneDriveContentMessageBodyReader}, it is important to call
  * {@link OneDriveInputStream#close()} manually when reading the stream has
  * finished, this will close underlying connection.

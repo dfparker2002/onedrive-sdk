@@ -27,7 +27,6 @@ import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
@@ -102,7 +101,7 @@ public class DownloadAction extends AbstractAction
         String address = itemAddress.getAddress();
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request().header(HEADER_IF_NONE_MATCH, createEtag(eTag)).get();
         handleNotModified(response);
         handleError(response, Status.OK,

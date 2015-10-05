@@ -20,7 +20,9 @@ import io.yucca.microsoft.onedrive.actions.DeleteAction;
 import io.yucca.microsoft.onedrive.actions.DownloadAction;
 import io.yucca.microsoft.onedrive.actions.MetadataAction;
 import io.yucca.microsoft.onedrive.actions.MoveAction;
+import io.yucca.microsoft.onedrive.actions.PollAction;
 import io.yucca.microsoft.onedrive.actions.UpdateAction;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
@@ -64,7 +66,9 @@ public class OneDriveItem {
     public OneDriveItem copy(OneDriveFolder destination, String name) {
         CopyAction action = new CopyAction(api, getAddress(), name,
                                            destination.getAddress());
-        return new OneDriveItem(api, action.call());
+        PollAction pollAction = new PollAction(api, action.call(), getAddress(),
+                                               CopyAction.ACTION);
+        return new OneDriveItem(api, pollAction.call());
     }
 
     /**
@@ -120,8 +124,8 @@ public class OneDriveItem {
      */
     public Item getItem() {
         try {
-            MetadataAction action = new MetadataAction(api, getAddress(), getEtag(),
-                                                       null);
+            MetadataAction action = new MetadataAction(api, getAddress(),
+                                                       getEtag(), null);
             this.item = action.call();
         } catch (NotModifiedException e) {
             // do nothing return cached item
@@ -135,7 +139,7 @@ public class OneDriveItem {
      * @return ItemAddress
      */
     public ItemAddress getAddress() {
-        return ItemAddress.idBased(itemId);
+        return new IdAddress(itemId);
     }
 
     /**

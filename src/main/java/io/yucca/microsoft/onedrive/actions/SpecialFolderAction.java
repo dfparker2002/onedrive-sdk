@@ -25,8 +25,8 @@ import javax.ws.rs.core.Response.Status;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
+import io.yucca.microsoft.onedrive.addressing.SpecialAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
@@ -85,9 +85,9 @@ public class SpecialFolderAction extends AbstractAction
      * @return Item
      */
     public Item specialFolder() {
-        String path = ItemAddress.specialAddress(folder).getPath();
+        String path = new SpecialAddress(folder).getPath();
         WebTarget target = api.webTarget().path(path)
-            .resolveTemplateFromEncoded(PathUtil.SPECIAL_FOLDER_NAME,
+            .resolveTemplateFromEncoded(ItemAddress.SPECIAL_FOLDER_NAME,
                                         folder.getName());
         if (parameters != null) {
             target = parameters.configure(target);

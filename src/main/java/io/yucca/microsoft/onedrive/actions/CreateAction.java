@@ -26,7 +26,6 @@ import javax.ws.rs.core.Response.Status;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.facets.FolderFacet;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
@@ -54,7 +53,7 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
      * @param name String name of item
      * @param parentAddress ItemAddress reference to parent folder in which item
      *            is created
-     * @param behaviour ConflictBehavior behaviour if a naming conflict occurs,
+     * @param behavior ConflictBehavior behaviour if a naming conflict occurs,
      *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
      */
     public CreateAction(OneDriveAPIConnection api, String name,
@@ -86,7 +85,7 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
         Map<String, Object> map = newFolderBody(name, behavior);
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request().post(Entity.json(api.mapToJson(map)));
         handleError(response, Status.CREATED,
                     "Failure creating folder: " + name + " in parent folder: "
@@ -99,14 +98,14 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
      * 
      * @param api OneDriveAPIConnection
      * @param name String name of folder to create
-     * @param behaviour ConflictBehavior behaviour if a naming conflict occurs,
+     * @param behavior ConflictBehavior behaviour if a naming conflict occurs,
      *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
      * @return Item created folder
      */
     public static Item createFolderInRoot(OneDriveAPIConnection api,
                                           String name,
-                                          ConflictBehavior behaviour) {
-        return new CreateAction(api, name, new RootAddress(), behaviour)
+                                          ConflictBehavior behavior) {
+        return new CreateAction(api, name, new RootAddress(), behavior)
             .create();
     }
 
@@ -114,12 +113,12 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
      * Create createFolder POST body
      * 
      * @param name String
-     * @param behaviour ConflictBehavior
+     * @param behavior ConflictBehavior
      * @return Map<String, Object>
      */
-    Map<String, Object> newFolderBody(String name, ConflictBehavior behaviour) {
-        String conflictBehavior = (behaviour == null)
-            ? ConflictBehavior.FAIL.getName() : behaviour.getName();
+    Map<String, Object> newFolderBody(String name, ConflictBehavior behavior) {
+        String conflictBehavior = (behavior == null)
+            ? ConflictBehavior.FAIL.getName() : behavior.getName();
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
         map.put("folder", new FolderFacet());

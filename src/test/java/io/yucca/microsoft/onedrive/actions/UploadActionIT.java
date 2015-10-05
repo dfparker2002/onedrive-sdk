@@ -29,6 +29,8 @@ import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveFile;
 import io.yucca.microsoft.onedrive.OneDriveInputStream;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 
 public class UploadActionIT extends AbstractActionIT {
@@ -37,8 +39,7 @@ public class UploadActionIT extends AbstractActionIT {
     public void testUploadByParentPath() throws FileNotFoundException {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_1_PATH), TestMother.ITEM_UPLOAD_1);
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         UploadAction action = new UploadAction(api, file, parentAddress,
                                                ConflictBehavior.RENAME);
 
@@ -49,7 +50,7 @@ public class UploadActionIT extends AbstractActionIT {
     public void testUploadByParentId() throws FileNotFoundException {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_2_PATH), TestMother.ITEM_UPLOAD_2);
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         UploadAction action = new UploadAction(api, file, parentAddress,
                                                ConflictBehavior.FAIL);
         assertNotNull(action.call());
@@ -61,7 +62,7 @@ public class UploadActionIT extends AbstractActionIT {
         FileInputStream is = new FileInputStream(new File(TestMother.ITEM_UPLOAD_3_PATH));
         OneDriveContent content = new OneDriveInputStream(is,
                                                           TestMother.ITEM_UPLOAD_3);
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         UploadAction action = new UploadAction(api, content, parentAddress,
                                                ConflictBehavior.FAIL);
         assertNotNull(action.call());

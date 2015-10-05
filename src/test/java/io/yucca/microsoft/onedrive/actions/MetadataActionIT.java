@@ -24,6 +24,8 @@ import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.QueryParameters.Builder;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.Relationship;
 
@@ -31,7 +33,7 @@ public class MetadataActionIT extends AbstractActionIT {
 
     @Test
     public void testGetMetadataById() throws NotModifiedException {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         QueryParameters params = Builder.newQueryParameters()
             .expand(Relationship.CHILDREN).build();
         MetadataAction action = new MetadataAction(api, parentAddress, null,
@@ -43,8 +45,7 @@ public class MetadataActionIT extends AbstractActionIT {
 
     @Test
     public void testGetMetadataByPath() throws NotModifiedException {
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         QueryParameters params = Builder.newQueryParameters()
             .expand(Relationship.CHILDREN).build();
         MetadataAction action = new MetadataAction(api, parentAddress, null,

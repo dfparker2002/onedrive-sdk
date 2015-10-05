@@ -26,7 +26,6 @@ import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
@@ -112,7 +111,7 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
         String address = itemAddress.getAddress();
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address);
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address);
         if (parameters != null) {
             target = parameters.configure(target);
         }

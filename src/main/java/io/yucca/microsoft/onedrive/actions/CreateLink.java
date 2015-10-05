@@ -25,7 +25,6 @@ import javax.ws.rs.core.Response.Status;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.facets.PermissionFacet;
 import io.yucca.microsoft.onedrive.resources.LinkType;
 
@@ -78,7 +77,7 @@ public class CreateLink extends AbstractAction
         LinkType linkType = (type == null) ? LinkType.VIEW : type;
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request(MediaType.APPLICATION_JSON_TYPE)
             .post(Entity.json(linkType));
         Status[] successCodes = { Status.CREATED, Status.OK };

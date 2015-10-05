@@ -22,6 +22,8 @@ import org.junit.Test;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 
 public class MoveActionIT extends AbstractActionIT {
@@ -31,9 +33,8 @@ public class MoveActionIT extends AbstractActionIT {
     @Test
     public void testMoveAndRenameById() throws NotModifiedException {
         createMoved();
-        ItemAddress itemAddress = ItemAddress.idBased(uploadedItemId);
-        ItemAddress movedAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST + "/"
+        ItemAddress itemAddress = new IdAddress(uploadedItemId);
+        ItemAddress movedAddress = new PathAddress(TestMother.FOLDER_APITEST + "/"
                        + TestMother.FOLDER_MOVED);
         MoveAction action = new MoveAction(api, itemAddress, DOCUMENT_NEWNAME,
                                            movedAddress);
@@ -42,11 +43,9 @@ public class MoveActionIT extends AbstractActionIT {
 
     @Test
     public void testMoveAndRenameByPath() throws NotModifiedException {
-        ItemAddress itemAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST + "/"
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST + "/"
                        + TestMother.ITEM_UPLOAD_1);
-        ItemAddress movedAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST + "/"
+        ItemAddress movedAddress = new PathAddress(TestMother.FOLDER_APITEST + "/"
                        + TestMother.FOLDER_MOVED);
         MoveAction action = new MoveAction(api, itemAddress, DOCUMENT_NEWNAME,
                                            movedAddress);
@@ -54,8 +53,7 @@ public class MoveActionIT extends AbstractActionIT {
     }
 
     public void createMoved() {
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         new CreateAction(api, TestMother.FOLDER_MOVED, parentAddress,
                          ConflictBehavior.FAIL).call();
     }

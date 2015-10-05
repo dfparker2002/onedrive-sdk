@@ -19,6 +19,8 @@ import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 
@@ -26,53 +28,50 @@ public class DeleteActionIT extends AbstractActionIT {
 
     @Test
     public void testDeleteById() {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         CreateAction caction = new CreateAction(api,
                                                 TestMother.FOLDER_FOR_DELETION,
                                                 parentAddress,
                                                 ConflictBehavior.FAIL);
         Item folder = caction.call();
-        DeleteAction action = new DeleteAction(api,
-                                               ItemAddress.idBased(folder));
+        DeleteAction action = new DeleteAction(api, new IdAddress(folder));
         action.call();
     }
 
     @Test
     public void testDeleteByIdETag() {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         CreateAction caction = new CreateAction(api,
                                                 TestMother.FOLDER_FOR_DELETION,
                                                 parentAddress,
                                                 ConflictBehavior.FAIL);
         Item folder = caction.call();
-        DeleteAction action = new DeleteAction(api, ItemAddress.idBased(folder),
+        DeleteAction action = new DeleteAction(api, new IdAddress(folder),
                                                folder.geteTag());
         action.call();
     }
 
     @Test
     public void testDeleteByPath() {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         CreateAction caction = new CreateAction(api,
                                                 TestMother.FOLDER_FOR_DELETION,
                                                 parentAddress,
                                                 ConflictBehavior.FAIL);
         Item folder = caction.call();
-        DeleteAction action = new DeleteAction(api,
-                                               ItemAddress.pathBased(folder));
+        DeleteAction action = new DeleteAction(api, new PathAddress(folder));
         action.call();
     }
 
     @Test
     public void testDeleteByPathETag() {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         CreateAction caction = new CreateAction(api,
                                                 TestMother.FOLDER_FOR_DELETION,
                                                 parentAddress,
                                                 ConflictBehavior.FAIL);
         Item folder = caction.call();
-        DeleteAction action = new DeleteAction(api,
-                                               ItemAddress.pathBased(folder),
+        DeleteAction action = new DeleteAction(api, new PathAddress(folder),
                                                folder.geteTag());
         action.call();
     }

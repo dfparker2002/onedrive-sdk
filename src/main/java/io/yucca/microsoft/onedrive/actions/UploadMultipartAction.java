@@ -32,7 +32,6 @@ import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.OneDriveFile;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.facets.FileFacet;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
@@ -92,14 +91,14 @@ public class UploadMultipartAction extends AbstractAction
      * 
      * @return Item uploaded content
      */
-    public Item upload() {
+    private Item upload() {
         String address = parentAddress.getAddress();
         // TODO add check for file above 100MB
         MultiPart multipart = createMultipart(content, behavior);
         Status[] successCodes = { Status.CREATED };
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request().post(Entity.entity(multipart, MULTIPART_RELATED_TYPE));
         handleError(response, successCodes,
                     "Failure uploading file: " + content.getName()

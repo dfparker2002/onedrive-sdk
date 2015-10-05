@@ -21,6 +21,9 @@ import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 
@@ -28,8 +31,7 @@ public class CreateActionIT extends AbstractActionIT {
 
     @Test
     public void testCreateFolderByPath() {
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         CreateAction action = new CreateAction(api, TestMother.FOLDER_CREATE,
                                                parentAddress,
                                                ConflictBehavior.FAIL);
@@ -38,7 +40,7 @@ public class CreateActionIT extends AbstractActionIT {
 
     @Test
     public void testCreateFolderById() {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         CreateAction action = new CreateAction(api, TestMother.FOLDER_CREATE,
                                                parentAddress,
                                                ConflictBehavior.FAIL);
@@ -47,13 +49,12 @@ public class CreateActionIT extends AbstractActionIT {
 
     @Test
     public void testCreateFolderInRoot() {
-        ItemAddress parentAddress = ItemAddress.rootAddress();
         CreateAction action = new CreateAction(api, TestMother.FOLDER_CREATE,
-                                               parentAddress,
+                                               new RootAddress(),
                                                ConflictBehavior.RENAME);
         Item item = action.call();
         assertNotNull(item);
-        new DeleteAction(api, ItemAddress.idBased(item.getId())).call();
+        new DeleteAction(api, new IdAddress(item.getId())).call();
     }
 
 }

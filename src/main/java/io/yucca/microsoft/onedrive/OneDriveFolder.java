@@ -24,8 +24,10 @@ import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
 import io.yucca.microsoft.onedrive.actions.MetadataAction;
 import io.yucca.microsoft.onedrive.actions.MoveAction;
+import io.yucca.microsoft.onedrive.actions.PollAction;
 import io.yucca.microsoft.onedrive.actions.SearchAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.ItemReference;
@@ -64,16 +66,19 @@ public class OneDriveFolder extends OneDriveItem {
     public OneDriveFolder copy(OneDriveFolder destination, String name) {
         CopyAction action = new CopyAction(api, getAddress(), name,
                                            destination.getAddress());
-        return new OneDriveFolder(api, action.call());
+        PollAction pollAction = new PollAction(api, action.call(), getAddress(),
+                                               CopyAction.ACTION);
+        return new OneDriveFolder(api, pollAction.call());
     }
 
     /**
      * Create a new folder inside this folder
      * 
-     * @param name String name of the folder
      * @param name String name of the folder @param behaviour ConflictBehavior
      *            behaviour if a naming conflict occurs, if {@code null} then
      *            defaults to {@link ConflictBehavior#FAIL}
+     * @param behavior ConflictBehavior behaviour if a naming conflict occurs,
+     *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
      * @return OneDriveFolder created folder
      */
     public OneDriveFolder createFolder(String name, ConflictBehavior behavior) {
@@ -111,7 +116,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @return OneDriveFolder
      */
     public OneDriveFolder getFolder(String path) {
-        return getFolder(ItemAddress.pathBased(getItem(), path));
+        return getFolder(new PathAddress(getItem(), path));
     }
 
     /**
@@ -132,7 +137,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @return OneDriveItem
      */
     public OneDriveItem getItem(String path) {
-        return getItem(ItemAddress.pathBased(getItem(), path));
+        return getItem(new PathAddress(getItem(), path));
     }
 
     /**
@@ -235,8 +240,7 @@ public class OneDriveFolder extends OneDriveItem {
      * Upload the content into this folder
      * 
      * @param content OneDriveContent
-     * @param name String name of the folder
-     * @param behaviour ConflictBehavior behaviour if a naming conflict occurs,
+     * @param behavior ConflictBehavior behaviour if a naming conflict occurs,
      *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
      * @return OneDriveItem uploaded item
      */

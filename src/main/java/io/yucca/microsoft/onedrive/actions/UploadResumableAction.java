@@ -37,7 +37,6 @@ import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.OneDriveFile;
 import io.yucca.microsoft.onedrive.OneDriveResumableUploadException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.io.FileFragmentStreamingOutput;
 import io.yucca.microsoft.onedrive.io.Range;
@@ -192,20 +191,9 @@ public class UploadResumableAction extends AbstractAction
     private WebTarget createUploadTarget(String address, String filename) {
         return api.webTarget()
             .path(parentAddress.getPathWithAddressAndFilename(ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
-            .resolveTemplateFromEncoded(PathUtil.FILENAME, content.getName());
-
-        /**
-         * if (Addressing.ID.equals(parentAddress.getMethod())) { return target
-         * .path(
-         * "/drive/items/{item-address}:/{filename}:/upload.createSession")
-         * .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
-         * .resolveTemplateFromEncoded(PathUtil.FILENAME, content.getName()); }
-         * else { return target
-         * .path("/drive/root:/{item-address}/{filename}:/upload.createSession")
-         * .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
-         * .resolveTemplateFromEncoded(PathUtil.FILENAME, content.getName()); }
-         */
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.FILENAME,
+                                        content.getName());
     }
 
     /**

@@ -21,6 +21,8 @@ import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.SyncResponse;
 
@@ -28,7 +30,7 @@ public class SyncActionIT extends AbstractActionIT {
 
     @Test
     public void testSyncChangesById() {
-        ItemAddress itemAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress itemAddress = new IdAddress(apiTestFolderId);
         SyncAction action = new SyncAction(api, itemAddress, null, null);
         SyncResponse result = action.call();
         assertNotNull(result);
@@ -40,8 +42,7 @@ public class SyncActionIT extends AbstractActionIT {
 
     @Test
     public void testSyncChangesByPath() {
-        ItemAddress itemAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
         SyncAction action = new SyncAction(api, itemAddress, null, null);
         SyncResponse result = action.call();
         assertNotNull(result);

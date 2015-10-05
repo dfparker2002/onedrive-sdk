@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response.Status;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.SyncResponse;
@@ -107,7 +106,7 @@ public class SyncAction extends AbstractAction
             .path(parentAddress.getPathWithAddress(ACTION))
             .queryParam(QueryParameters.TOKEN, token)
             .queryParam(QueryParameters.TOP, top)
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request().get();
         handleError(response, Status.OK,
                     "Failure enumerating changes for folder: " + address);

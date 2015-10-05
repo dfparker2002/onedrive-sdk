@@ -27,7 +27,7 @@ import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
@@ -68,14 +68,14 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
      * @param itemAddress ItemAddress
      * @param name String name of copied reference, if left empty the original
      *            name is used
-     * @param parentRef String reference to parent folder
+     * @param parentPath String reference to parent folder
      */
     public MoveAction(OneDriveAPIConnection api, ItemAddress itemAddress,
                       String name, String parentPath) {
         super(api);
         this.itemAddress = itemAddress;
         this.name = name;
-        this.parentAddress = ItemAddress.pathBased(parentPath);
+        this.parentAddress = new PathAddress(parentPath);
     }
 
     /**
@@ -102,7 +102,7 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
         Map<String, Object> map = newParentRefBody(name, parentAddress
             .getItemReference());
         Response response = api.webTarget().path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request()
             // https://stackoverflow.com/questions/22355235/patch-request-using-jersey-client
             .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)

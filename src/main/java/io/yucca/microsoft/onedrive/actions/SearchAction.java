@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response.Status;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ItemCollection;
@@ -87,10 +86,10 @@ public class SearchAction extends AbstractAction
      * @param parameters QueryParameters influences the way item results are
      *            returned, if null the default listing is returned
      */
-    public SearchAction(OneDriveAPIConnection api, ItemAddress itemAddress,
+    public SearchAction(OneDriveAPIConnection api, ItemAddress parentAddress,
                         String query, QueryParameters parameters) {
         super(api);
-        this.parentAddress = itemAddress;
+        this.parentAddress = parentAddress;
         this.query = query;
         this.parameters = parameters;
     }
@@ -114,7 +113,7 @@ public class SearchAction extends AbstractAction
         String address = parentAddress.getAddress();
         WebTarget target = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .queryParam("q", URLHelper.encodeURIComponent(query));
         if (parameters != null) {
             // XXX when the top parameter is set, the last page of the total

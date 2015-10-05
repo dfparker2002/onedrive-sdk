@@ -13,14 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.actions;
+package io.yucca.microsoft.onedrive.addressing;
+
+import io.yucca.microsoft.onedrive.actions.Addressing;
 
 /**
- * Methods for adressing an Item
- *
+ * RootAddress, addressing of items in root folder by path
+ * 
  * @author yucca.io
  */
-public enum Addressing {
+public class RootAddress extends AbstractItemAddress {
 
-    ID, PATH, ROOT, SPECIAL, URL;
+    /**
+     * Constructor address that corresponds with the root folder i.e.
+     * "/drive/root:"
+     */
+    public RootAddress() {
+        super("/");
+        this.method = Addressing.ROOT;
+        this.seperatorStart = ":";
+        this.seperatorEnd = ":/";
+        this.basePath = DRIVE_ROOT;
+        this.addressWithFileName = "{item-address}{filename}";
+    }
 }

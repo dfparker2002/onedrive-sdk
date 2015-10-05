@@ -27,8 +27,8 @@ import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ItemCollection;
 import io.yucca.microsoft.onedrive.resources.ItemIterable;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
@@ -41,7 +41,7 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
 public class ListChildrenAction extends AbstractAction
     implements Callable<ItemIterable> {
 
-    public static final String LISTCHILDREN_ACTION = "children";
+    public static final String ACTION = "children";
 
     private final ItemAddress itemAddress;
 
@@ -53,16 +53,13 @@ public class ListChildrenAction extends AbstractAction
      * List children in the root drive
      * 
      * @param api OneDriveAPIConnection
-     * @param eTag String an optional etag value of the cached item, if set and
-     *            the tag matches the upstream item an NotModifiedException is
-     *            thrown. If @{code null} than no etag validation is done
      * @param parameters QueryParameters influences the way item results are
      *            returned, if null the default listing is returned.
      */
     public ListChildrenAction(OneDriveAPIConnection api,
                               QueryParameters parameters) {
         super(api);
-        this.itemAddress = ItemAddress.rootAddress();
+        this.itemAddress = new RootAddress();
         this.eTag = null;
         this.parameters = parameters;
 
@@ -76,8 +73,6 @@ public class ListChildrenAction extends AbstractAction
      * @param eTag String an optional etag value of the cached item, if set and
      *            the tag matches the upstream item an NotModifiedException is
      *            thrown. If @{code null} than no etag validation is done
-     * @param parameters QueryParameters influences the way item results are
-     *            returned, if null the default listing is returned
      */
     public ListChildrenAction(OneDriveAPIConnection api,
                               ItemAddress itemAddress, String eTag) {
@@ -129,8 +124,8 @@ public class ListChildrenAction extends AbstractAction
     public ItemIterable listChildren() {
         String address = itemAddress.getAddress();
         WebTarget target = api.webTarget()
-            .path(itemAddress.getPathWithAddress(LISTCHILDREN_ACTION))
-            .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address);
+            .path(itemAddress.getPathWithAddress(ACTION))
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address);
         if (parameters != null) {
             target = parameters.configure(target, QueryParameters.EXPAND);
         }

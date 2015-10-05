@@ -26,6 +26,8 @@ import io.yucca.microsoft.onedrive.actions.MetadataAction;
 import io.yucca.microsoft.onedrive.actions.SearchAction;
 import io.yucca.microsoft.onedrive.actions.SpecialFolderAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.facets.QuotaFacet;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Drive;
@@ -141,7 +143,7 @@ public class OneDrive {
      * @return OneDriveFolder
      */
     public OneDriveFolder getFolder(String path) {
-        return getFolder(ItemAddress.pathBased(path));
+        return getFolder(new PathAddress(path));
     }
 
     /**
@@ -162,7 +164,7 @@ public class OneDrive {
      * @return OneDriveItem
      */
     public OneDriveItem getItem(String path) {
-        return getItem(ItemAddress.pathBased(path));
+        return getItem(new PathAddress(path));
     }
 
     /**
@@ -212,8 +214,7 @@ public class OneDrive {
      * Upload the content into this folder
      * 
      * @param content OneDriveContent
-     * @param name String name of the folder
-     * @param behaviour ConflictBehavior behaviour if a naming conflict occurs,
+     * @param behavior ConflictBehavior behaviour if a naming conflict occurs,
      *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
      * @return OneDriveItem uploaded item
      */
@@ -241,7 +242,7 @@ public class OneDrive {
      * @return ItemAddress
      */
     public ItemAddress getAddress() {
-        return ItemAddress.rootAddress();
+        return new RootAddress();
     }
 
     /**

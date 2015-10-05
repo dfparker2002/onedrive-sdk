@@ -15,7 +15,8 @@
  */
 package io.yucca.microsoft.onedrive.actions;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
@@ -26,13 +27,15 @@ import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveFile;
 import io.yucca.microsoft.onedrive.OneDriveResumableUploadException;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 
 public class UploadResumableActionIT extends AbstractActionIT {
 
     @Test
     public void testCreateAndCancelSession() throws FileNotFoundException {
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_3_PATH), TestMother.ITEM_UPLOAD_3);
         UploadResumableAction action = new UploadResumableAction(api, file,
@@ -47,7 +50,7 @@ public class UploadResumableActionIT extends AbstractActionIT {
         throws FileNotFoundException, OneDriveResumableUploadException {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_3_PATH), TestMother.ITEM_UPLOAD_3);
-        ItemAddress parentAddress = ItemAddress.idBased(apiTestFolderId);
+        ItemAddress parentAddress = new IdAddress(apiTestFolderId);
         UploadResumableAction action = new UploadResumableAction(api, file,
                                                                  parentAddress,
                                                                  ConflictBehavior.FAIL);
@@ -59,8 +62,7 @@ public class UploadResumableActionIT extends AbstractActionIT {
         throws FileNotFoundException, OneDriveResumableUploadException {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_3_PATH), TestMother.ITEM_UPLOAD_3);
-        ItemAddress parentAddress = ItemAddress
-            .pathBased(TestMother.FOLDER_APITEST);
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
         UploadResumableAction action = new UploadResumableAction(api, file,
                                                                  parentAddress,
                                                                  ConflictBehavior.FAIL);

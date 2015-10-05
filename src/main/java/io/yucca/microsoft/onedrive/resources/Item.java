@@ -22,8 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
-import io.yucca.microsoft.onedrive.PathUtil;
-import io.yucca.microsoft.onedrive.actions.Addressing;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.facets.AudioFacet;
 import io.yucca.microsoft.onedrive.facets.DeletedFacet;
 import io.yucca.microsoft.onedrive.facets.FileFacet;
@@ -422,7 +421,7 @@ public class Item {
 
     @JsonIgnore
     public ItemAddress getItemAddress() {
-        return new ItemAddress(id, Addressing.ID);
+        return new IdAddress(id);
     }
 
     /**
@@ -444,7 +443,7 @@ public class Item {
     @JsonIgnore
     public String getRelativePath() {
         String rel = getParentReference().getPath()
-            .replaceAll(PathUtil.DRIVE_ROOT + ":\\/?", "");
+            .replaceAll(ItemAddress.DRIVE_ROOT + ":\\/?", "");
         return rel.isEmpty() ? name : rel + "/" + name;
     }
 
