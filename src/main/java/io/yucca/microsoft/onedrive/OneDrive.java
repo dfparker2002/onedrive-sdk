@@ -74,6 +74,19 @@ public class OneDrive {
     }
 
     /**
+     * Get the default drive for the user
+     * 
+     * @param api OneDriveAPIConnection connection to the OneDrive API
+     * @param driveId String drive identifier
+     * @return OneDrive
+     */
+    public static OneDrive byDriveId(OneDriveAPIConnection api,
+                                        String driveId) {
+        DriveAction action = new DriveAction(api, driveId);
+        return new OneDrive(api, action.call());
+    }
+
+    /**
      * Create a new folder inside this drive
      * 
      * @param name String name of the folder
