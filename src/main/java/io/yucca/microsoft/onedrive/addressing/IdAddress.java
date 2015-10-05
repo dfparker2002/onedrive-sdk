@@ -55,6 +55,7 @@ public class IdAddress extends AbstractItemAddress {
      */
     public IdAddress(Item item) {
         super(item.getId());
+        this.basePath = DRIVE_ITEMS;
         init();
     }
 
@@ -63,5 +64,6 @@ public class IdAddress extends AbstractItemAddress {
         this.seperatorStart = "/";
         this.seperatorEnd = "/";
         this.addressWithFileName = "{item-address}:/{filename}";
+        this.basePath = DRIVE_ITEMS;
     }
 }
