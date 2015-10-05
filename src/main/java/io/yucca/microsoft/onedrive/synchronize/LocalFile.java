@@ -208,11 +208,14 @@ public class LocalFile implements LocalItem {
 
     /**
      * Compare modification date of this file in regard to lastModifiedDateTime.
-     * If {@link Item#getLastModifiedDateTime() cannot be parsed
-     * ModificationStatus.NOTMODIFIED is returned. <p> When metadata timestamps
-     * like lastModifiedDateTime are witten the precision is dependant on the
-     * underlying filesystem. Linux/ext4fs looses the milliseconds precision,
-     * therefor modification status is done on second precision</p>
+     * If {@link Item#getLastModifiedDateTime()} cannot be parsed
+     * ModificationStatus.NOTMODIFIED is returned.
+     * <p>
+     * When metadata timestamps like lastModifiedDateTime are witten the
+     * precision is dependant on the underlying filesystem. Linux/ext4fs looses
+     * the milliseconds precision, therefor modification status is done on
+     * second precision
+     * </p>
      * 
      * @param item Item
      * @return ModificationStatus

@@ -56,7 +56,7 @@ public class MetadataUtil {
      * 
      * @param path Path to write to
      * @param name String attribute name
-     * @param String attribute value
+     * @param value String attribute value
      * @throws IOException if attribute cannot be written
      */
     public static void writeAttribute(Path path, String name, String value)

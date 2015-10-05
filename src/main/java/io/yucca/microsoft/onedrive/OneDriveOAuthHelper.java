@@ -103,13 +103,7 @@ public class OneDriveOAuthHelper {
     /**
      * OneDriveOAuthHelper
      * 
-     * @param clientId String the client ID created for your application.
-     * @param clientSecret String the client secret created for your
-     *            application.
-     * @param authorizationCode String the authorization code you received in
-     *            the first authentication request.
-     * @param refreshToken String the refreshToken used for acquiring a new
-     *            accessToken, if null or empty an new refresh token is acquired
+     * @param configuration OneDriveConfiguration
      * @param client Client client in working with the OneDriveAPI
      */
     public OneDriveOAuthHelper(OneDriveConfiguration configuration,

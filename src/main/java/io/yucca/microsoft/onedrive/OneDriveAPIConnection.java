@@ -61,7 +61,7 @@ public class OneDriveAPIConnection {
      * Constructs the connection to the OneDrive API, the authorization is
      * delayed until the first API request
      * 
-     * @param configurationFile String
+     * @param configuration OneDriveConfiguration
      * @throws ConfigurationException if configuration is invalid
      * @throws FileNotFoundException if configuration file does not exist
      */
@@ -97,10 +97,6 @@ public class OneDriveAPIConnection {
 
     /**
      * Get authorized client.
-     * 
-     * <pre>
-     * The modifier is explicitly package local for usage by {@link OneDriveAPIResumableUpload}
-     * </pre>
      * 
      * @return Client
      */

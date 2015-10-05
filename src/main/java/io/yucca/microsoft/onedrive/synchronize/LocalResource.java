@@ -75,7 +75,7 @@ public interface LocalResource extends Serializable {
     /**
      * Update the {@link Item} properties based on this LocalResource
      * 
-     * @param Item item
+     * @param item Item
      */
     void updateItem(Item item);
 

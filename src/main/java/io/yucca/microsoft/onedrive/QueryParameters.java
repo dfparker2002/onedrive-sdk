@@ -138,7 +138,7 @@ public class QueryParameters {
         /**
          * Defines the relationships to expand and include in the response
          * 
-         * @param expand String relationship
+         * @param relationship Relationship relationship
          * @return Builder
          */
         public Builder expand(Relationship relationship) {
@@ -149,7 +149,7 @@ public class QueryParameters {
         /**
          * Defines the relationships to expand and include in the response
          * 
-         * @param expand List<Relationship> relationships
+         * @param relationships List<Relationship> relationships
          * @return Builder
          */
         public Builder expand(List<Relationship> relationships) {
