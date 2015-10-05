@@ -66,7 +66,7 @@ public class UploadResumableAction extends AbstractAction
     private static final Logger LOG = LoggerFactory
         .getLogger(UploadResumableAction.class);
 
-    public static final String UPLOAD_ACTION = "upload.createSession";
+    public static final String ACTION = "upload.createSession";
 
     public static final long OPTIMAL_FRAGMENTSIZE_ALIGNMENT = 1024 * 320;
 
@@ -191,7 +191,7 @@ public class UploadResumableAction extends AbstractAction
 
     private WebTarget createUploadTarget(String address, String filename) {
         return api.webTarget()
-            .path(parentAddress.getPathWithAddressAndFilename(UPLOAD_ACTION))
+            .path(parentAddress.getPathWithAddressAndFilename(ACTION))
             .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
             .resolveTemplateFromEncoded(PathUtil.FILENAME, content.getName());
 

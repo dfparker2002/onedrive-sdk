@@ -26,6 +26,7 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ItemCollection;
 import io.yucca.microsoft.onedrive.resources.ItemIterable;
 import io.yucca.microsoft.onedrive.util.URLHelper;
@@ -38,7 +39,7 @@ import io.yucca.microsoft.onedrive.util.URLHelper;
 public class SearchAction extends AbstractAction
     implements Callable<ItemIterable> {
 
-    public static final String SEARCH_ACTION = "view.search";
+    public static final String ACTION = "view.search";
 
     private final ItemAddress parentAddress;
 
@@ -57,7 +58,7 @@ public class SearchAction extends AbstractAction
     public SearchAction(OneDriveAPIConnection api, String query,
                         QueryParameters parameters) {
         super(api);
-        this.parentAddress = ItemAddress.rootAddress();
+        this.parentAddress = new RootAddress();
         this.query = query;
         this.parameters = parameters;
     }
@@ -112,7 +113,7 @@ public class SearchAction extends AbstractAction
     private ItemIterable search() {
         String address = parentAddress.getAddress();
         WebTarget target = api.webTarget()
-            .path(parentAddress.getPathWithAddress(SEARCH_ACTION))
+            .path(parentAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
             .queryParam("q", URLHelper.encodeURIComponent(query));
         if (parameters != null) {

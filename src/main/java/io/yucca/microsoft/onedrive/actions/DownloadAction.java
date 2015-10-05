@@ -38,7 +38,7 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
 public class DownloadAction extends AbstractAction
     implements Callable<OneDriveContent> {
 
-    public static final String DOWNLOAD_ACTION = "content";
+    public static final String ACTION = "content";
 
     private final ItemAddress itemAddress;
 
@@ -101,7 +101,7 @@ public class DownloadAction extends AbstractAction
     private OneDriveContent download() {
         String address = itemAddress.getAddress();
         Response response = api.webTarget()
-            .path(itemAddress.getPathWithAddress(DOWNLOAD_ACTION))
+            .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
             .request().header(HEADER_IF_NONE_MATCH, createEtag(eTag)).get();
         handleNotModified(response);

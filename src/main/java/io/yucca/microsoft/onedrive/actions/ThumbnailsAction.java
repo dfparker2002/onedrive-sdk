@@ -35,7 +35,7 @@ import io.yucca.microsoft.onedrive.resources.ThumbnailSet;
 public class ThumbnailsAction extends AbstractAction
     implements Callable<ThumbnailSet> {
 
-    public static final String THUMBNAILS_ACTION = "thumbnails";
+    public static final String ACTION = "thumbnails";
 
     private final ItemAddress itemAddress;
 
@@ -69,7 +69,7 @@ public class ThumbnailsAction extends AbstractAction
     public ThumbnailSet thumbnails() {
         String address = itemAddress.getAddress();
         Response response = api.webTarget()
-            .path(itemAddress.getPathWithAddress(THUMBNAILS_ACTION))
+            .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
             .request().get();
         handleError(response, Status.OK,

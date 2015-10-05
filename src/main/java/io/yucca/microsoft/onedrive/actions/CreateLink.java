@@ -37,7 +37,7 @@ import io.yucca.microsoft.onedrive.resources.LinkType;
 public class CreateLink extends AbstractAction
     implements Callable<PermissionFacet> {
 
-    public static final String CREATELINK_ACTION = "action.createLink";
+    public static final String ACTION = "action.createLink";
 
     private final ItemAddress itemAddress;
 
@@ -77,7 +77,7 @@ public class CreateLink extends AbstractAction
         String address = itemAddress.getAddress();
         LinkType linkType = (type == null) ? LinkType.VIEW : type;
         Response response = api.webTarget()
-            .path(itemAddress.getPathWithAddress(CREATELINK_ACTION))
+            .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
             .request(MediaType.APPLICATION_JSON_TYPE)
             .post(Entity.json(linkType));

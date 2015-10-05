@@ -47,7 +47,7 @@ import io.yucca.microsoft.onedrive.resources.Item;
 public class UploadMultipartAction extends AbstractAction
     implements Callable<Item> {
 
-    public static final String CHILDREN = "children";
+    public static final String ACTION = "children";
 
     public static final MediaType MULTIPART_RELATED_TYPE = new MediaType("multipart",
                                                                          "related");
@@ -98,7 +98,7 @@ public class UploadMultipartAction extends AbstractAction
         MultiPart multipart = createMultipart(content, behavior);
         Status[] successCodes = { Status.CREATED };
         Response response = api.webTarget()
-            .path(parentAddress.getPathWithAddress(CHILDREN))
+            .path(parentAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
             .request().post(Entity.entity(multipart, MULTIPART_RELATED_TYPE));
         handleError(response, successCodes,

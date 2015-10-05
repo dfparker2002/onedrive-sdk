@@ -27,6 +27,7 @@ import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.PathUtil;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.facets.FolderFacet;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
@@ -38,7 +39,7 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class CreateAction extends AbstractAction implements Callable<Item> {
 
-    public static final String CREATE_ACTION = "children";
+    public static final String ACTION = "children";
 
     private final String name;
 
@@ -84,7 +85,7 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
         String address = parentAddress.getAddress();
         Map<String, Object> map = newFolderBody(name, behavior);
         Response response = api.webTarget()
-            .path(parentAddress.getPathWithAddress(CREATE_ACTION))
+            .path(parentAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)
             .request().post(Entity.json(api.mapToJson(map)));
         handleError(response, Status.CREATED,
@@ -105,8 +106,8 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
     public static Item createFolderInRoot(OneDriveAPIConnection api,
                                           String name,
                                           ConflictBehavior behaviour) {
-        ItemAddress parentAddress = ItemAddress.rootAddress();
-        return new CreateAction(api, name, parentAddress, behaviour).create();
+        return new CreateAction(api, name, new RootAddress(), behaviour)
+            .create();
     }
 
     /**

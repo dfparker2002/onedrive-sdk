@@ -25,6 +25,7 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.PathUtil;
 import io.yucca.microsoft.onedrive.QueryParameters;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.SyncResponse;
 
 /**
@@ -36,7 +37,7 @@ import io.yucca.microsoft.onedrive.resources.SyncResponse;
 public class SyncAction extends AbstractAction
     implements Callable<SyncResponse> {
 
-    public static final String SYNC_ACTION = "view.delta";
+    public static final String ACTION = "view.delta";
 
     private final ItemAddress parentAddress;
 
@@ -56,7 +57,7 @@ public class SyncAction extends AbstractAction
      */
     public SyncAction(OneDriveAPIConnection api, String token, String top) {
         super(api);
-        this.parentAddress = ItemAddress.rootAddress();
+        this.parentAddress = new RootAddress();
         this.token = token;
         this.top = top;
     }
@@ -103,7 +104,7 @@ public class SyncAction extends AbstractAction
     private SyncResponse sync() {
         String address = parentAddress.getAddress();
         Response response = api.webTarget()
-            .path(parentAddress.getPathWithAddress(SYNC_ACTION))
+            .path(parentAddress.getPathWithAddress(ACTION))
             .queryParam(QueryParameters.TOKEN, token)
             .queryParam(QueryParameters.TOP, top)
             .resolveTemplateFromEncoded(PathUtil.ITEM_ADDRESS, address)

@@ -42,7 +42,7 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  */
 public class UploadAction extends AbstractAction implements Callable<Item> {
 
-    public static final String UPLOAD_ACTION = "content";
+    public static final String ACTION = "content";
 
     private final OneDriveContent content;
 
@@ -96,7 +96,7 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
         String conflictBehavior = (behavior == null)
             ? null : behavior.getName();
 
-        String path = parentAddress.getPathWithAddressAndFilename(UPLOAD_ACTION);         
+        String path = parentAddress.getPathWithAddressAndFilename(ACTION);         
         Status[] successCodes = { Status.CREATED, Status.OK };
         Response response = api.webTarget()
             .path(path)
