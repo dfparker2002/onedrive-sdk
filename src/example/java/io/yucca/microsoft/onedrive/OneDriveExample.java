@@ -18,8 +18,6 @@ package io.yucca.microsoft.onedrive;
 import java.io.FileNotFoundException;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Example in using the OneDrive Java SDK
@@ -28,43 +26,34 @@ import org.slf4j.LoggerFactory;
  */
 public class OneDriveExample {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(OneDriveExample.class);
+    private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private static final String CONFIGURATIONFILE = "src/example/resources/onedrive-test.properties";
+    private static OneDriveAPIConnection api;
 
-    private static OneDriveExample ode;
-
-    private OneDriveAPIConnection api;
-
-    private OneDriveConfiguration configuration;
+    private static OneDriveConfiguration configuration;
 
     public static void main(String[] args) {
-        ode = new OneDriveExample();
-        ode.info();
-        ode.list();
-    }
-
-    public OneDriveExample() {
         try {
-            this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
-            this.api = new OneDriveAPIConnection(configuration);
+            configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
+            api = new OneDriveAPIConnection(configuration);
+            info();
+            list();
         } catch (FileNotFoundException | ConfigurationException e) {
-            LOG.error("Failed reading configuration", e);
+            System.out.println("Failed reading OneDrive configuration. " + e);
         }
     }
 
-    public void info() {
+    public static void info() {
         OneDrive drive = OneDrive.defaultDrive(api);
-        LOG.info("Hello user: {}", drive.getUser().getDisplayName());
+        System.out.println("Hello user: " + drive.getUser().getDisplayName());
     }
 
-    public void list() {
+    public static void list() {
         OneDrive drive = OneDrive.defaultDrive(api);
-        LOG.info("OneDrive contains the following folders:");
+        System.out.println("The OneDrive contains the following folders: ");
         for (OneDriveItem item : drive.listChildren()) {
             if (item instanceof OneDriveFolder) {
-                LOG.info(item.getItem().getName());
+                System.out.format(" %s\n", item.getItem().getName());
             }
         }
     }
