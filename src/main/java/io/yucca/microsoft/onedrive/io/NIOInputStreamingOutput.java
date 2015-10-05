@@ -68,11 +68,20 @@ public class NIOInputStreamingOutput implements StreamingOutput, Closeable {
         ReadableByteChannel in = Channels.newChannel(input);
         WritableByteChannel out = Channels.newChannel(output);
         ByteBuffer buf = ByteBuffer.allocateDirect(64 * 1024);
-        buf.clear();
         while ((in.read(buf)) != -1) {
+            // prepare the buffer to be drained
             buf.flip();
+            // write to the channel, may block
             out.write(buf);
+            // If partial transfer, shift remainder down
+            // If buffer is empty, same as doing clear()
             buf.compact();
+        }
+        // EOF will leave buffer in fill state
+        buf.flip();
+        // make sure the buffer is fully drained.
+        while (buf.hasRemaining()) {
+            out.write(buf);
         }
         output.flush();
     }
