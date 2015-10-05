@@ -21,7 +21,6 @@ import java.util.Map;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.EntityTag;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.glassfish.jersey.client.oauth2.TokenResult;
@@ -138,16 +137,6 @@ public class OneDriveAPIConnection {
      */
     public void logOut() {
         session.logOut();
-    }
-
-    /**
-     * Create an EntityTag
-     * 
-     * @param etag String value
-     * @return null if etag is null or empty
-     */
-    public EntityTag createEtag(String etag) {
-        return (etag == null || etag.isEmpty()) ? null : new EntityTag(etag);
     }
 
     /**
