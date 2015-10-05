@@ -51,7 +51,7 @@ public class InputStreamingOutput implements StreamingOutput, Closeable {
 
     /**
      * Streams the content from the InputStream, so complete content is not
-     * loaded into RAM. The stream is flushed every 1MB. The InputStream is
+     * loaded into RAM. The stream is flushed every 64KB. The InputStream is
      * closed after writing, the OutputStream must be closed by the caller
      * <p>
      * bucket based on http://www.javapractices.com/topic/TopicAction.do?Id=246
@@ -62,8 +62,8 @@ public class InputStreamingOutput implements StreamingOutput, Closeable {
      */
     @Override
     public void write(OutputStream output) throws IOException {
-        // buffer size set to 1MB
-        byte[] bucket = new byte[1024 * 1024];
+        // buffer size set to 64KB
+        byte[] bucket = new byte[64 * 1024];
         int bytesRead = 0;
         while ((bytesRead = input.read(bucket)) != -1) {
             output.write(bucket, 0, bytesRead);
