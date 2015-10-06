@@ -85,7 +85,8 @@ public class ItemIterator implements Iterator<Item> {
             this.page = ListChildrenAction
                 .byURI(api, collection.getNextLink().toURI());
         } catch (URISyntaxException e) {
-            throw new NoSuchElementException("URL for next collection is invalid");
+            throw new NoSuchElementException("URL for next collection is invalid. "
+                                             + e.getMessage());
         }
         this.innerIterator = page.innerIterator();
     }
