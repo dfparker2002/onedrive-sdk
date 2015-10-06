@@ -346,6 +346,16 @@ public class OneDriveSession {
     }
 
     /**
+     * Build an OAuth2CodeGrantFlow, using {@link #DEFAULT_SCOPE}
+     * 
+     * @param clientIdentifier ClientIdentifier
+     * @return OAuth2CodeGrantFlow
+     */
+    public static OAuth2CodeGrantFlow buildFlow(ClientIdentifier clientIdentifier) {
+        return buildFlow(clientIdentifier, DEFAULT_SCOPE);
+    }
+
+    /**
      * Extract the authorization code from the tokenURL (redirected)
      * 
      * @param tokenURL String tokenURL
