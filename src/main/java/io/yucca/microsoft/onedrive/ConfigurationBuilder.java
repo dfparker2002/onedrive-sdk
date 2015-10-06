@@ -55,7 +55,7 @@ public class ConfigurationBuilder {
 
     public void build(String configurationFile) throws IOException {
         if (exists(configurationFile) == false) {
-            System.exit(0);
+            return;
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
