@@ -174,14 +174,13 @@ public class LocalFile implements LocalItem {
     }
 
     private void write(OneDriveContent content) throws IOException {
-        try (
-            OutputStream out = Files.newOutputStream(path,
-                                                     StandardOpenOption.CREATE,
-                                                     StandardOpenOption.TRUNCATE_EXISTING);
-            InputStreamingOutput iso = new InputStreamingOutput(content
-                .getInputStream())) {
-            iso.write(out);
-        }
+        InputStreamingOutput iso = new InputStreamingOutput(content
+            .getInputStream());
+        OutputStream out = Files
+            .newOutputStream(path, StandardOpenOption.CREATE,
+                             StandardOpenOption.TRUNCATE_EXISTING);
+        iso.write(out);
+        out.close();
     }
 
     /**

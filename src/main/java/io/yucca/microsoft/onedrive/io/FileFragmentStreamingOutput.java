@@ -23,23 +23,21 @@ import java.nio.file.Path;
 
 import javax.ws.rs.core.StreamingOutput;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * FileFragmentStreamingOutput, streams a fragment (defined by range) of a file
  * to the OutputStream.
+ * <p>
+ * Autocloseable is not yet implemented because this is only supported from
+ * JAX-RS 2.1 and upwards. Jersey 2.2x currently uses JAX-RS 2.0.x.
+ * </p>
  * 
  * @author yucca.io
  */
 public class FileFragmentStreamingOutput implements StreamingOutput {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(FileFragmentStreamingOutput.class);
-
     private final Range range;
 
-    private final RandomAccessFile file;
+    private final RandomAccessFile raf;
 
     /**
      * Constructor
@@ -51,7 +49,7 @@ public class FileFragmentStreamingOutput implements StreamingOutput {
      */
     public FileFragmentStreamingOutput(Path file, Range range)
         throws FileNotFoundException {
-        this.file = new RandomAccessFile(file.toFile(), "r");
+        this.raf = new RandomAccessFile(file.toFile(), "r");
         this.range = range;
     }
 
@@ -63,23 +61,31 @@ public class FileFragmentStreamingOutput implements StreamingOutput {
      */
     public void write(OutputStream output) throws IOException {
         try {
-            this.file.seek(this.range.getLower());
-            long pos = this.range.getLower();
+            raf.seek(range.getLower());
+            long pos = range.getLower();
             int bytes = 0;
-            int buffer = 0;
-            while ((bytes = file.read()) != -1) {
+            while ((bytes = raf.read()) != -1) {
                 output.write(bytes);
                 // break out if upper range is reached
-                if (pos == this.range.getUpper()) {
+                if (pos == range.getUpper()) {
                     break;
                 }
                 pos++;
-                buffer++;
             }
-            LOG.debug("Bytes written: {}", buffer);
             output.flush();
         } finally {
-            this.file.close();
+            close();
         }
+    }
+
+    private void close() throws IOException {
+        if (raf != null) {
+            try {
+                raf.close();
+            } catch (IOException e) {
+                // do nothing; close should be idempotent
+            }
+        }
+
     }
 }

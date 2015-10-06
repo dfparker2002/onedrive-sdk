@@ -39,12 +39,12 @@ public class NIOInputStreamingOutputTest {
 
     @Test
     public void testWriteTotal() throws IOException {
-        try (
-            NIOInputStreamingOutput iso = new NIOInputStreamingOutput(new FileInputStream(file))) {
-            ByteArrayOutputStream b = new ByteArrayOutputStream();
-            iso.write(b);
-            assertEquals(file.length(), b.size());
-        }
+        FileInputStream input = new FileInputStream(file);
+        NIOInputStreamingOutput iso = new NIOInputStreamingOutput(input);
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        iso.write(b);
+        assertEquals(file.length(), b.size());
+        input.close();
     }
 
 }

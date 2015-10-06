@@ -39,12 +39,12 @@ public class InputStreamingOutputTest {
 
     @Test
     public void testWriteTotal() throws IOException {
-        try (
-            InputStreamingOutput iso = new InputStreamingOutput(new FileInputStream(file))) {
-            ByteArrayOutputStream b = new ByteArrayOutputStream();
-            iso.write(b);
-            assertEquals(file.length(), b.size());
-        }
+        FileInputStream input = new FileInputStream(file);
+        InputStreamingOutput iso = new InputStreamingOutput(input);
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        iso.write(b);
+        assertEquals(file.length(), b.size());
+        input.close();
     }
 
 }

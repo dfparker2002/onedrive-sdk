@@ -55,10 +55,9 @@ public class OneDriveContentMessageBodyWriter
                         MultivaluedMap<String, Object> httpHeaders,
                         OutputStream entityStream)
                             throws IOException, WebApplicationException {
-        try (InputStreamingOutput iso = new InputStreamingOutput(t
-            .getInputStream())) {
-            iso.write(entityStream);
-        }
+        InputStreamingOutput iso = new InputStreamingOutput(t.getInputStream());
+        iso.write(entityStream);
+
     }
 
 }

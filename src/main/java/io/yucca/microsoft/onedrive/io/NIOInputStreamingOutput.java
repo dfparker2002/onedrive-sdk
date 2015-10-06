@@ -15,7 +15,6 @@
  */
 package io.yucca.microsoft.onedrive.io;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,19 +27,17 @@ import javax.ws.rs.core.StreamingOutput;
 
 /**
  * NIOInputStreamingOutput, streams the content from the InputStream to
- * OutputStream using Java NIO
- * 
- * <pre>
- * TODO create a FileInputStreamOutput based on, because InputStream does not support length.
- * https://stackoverflow.com/questions/14410344/jersey-rest-support-resume-media-streaming
- * https://stackoverflow.com/questions/11584791/jersey-client-upload-progress
- * https://stackoverflow.com/questions/3474911/changing-the-index-positioning-in-inputstream
- * https://plus.google.com/+rkalla/posts/EvtUW2x3Qc8
- * </pre>
+ * OutputStream using Java NIO.
+ * <p>
+ * Autocloseable is not yet implemented because this is only supported from
+ * JAX-RS 2.1 and upwards. Jersey 2.2x currently uses JAX-RS 2.0.x.
+ * </p>
  * 
  * @author yucca.io
  */
-public class NIOInputStreamingOutput implements StreamingOutput, Closeable {
+public class NIOInputStreamingOutput implements StreamingOutput {
+
+    private static final int PAGE_SIZE = 4 * 1024;
 
     private final InputStream input;
 
@@ -65,29 +62,31 @@ public class NIOInputStreamingOutput implements StreamingOutput, Closeable {
      */
     @Override
     public void write(OutputStream output) throws IOException {
-        ReadableByteChannel in = Channels.newChannel(input);
-        WritableByteChannel out = Channels.newChannel(output);
-        ByteBuffer buf = ByteBuffer.allocateDirect(64 * 1024);
-        while ((in.read(buf)) != -1) {
-            // prepare the buffer to be drained
+        try (ReadableByteChannel in = Channels.newChannel(input);
+            WritableByteChannel out = Channels.newChannel(output)) {
+            ByteBuffer buf = ByteBuffer.allocateDirect(PAGE_SIZE);
+            while ((in.read(buf)) != -1) {
+                // prepare the buffer to be drained
+                buf.flip();
+                // write to the channel, may block
+                out.write(buf);
+                // If partial transfer, shift remainder down
+                // If buffer is empty, same as doing clear()
+                buf.compact();
+            }
+            // EOF will leave buffer in fill state
             buf.flip();
-            // write to the channel, may block
-            out.write(buf);
-            // If partial transfer, shift remainder down
-            // If buffer is empty, same as doing clear()
-            buf.compact();
+            // make sure the buffer is fully drained.
+            while (buf.hasRemaining()) {
+                out.write(buf);
+            }
+            output.flush();
+        } finally {
+            close();
         }
-        // EOF will leave buffer in fill state
-        buf.flip();
-        // make sure the buffer is fully drained.
-        while (buf.hasRemaining()) {
-            out.write(buf);
-        }
-        output.flush();
     }
 
-    @Override
-    public void close() throws IOException {
+    private void close() throws IOException {
         if (input != null) {
             try {
                 input.close();

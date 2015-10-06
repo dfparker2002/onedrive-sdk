@@ -153,7 +153,7 @@ public class Synchronizer {
      * delta synchronizations.
      * 
      * @param deltaSynchronization boolean true for deltaSynchronization and
-     *            true for a full synchronization
+     *            false for a full synchronization
      * @throws ConfigurationException if deltaToken cannot be saved to
      *             configuration file
      */
@@ -171,7 +171,8 @@ public class Synchronizer {
     /**
      * On deltaSynchronization read the delta token from configuration
      * 
-     * @param deltaSynchronization boolean
+     * @param deltaSynchronization boolean true for deltaSynchronization and
+     *            false for a full synchronization
      * @return String deltaToken {@code null} for a full synchronization
      */
     private String getDeltaToken(boolean deltaSynchronization) {

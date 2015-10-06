@@ -15,7 +15,6 @@
  */
 package io.yucca.microsoft.onedrive.io;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,6 +24,10 @@ import javax.ws.rs.core.StreamingOutput;
 /**
  * InputStreamingOutput, streams the content from the InputStream to
  * OutputStream without loading complete content in RAM.
+ * <p>
+ * Autocloseable is not yet implemented because this is only supported from
+ * JAX-RS 2.1 and upwards. Jersey 2.2x currently uses JAX-RS 2.0.x.
+ * </p>
  * 
  * <pre>
  * TODO create a FileInputStreamOutput based on, because InputStream does not support length.
@@ -36,7 +39,7 @@ import javax.ws.rs.core.StreamingOutput;
  * 
  * @author yucca.io
  */
-public class InputStreamingOutput implements StreamingOutput, Closeable {
+public class InputStreamingOutput implements StreamingOutput {
 
     private final InputStream input;
 
@@ -51,7 +54,7 @@ public class InputStreamingOutput implements StreamingOutput, Closeable {
 
     /**
      * Streams the content from the InputStream, so complete content is not
-     * loaded into RAM. The stream is flushed every 64KB. The InputStream is
+     * loaded into RAM. The stream is flushed every 4KB. The InputStream is
      * closed after writing, the OutputStream must be closed by the caller
      * <p>
      * bucket based on http://www.javapractices.com/topic/TopicAction.do?Id=246
@@ -62,18 +65,21 @@ public class InputStreamingOutput implements StreamingOutput, Closeable {
      */
     @Override
     public void write(OutputStream output) throws IOException {
-        // buffer size set to 64KB
-        byte[] bucket = new byte[64 * 1024];
-        int bytesRead = 0;
-        while ((bytesRead = input.read(bucket)) != -1) {
-            output.write(bucket, 0, bytesRead);
+        try {
+            // buffer size set to 4KB
+            byte[] bucket = new byte[4 * 1024];
+            int bytesRead = 0;
+            while ((bytesRead = input.read(bucket)) != -1) {
+                output.write(bucket, 0, bytesRead);
+                output.flush();
+            }
             output.flush();
+        } finally {
+            close();
         }
-        output.flush();
     }
 
-    @Override
-    public void close() throws IOException {
+    private void close() throws IOException {
         if (input != null) {
             try {
                 input.close();
