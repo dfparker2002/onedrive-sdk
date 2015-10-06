@@ -114,7 +114,7 @@ public class OneDriveFile implements OneDriveContent {
 
     @Override
     public boolean isLarger(long length) throws IOException {
-        return (getLength() > length);
+        return getLength() > length;
     }
 
     @Override

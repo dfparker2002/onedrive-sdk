@@ -80,7 +80,7 @@ public class OneDriveInputStream implements OneDriveContent {
 
     @Override
     public boolean isLarger(long length) {
-        return (this.length > length);
+        return this.length > length;
     }
 
     /**
