@@ -29,6 +29,9 @@ import java.util.Map;
  */
 public final class URLHelper {
 
+    private URLHelper() {
+    }
+
     /**
      * Extract query parameters from an URL
      * 
