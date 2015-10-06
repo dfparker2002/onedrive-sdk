@@ -19,7 +19,7 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-
+sonar-project.properties
 *.class
 
 # Package Files
