@@ -15,14 +15,18 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * OneDriveError
+ * OneDriveErr@SuppressWarnings("serial") or
  *
  * @author yucca.io
  */
-public class OneDriveError {
+public class OneDriveError implements Serializable {
+
+    private static final long serialVersionUID = -4528423068974979524L;
 
     private InnerError error;
 
