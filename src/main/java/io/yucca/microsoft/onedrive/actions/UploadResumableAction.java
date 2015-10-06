@@ -166,7 +166,7 @@ public class UploadResumableAction extends AbstractAction
         } catch (IOException e) {
             throw new OneDriveException("Failure uploading of file: "
                                         + content.getName()
-                                        + ", file does not exist");
+                                        + ", file does not exist", e);
         } catch (OneDriveResumableUploadException e) {
             cancelSession();
             throw new OneDriveException("Failure uploading of file: "
