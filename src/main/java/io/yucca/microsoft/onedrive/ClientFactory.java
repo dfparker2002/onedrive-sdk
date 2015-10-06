@@ -50,6 +50,9 @@ public final class ClientFactory {
     private static final Logger LOG = LoggerFactory
         .getLogger(ClientFactory.class);
 
+    private ClientFactory() {
+    }
+
     /**
      * Create a pooled Jersey client
      * 
