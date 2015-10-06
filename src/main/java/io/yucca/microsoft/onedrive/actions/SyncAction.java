@@ -101,6 +101,7 @@ public class SyncAction extends AbstractAction
      * be used to synchronise a local copy of the drive.
      * <p>
      * TODO Handle HTTP 410 Gone error
+     * https://github.com/robses/onedrive-sdk/issues/11
      * </p>
      * 
      * @return SyncResponse
