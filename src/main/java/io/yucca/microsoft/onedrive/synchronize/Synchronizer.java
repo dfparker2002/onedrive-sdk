@@ -178,6 +178,8 @@ public class Synchronizer {
     private String getDeltaToken(boolean deltaSynchronization) {
         String deltaToken = null;
         if (deltaSynchronization) {
+            LOG.info("Loading delta token from configuration: {}",
+                     configuration.getConfigurationFile());
             deltaToken = configuration.getDeltaToken();
         }
         return deltaToken;
@@ -215,7 +217,11 @@ public class Synchronizer {
     private void walkTree(Map<String, Item> deltaMap,
                           boolean deltaSynchronization) {
         try {
+            LOG.info("Started a {} synchronization of OneDrive: {} with LocalDrive: {}",
+                     syncMethod(deltaSynchronization));
             initializeRootFolder();
+            LOG.info("Walking the LocalDrive: {}, enumerate files and folders used for synchronization",
+                     localFolder.getPath());
             LocalFileVisitor visitor = new LocalFileVisitor(this);
             Files.walkFileTree(localFolder.getPath(),
                                new HashSet<FileVisitOption>(),
@@ -224,6 +230,8 @@ public class Synchronizer {
             processLocalAdditions();
             processChanges(deltaMap);
             writeLocalDriveState();
+            LOG.info("Succesfully synchronized OneDrive: {} with LocalDrive: {} and vise-versa",
+                     remoteDrive, localDrive);
         } catch (IOException e) {
             throw new OneDriveException("Failure synchronizing OneDrive: "
                                         + remoteDrive + " with LocalDrive: "
@@ -240,6 +248,8 @@ public class Synchronizer {
     }
 
     private void initializeRootFolder() throws IOException {
+        LOG.info("Initializing the root of LocalDrive: {}",
+                 localDrive.getName());
         registerFolder(localDrive);
     }
 
@@ -251,12 +261,16 @@ public class Synchronizer {
      * @param deltaMap Map<String, Item> delta changes acquired from OneDrive
      */
     private void processChanges(Map<String, Item> deltaMap) {
+        LOG.info("Processing enumerated changes from OneDrive: {} with LocalDrive: {}",
+                 remoteDrive, localDrive);
         Iterator<Item> it = deltaMap.values().iterator();
         while (it.hasNext()) {
             Item updated = it.next();
             try {
                 LocalItem local = items.get(updated.getId());
                 if (local != null) {
+                    LOG.info("Item: {}, id: {} is on the delta list will be synchronized",
+                             local.getPath(), local.getId());
                     if (updated.isDeleted()) {
                         deleteLocaly(local, updated);
                         break;
@@ -271,8 +285,6 @@ public class Synchronizer {
                         updateLocaly(local, updated);
                         break;
                     }
-                    LOG.debug("Item: {}, id: {} was on the delta list and is synchronized",
-                              local.getPath(), local.getId());
                 } else {
                     addLocaly(updated);
                 }
@@ -299,19 +311,23 @@ public class Synchronizer {
         if (deltaSynchronization == false) {
             return;
         }
+        LOG.info("Processing deletions in LocalDrive: {} with OneDrive: {}",
+                 localDrive, remoteDrive);
         for (LocalItem local : savedState) {
             try {
                 if (items.containsKey(local.getId()) == false) {
+                    LOG.info("Item: {}, id: {}, was deleted localy, deleting item from OneDrive",
+                             local.getPath(), local.getId());
                     new DeleteAction(api, new IdAddress(local.getId())).call();
                     // remove deleted item from delta list to prevent a possible
                     // re-creation of the item
                     deltaMap.remove(local.getId());
-                    LOG.debug("Item: {}, name: {} was deleted localy and deleted from OneDrive",
-                              local.getId(), local.getName());
+                    LOG.info("Deleted item: {}, id: {} from OneDrive",
+                             local.getPath(), local.getId());
                 }
             } catch (OneDriveException e) {
-                LOG.error("Failure deleting OneDrive item triggered by local deletion of item: {}, name: {}, skipped!",
-                          local.getId(), local.getName(), e);
+                LOG.error("Failure deleting OneDrive item triggered by local deletion of item: {}, path: {}, skipped!",
+                          local.getId(), local.getPath(), e);
             }
         }
     }
@@ -321,10 +337,14 @@ public class Synchronizer {
      * OneDrive
      */
     private void processLocalAdditions() {
+        LOG.info("Processing additions in LocalDrive: {} with OneDrive: {}",
+                 localDrive, remoteDrive);
         for (LocalItem local : additions) {
             try {
                 Item uploaded = null;
                 LocalResource parent = getParentResource(local.getParentId());
+                LOG.info("Item: {} was added localy, adding item to OneDrive",
+                         local.getPath());
                 if (ResourceType.FILE.equals(local.type())) {
                     ItemAddress parentAddress = new IdAddress(parent.getId());
                     UploadAction action = new UploadAction(api,
@@ -341,10 +361,10 @@ public class Synchronizer {
                 }
                 local.update(uploaded, null, parent);
                 registerItem(local);
-                LOG.debug("Item: {} was added localy and is added to OneDrive under id: {}",
-                          local.getPath(), local.getId());
+                LOG.info("Added item: {} to OneDrive under id: {}",
+                         local.getPath(), local.getId());
             } catch (IOException | OneDriveException e) {
-                LOG.error("Failure creating OneDrive item triggered by local addition of item: {}, name: {}, skipped!",
+                LOG.error("Failure creating OneDrive item triggered by local addition of item: {}, path: {}, skipped!",
                           local.getId(), local.getPath(), e);
             }
         }
@@ -352,6 +372,8 @@ public class Synchronizer {
 
     private void updateOneDrive(LocalItem local, Item item) {
         try {
+            LOG.info("Item: {}, id: {} was modified localy, modifying item in OneDrive",
+                     local.getPath(), local.getId());
             if (ResourceType.FILE.equals(local.type())
                 && local.isContentModified(item)) {
                 ItemAddress parentAddress = new IdAddress(local.getParentId());
@@ -367,12 +389,12 @@ public class Synchronizer {
             }
             local.updateItem(item);
             new UpdateAction(api, item).call();
-            LOG.debug("Item: {}, id: {} was modified localy and is modified in OneDrive",
-                      local.getPath(), local.getId());
+            LOG.info("Updated item: {}, id: {} in OneDrive", local.getPath(),
+                     local.getId());
         } catch (IOException | OneDriveException e) {
-            LOG.error("Failure updating OneDrive item: {} trigger by local modification of item: {}, name: {}, skipped!",
-                      new Object[] { item.getId(), local.getId(),
-                                     local.getPath() },
+            LOG.error("Failure updating OneDrive item: {} trigger by local modification of item: {}, id: {}, skipped!",
+                      new Object[] { item.getId(), local.getPath(),
+                                     local.getId() },
                       e);
         }
     }
@@ -389,6 +411,8 @@ public class Synchronizer {
             if (updated.isDeleted()) {
                 return;
             }
+            LOG.info("Item: {}, id: {} was added in OneDrive, adding item to LocalDrive",
+                     updated.getName(), updated.getId());
             OneDriveContent content = null;
             if (updated.isFile()) {
                 ItemAddress address = new IdAddress(updated.getId());
@@ -404,16 +428,18 @@ public class Synchronizer {
             // registered localy created item, otherwise it is not in
             // the saved state of the LocalDrive
             registerItem(local);
-            LOG.debug("Added local item: {}, id: {}", local.getPath(),
-                      local.getId());
+            LOG.info("Added item: {}, id: {} to LocalDrive", local.getPath(),
+                     local.getId());
         } catch (IOException | OneDriveException e) {
-            LOG.error("Failure adding local item trigger by OneDrive addition of item: {}, name: {}, skipped!",
-                      updated.getId(), updated.getName(), e);
+            LOG.error("Failure adding local item trigger by OneDrive addition of item: {}, id: {}, skipped!",
+                      updated.getName(), updated.getId(), e);
         }
     }
 
     private void updateLocaly(LocalItem local, Item updated) {
         try {
+            LOG.info("Item: {}, id: {} was modified in OneDrive, modifying item in LocalDrive",
+                     updated.getName(), updated.getId());
             OneDriveContent content = null;
             if (ResourceType.FILE.equals(local.type())
                 && local.isContentModified(updated)) {
@@ -422,12 +448,12 @@ public class Synchronizer {
             }
             LocalResource parent = getParentResource(local.getParentId());
             local.update(updated, content, parent);
-            LOG.debug("Updated local item: {}, id: {}", local.getPath(),
-                      local.getId());
+            LOG.info("Updated item: {}, id: {} to LocalDrive", local.getPath(),
+                     local.getId());
         } catch (IOException | OneDriveException e) {
-            LOG.error("Failure updating Local item: {} from OneDrive modification of item: {}, name: {}, skipped!",
-                      new Object[] { local.getPath(), updated.getId(),
-                                     updated.getName() },
+            LOG.error("Failure updating local item: {} from OneDrive modification of item: {}, id: {}, skipped!",
+                      new Object[] { local.getPath(), updated.getName(),
+                                     updated.getId() },
                       e);
         }
     }
@@ -435,14 +461,16 @@ public class Synchronizer {
     private void deleteLocaly(LocalItem local, Item updated)
         throws IOException {
         try {
+            LOG.info("Item: {}, id: {} was deleted in OneDrive, deleting item in LocalDrive",
+                     updated.getName(), updated.getId());
             local.delete();
             deregisterItem(local);
-            LOG.debug("Deleted local item: {}, id: {}", local.getPath(),
-                      local.getId());
+            LOG.info("Deleted item: {}, id: {} in LocalDrive", local.getPath(),
+                     local.getId());
         } catch (IOException e) {
-            LOG.error("Failure deleting local item: {} triggered by OneDrive deletion of item: {}, name: {}, skipped!",
-                      new Object[] { local.getPath(), updated.getId(),
-                                     updated.getName() },
+            LOG.error("Failure deleting local item: {} triggered by OneDrive deletion of item: {}, id: {}, skipped!",
+                      new Object[] { local.getPath(), updated.getName(),
+                                     updated.getId(), },
                       e);
         }
     }
@@ -465,6 +493,8 @@ public class Synchronizer {
 
     private void saveDeltaToken(String deltaToken) {
         try {
+            LOG.info("Saving delta token in configuration: {}",
+                     configuration.getConfigurationFile());
             configuration.setDeltaToken(deltaToken);
             ConfigurationUtil.save(configuration);
         } catch (ConfigurationException e) {
@@ -495,6 +525,7 @@ public class Synchronizer {
             savedState = new LinkedList<>();
             return false;
         }
+        LOG.info("Reading LocalDrive state from file: {}", savedStatePath);
         try (InputStream fis = Files.newInputStream(savedStatePath,
                                                     StandardOpenOption.READ)) {
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -512,6 +543,7 @@ public class Synchronizer {
      * @throws OneDriveException of state cannot be serialized
      */
     private void writeLocalDriveState() {
+        LOG.info("Writing LocalDrive state to file: {}", localDriveStateFile());
         savedState.clear();
         savedState.addAll(items.values());
         try (
@@ -593,6 +625,16 @@ public class Synchronizer {
      */
     void registerFolder(LocalResource folder) {
         folders.put(folder.getId(), folder);
+    }
+
+    /**
+     * Get synchronization method
+     * 
+     * @param deltaSynchronization boolean
+     * @return String
+     */
+    private String syncMethod(boolean deltaSynchronization) {
+        return (deltaSynchronization == true) ? "delta" : "full";
     }
 
     /**
