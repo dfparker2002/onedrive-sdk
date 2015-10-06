@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reading and writing of the configuration properties.
@@ -27,6 +29,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  * @author yucca.io
  */
 public class ConfigurationUtil {
+
+    private static final Logger LOG = LoggerFactory
+        .getLogger(ConfigurationUtil.class);
 
     public static final String CLIENT_ID = "clientId";
 
@@ -56,6 +61,7 @@ public class ConfigurationUtil {
      */
     public static OneDriveConfiguration read(String configurationFile)
         throws FileNotFoundException, ConfigurationException {
+        LOG.info("Reading configuration from file:", configurationFile);
         File file = new File(configurationFile);
         if (file.exists() == false) {
             throw new FileNotFoundException("Failure reading configuration, file: "
@@ -127,6 +133,8 @@ public class ConfigurationUtil {
      */
     public static void save(OneDriveConfiguration configuration)
         throws ConfigurationException {
+        LOG.info("Saved configuration to file:",
+                 configuration.getConfigurationFile());
         setProperties(configuration);
         // XXX is this correct?
         config.setBasePath(".");

@@ -21,6 +21,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
@@ -37,6 +40,8 @@ import io.yucca.microsoft.onedrive.util.URLHelper;
  */
 public class SearchAction extends AbstractAction
     implements Callable<ItemIterable> {
+
+    private final Logger LOG = LoggerFactory.getLogger(SearchAction.class);
 
     public static final String ACTION = "view.search";
 
@@ -111,6 +116,8 @@ public class SearchAction extends AbstractAction
      */
     private ItemIterable search() {
         String address = parentAddress.getAddress();
+        LOG.info("Searching for items in folder: {} matching query: {}, with query parameter: {}",
+                 address, query, parameters);
         WebTarget target = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)

@@ -20,6 +20,9 @@ import java.util.concurrent.Callable;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
@@ -33,6 +36,8 @@ import io.yucca.microsoft.onedrive.resources.ThumbnailSet;
  */
 public class ThumbnailsAction extends AbstractAction
     implements Callable<ThumbnailSet> {
+
+    private final Logger LOG = LoggerFactory.getLogger(ThumbnailsAction.class);
 
     public static final String ACTION = "thumbnails";
 
@@ -67,6 +72,7 @@ public class ThumbnailsAction extends AbstractAction
      */
     private ThumbnailSet thumbnails() {
         String address = itemAddress.getAddress();
+        LOG.info("Getting thumbsnails for item: {}", address);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)

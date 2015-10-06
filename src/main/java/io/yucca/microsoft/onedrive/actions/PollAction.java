@@ -37,11 +37,9 @@ import io.yucca.microsoft.onedrive.resources.Item;
  * 
  * @author yucca.io
  */
-public class PollAction extends AbstractAction
-    implements Callable<Item> {
+public class PollAction extends AbstractAction implements Callable<Item> {
 
-    private static final Logger LOG = LoggerFactory
-        .getLogger(PollAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PollAction.class);
 
     public static final int POLLING_INTERVAL = 2;
 
@@ -61,7 +59,7 @@ public class PollAction extends AbstractAction
      * @param action String asynchronous job name
      */
     public PollAction(OneDriveAPIConnection api, URI location,
-                                   ItemAddress itemAddress, String action) {
+                      ItemAddress itemAddress, String action) {
         super(api);
         this.location = location;
         this.itemAddress = itemAddress;
@@ -91,6 +89,8 @@ public class PollAction extends AbstractAction
     private Item pollForCompletion(URI uri, ItemAddress itemAddress,
                                    String action, long duration,
                                    TimeUnit unit) {
+        LOG.info("Polling completing of action: {} for item: {} ", action,
+                 itemAddress.getAddress());
         int errorcount = 5;
         while (true) {
             Response response = api.webTarget(uri).request().get();

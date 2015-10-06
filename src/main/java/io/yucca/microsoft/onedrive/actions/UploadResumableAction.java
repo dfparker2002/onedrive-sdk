@@ -158,6 +158,8 @@ public class UploadResumableAction extends AbstractAction
      * @return Item uploaded content
      */
     public Item upload() {
+        LOG.info("Uploading file: {} using resumable method into folder: {}",
+                 content.getName(), parentAddress.getAddress());
         createSession();
         try {
             return uploadFragments();
@@ -177,6 +179,8 @@ public class UploadResumableAction extends AbstractAction
      * Create an resumable upload session
      */
     public void createSession() {
+        LOG.info("Creating session for uploading file: {} into folder: {}",
+                 content.getName(), parentAddress.getAddress());
         Map<String, Object> map = newCreateSessionBody(content, behavior);
         String address = parentAddress.getAddress();
         Response response = createUploadTarget(address, content.getName())
@@ -240,18 +244,18 @@ public class UploadResumableAction extends AbstractAction
                 ranges.remove(range);
                 waitStrategy.reset();
                 unknownFailureCount = 0;
-                LOG.debug("Successfully uploaded file fragment {}, for: {}",
-                          range.getContentRangeHeader(), content.getName());
+                LOG.info("Successfully uploaded file fragment {}, for: {}",
+                         range.getContentRangeHeader(), content.getName());
             } else if (equalsStatus(response, Status.OK)
                        || equalsStatus(response, Status.CREATED)) {
-                LOG.debug("Successfully uploaded all file fragments for: {}",
-                          content.getName());
+                LOG.info("Successfully uploaded all file fragments for: {}",
+                         content.getName());
                 return response.readEntity(Item.class);
             } else if (equalsStatus(response,
                                     Status.REQUESTED_RANGE_NOT_SATISFIABLE)) {
                 ranges.remove(range);
-                LOG.debug("Fragment: {} is already uploaded, skipping this fragment",
-                          range.getContentRangeHeader());
+                LOG.info("Fragment: {} is already uploaded, skipping this fragment",
+                         range.getContentRangeHeader());
                 // could request UploadStatus and get expected range and upload
                 // that, if this not exists fail completely
             } else if (equalsStatus(response, Status.CONFLICT)) {
@@ -278,10 +282,10 @@ public class UploadResumableAction extends AbstractAction
             } else {
                 unknownFailureCount++;
                 waitStrategy.sleep();
-                LOG.debug("Unknown failure: {} while uploading fragment: {} for file: {}",
-                          new Object[] { response.getStatus(),
-                                         range.getContentRangeHeader(),
-                                         content.getName() });
+                LOG.info("Unknown failure: {} while uploading fragment: {} for file: {}",
+                         new Object[] { response.getStatus(),
+                                        range.getContentRangeHeader(),
+                                        content.getName() });
                 if (unknownFailureCount > unknownFailureThreshold) {
                     throw new OneDriveResumableUploadException(formatError(response
                         .getStatus(), "Too many unknown failures while trying to upload file: "
@@ -297,6 +301,8 @@ public class UploadResumableAction extends AbstractAction
      * Cancel the upload session
      */
     public void cancelSession() {
+        LOG.info("Cancelling session for uploading file: {} into folder: {}",
+                 content.getName(), parentAddress.getAddress());
         Response response = api.getClient().target(session.getUploadUrl())
             .request().delete();
         handleError(response, Status.NO_CONTENT,

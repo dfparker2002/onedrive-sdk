@@ -22,6 +22,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -35,6 +37,8 @@ import io.yucca.microsoft.onedrive.resources.Item;
  * @author yucca.io
  */
 public class UpdateAction extends AbstractAction implements Callable<Item> {
+
+    private final Logger LOG = LoggerFactory.getLogger(UpdateAction.class);
 
     private final Item item;
 
@@ -96,7 +100,9 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
         if (item.getParentReference() != null) {
             item.setParentReference(null);
         }
-        Response response = api.webTarget().path(itemAddress.getPathWithAddress())
+        LOG.info("Updating item: {}", itemAddress.getAddress());
+        Response response = api.webTarget()
+            .path(itemAddress.getPathWithAddress())
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request().header(HEADER_IF_MATCH, createEtag(eTag))

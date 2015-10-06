@@ -22,6 +22,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -36,6 +39,8 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  * @author yucca.io
  */
 public class MetadataAction extends AbstractAction implements Callable<Item> {
+    
+    private final Logger LOG = LoggerFactory.getLogger(MetadataAction.class);
 
     private final ItemAddress itemAddress;
 
@@ -109,6 +114,7 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
      */
     private Item metadata() throws NotModifiedException {
         String address = itemAddress.getAddress();
+        LOG.info("Get metadata for item: {}",address);
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress())
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address);

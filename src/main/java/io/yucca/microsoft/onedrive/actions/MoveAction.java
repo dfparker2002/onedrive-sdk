@@ -23,6 +23,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -36,6 +38,8 @@ import io.yucca.microsoft.onedrive.resources.Item;
  * @author yucca.io
  */
 public class MoveAction extends AbstractAction implements Callable<Item> {
+
+    private final Logger LOG = LoggerFactory.getLogger(MoveAction.class);
 
     private final ItemAddress itemAddress;
 
@@ -99,9 +103,12 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
      */
     private Item move() {
         String address = itemAddress.getAddress();
+        LOG.info("Moving item: {} to folder: {}", address,
+                 parentAddress.absolutePath());
         Map<String, Object> map = newParentRefBody(name, parentAddress
             .getItemReference());
-        Response response = api.webTarget().path(itemAddress.getPathWithAddress())
+        Response response = api.webTarget()
+            .path(itemAddress.getPathWithAddress())
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
             .request()
             // https://stackoverflow.com/questions/22355235/patch-request-using-jersey-client

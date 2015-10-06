@@ -23,6 +23,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -40,6 +43,8 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  * @author yucca.io
  */
 public class UploadAction extends AbstractAction implements Callable<Item> {
+
+    private final Logger LOG = LoggerFactory.getLogger(UploadAction.class);
 
     public static final String ACTION = "content";
 
@@ -94,7 +99,8 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
         String address = parentAddress.getAddress();
         String conflictBehavior = (behavior == null)
             ? null : behavior.getName();
-
+        LOG.info("Uploading file: {} into folder: {}", content.getName(),
+                 address);
         String path = parentAddress.getPathWithAddressAndFilename(ACTION);
         Status[] successCodes = { Status.CREATED, Status.OK };
         Response response = api.webTarget().path(path)

@@ -22,6 +22,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -36,6 +39,8 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  */
 public class DownloadAction extends AbstractAction
     implements Callable<OneDriveContent> {
+
+    private final Logger LOG = LoggerFactory.getLogger(DownloadAction.class);
 
     public static final String ACTION = "content";
 
@@ -99,6 +104,7 @@ public class DownloadAction extends AbstractAction
      */
     private OneDriveContent download() {
         String address = itemAddress.getAddress();
+        LOG.info("Downloading item: {}", address);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)

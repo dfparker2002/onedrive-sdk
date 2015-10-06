@@ -20,6 +20,9 @@ import java.util.concurrent.Callable;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
@@ -35,6 +38,8 @@ import io.yucca.microsoft.onedrive.resources.SyncResponse;
  */
 public class SyncAction extends AbstractAction
     implements Callable<SyncResponse> {
+
+    private final Logger LOG = LoggerFactory.getLogger(SyncAction.class);
 
     public static final String ACTION = "view.delta";
 
@@ -101,6 +106,8 @@ public class SyncAction extends AbstractAction
      * @return SyncResponse
      */
     private SyncResponse sync() {
+        LOG.info("Enumerate the synchronization changes for folder: {}",
+                 parentAddress.absolutePath());
         String address = parentAddress.getAddress();
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))

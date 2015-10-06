@@ -22,6 +22,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.resources.Drive;
@@ -32,6 +35,8 @@ import io.yucca.microsoft.onedrive.resources.Drive;
  * @author yucca.io
  */
 public class DriveAction extends AbstractAction implements Callable<Drive> {
+
+    private final Logger LOG = LoggerFactory.getLogger(DriveAction.class);
 
     private final String driveId;
 
@@ -74,6 +79,7 @@ public class DriveAction extends AbstractAction implements Callable<Drive> {
     public Drive drive() {
         String path = (driveId == null) ? "/drive" : "/drives/{drive-id}";
         String name = (driveId == null) ? "default" : driveId;
+        LOG.info("Getting information for Drive: {}", path);
         WebTarget target = api.webTarget().path(path);
         if (driveId != null) {
             target = target.resolveTemplateFromEncoded("drive-id", driveId);

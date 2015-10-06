@@ -24,6 +24,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -38,6 +41,9 @@ import io.yucca.microsoft.onedrive.facets.FileFacet;
  */
 public class UploadFromURLAction extends AbstractAction
     implements Callable<URI> {
+
+    private final Logger LOG = LoggerFactory
+        .getLogger(UploadFromURLAction.class);
 
     public static final String ACTION = "children";
 
@@ -78,8 +84,9 @@ public class UploadFromURLAction extends AbstractAction
 
     private URI upload() {
         String address = parentAddress.getAddress();
+        LOG.info("Uploading content from URL: {} into folder: {}",
+                 url.toString(), address);
         Map<String, Object> map = newUploadURLBody(url, name);
-
         Status successCodes = Status.ACCEPTED;
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))

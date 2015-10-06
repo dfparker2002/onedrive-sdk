@@ -25,6 +25,8 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -45,6 +47,9 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
  */
 public final class ClientFactory {
 
+    private static final Logger LOG = LoggerFactory
+        .getLogger(ClientFactory.class);
+
     /**
      * Create a pooled Jersey client
      * 
@@ -64,14 +69,19 @@ public final class ClientFactory {
                               configuration.getReadTimeout());
         clientConfig.property(ClientProperties.CONNECT_TIMEOUT,
                               configuration.getConnectionTimeout());
+        LOG.debug("Client timeout values set, connection timeout: {}, read timeout: {}",
+                  configuration.getConnectionTimeout(),
+                  configuration.getReadTimeout());
 
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setMaxTotal(100);
         connectionManager.setDefaultMaxPerRoute(20);
+        LOG.debug("Client pooling values set, maximum: {}, per-route: {}", 100,
+                  20);
 
         /**
-         * Allow restricted headers to be set. Prevents a warning in 
-         * {@link UploadResumableAction} which specifies Content-Length 
+         * Allow restricted headers to be set. Prevents a warning in
+         * {@link UploadResumableAction} which specifies Content-Length
          * {@link https://jersey.java.net/documentation/latest/client.html#d0e4832}
          */
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");

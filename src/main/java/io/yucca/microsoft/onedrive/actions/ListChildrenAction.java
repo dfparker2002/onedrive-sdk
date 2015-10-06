@@ -23,6 +23,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -40,6 +43,8 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  */
 public class ListChildrenAction extends AbstractAction
     implements Callable<ItemIterable> {
+
+    private final Logger LOG = LoggerFactory.getLogger(DriveAction.class);
 
     public static final String ACTION = "children";
 
@@ -123,6 +128,8 @@ public class ListChildrenAction extends AbstractAction
      */
     public ItemIterable listChildren() {
         String address = itemAddress.getAddress();
+        LOG.info("Listing children in folder: {} with queryparameters: {}",
+                 address, parameters);
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address);

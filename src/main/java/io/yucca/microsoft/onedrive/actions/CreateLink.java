@@ -22,6 +22,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
@@ -35,6 +38,8 @@ import io.yucca.microsoft.onedrive.resources.LinkType;
  */
 public class CreateLink extends AbstractAction
     implements Callable<PermissionFacet> {
+
+    private final Logger LOG = LoggerFactory.getLogger(CreateLink.class);
 
     public static final String ACTION = "action.createLink";
 
@@ -75,6 +80,8 @@ public class CreateLink extends AbstractAction
     private PermissionFacet createLink() {
         String address = itemAddress.getAddress();
         LinkType linkType = (type == null) ? LinkType.VIEW : type;
+        LOG.info("Creating link to item: {} of type: {}", address,
+                 linkType.name());
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)

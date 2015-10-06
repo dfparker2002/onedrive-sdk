@@ -23,6 +23,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
@@ -34,6 +37,8 @@ import io.yucca.microsoft.onedrive.addressing.PathAddress;
  * @author yucca.io
  */
 public class CopyAction extends AbstractAction implements Callable<URI> {
+
+    private final Logger LOG = LoggerFactory.getLogger(CopyAction.class);
 
     public static final String ACTION = "action.copy";
 
@@ -96,6 +101,8 @@ public class CopyAction extends AbstractAction implements Callable<URI> {
      */
     private URI copy() {
         String address = itemAddress.getAddress();
+        LOG.info("Copying item: {} to folder: {}", address,
+                 parentAddress.absolutePath());
         Map<String, Object> map = newParentRefBody(name, parentAddress
             .getItemReference());
         Response response = api.webTarget()

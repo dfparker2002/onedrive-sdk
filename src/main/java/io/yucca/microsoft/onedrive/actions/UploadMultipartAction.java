@@ -27,6 +27,8 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
@@ -45,6 +47,9 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class UploadMultipartAction extends AbstractAction
     implements Callable<Item> {
+
+    private final Logger LOG = LoggerFactory
+        .getLogger(UploadMultipartAction.class);
 
     public static final String ACTION = "children";
 
@@ -93,6 +98,8 @@ public class UploadMultipartAction extends AbstractAction
      */
     private Item upload() {
         String address = parentAddress.getAddress();
+        LOG.info("Uploading file: {} using multipart method into folder: {}",
+                 content.getName(), address);
         // TODO add check for file above 100MB
         MultiPart multipart = createMultipart(content, behavior);
         Status[] successCodes = { Status.CREATED };

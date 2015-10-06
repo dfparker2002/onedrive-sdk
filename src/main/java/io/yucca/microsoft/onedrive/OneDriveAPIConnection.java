@@ -64,14 +64,17 @@ public class OneDriveAPIConnection {
      */
     public OneDriveAPIConnection(OneDriveConfiguration configuration)
         throws FileNotFoundException, ConfigurationException {
+        LOG.info("Creating connection to OneDrive: {}", ONEDRIVE_URL);
         this.configuration = configuration;
         initialiseClient();
+        LOG.info("Successfully established connection to OneDrive");
     }
 
     /**
      * Initialize Jersey Client
      */
     private void initialiseClient() {
+        LOG.info("Initializing Jersey client");
         JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
         this.mapper = ClientFactory.createMapper(configuration,
                                                  jacksonProvider);

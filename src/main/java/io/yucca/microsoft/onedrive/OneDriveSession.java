@@ -52,6 +52,18 @@ public class OneDriveSession {
 
     private static Logger LOG = LoggerFactory.getLogger(OneDriveSession.class);
 
+    public static final String CLIENT_ID = "client_id";
+
+    public static final String CLIENT_SECRET = "client_secret";
+
+    public static final String REDIRECT_URI = "redirect_uri";
+
+    public static final String CODE = "code";
+
+    public static final String REFRESH_TOKEN = "refresh_token";
+
+    public static final String STATE = "state";
+
     /**
      * The login authentication URI
      */
@@ -109,6 +121,7 @@ public class OneDriveSession {
      * @param client Client client in working with the OneDriveAPI
      */
     public OneDriveSession(OneDriveConfiguration configuration, Client client) {
+        LOG.info("Initializing OneDrive session");
         this.configuration = configuration;
         this.client = client;
         this.clientId = configuration.getClientId();
@@ -121,19 +134,13 @@ public class OneDriveSession {
     }
 
     /**
-     * Initialise TokenResult with refresh_token
+     * Initialize the OAuth2 flow
      * 
-     * @param refreshToken String
+     * @param client
      */
-    private void initTokenResult(String refreshToken) {
-        if (refreshToken != null && !refreshToken.isEmpty()) {
-            Map<String, Object> props = new LinkedHashMap<>();
-            props.put("refresh_token", refreshToken);
-            this.accessToken = new TokenResult(props);
-        }
-    }
-
     private void initFlow(Client client) {
+        LOG.info("Initializing authorizing flow to the OneDrive API: {}",
+                 ONEDRIVE_OAUTH20_AUTH_URI);
         if (flow == null) {
             this.flow = buildFlow(clientIdentifier, scope);
         }
@@ -146,6 +153,19 @@ public class OneDriveSession {
     }
 
     /**
+     * Initialise TokenResult with refresh_token
+     * 
+     * @param refreshToken String
+     */
+    private void initTokenResult(String refreshToken) {
+        if (refreshToken != null && !refreshToken.isEmpty()) {
+            Map<String, Object> props = new LinkedHashMap<>();
+            props.put(REFRESH_TOKEN, refreshToken);
+            this.accessToken = new TokenResult(props);
+        }
+    }
+
+    /**
      * Acquire state value from authorizationUri used in requesting an
      * accessToken
      * 
@@ -154,7 +174,7 @@ public class OneDriveSession {
     private void setFlowState(String authorizationUri) {
         try {
             this.state = URLHelper.splitQuery(new URL(authorizationUri))
-                .get("state");
+                .get(STATE);
         } catch (MalformedURLException e) {
             this.state = "";
         }
@@ -164,10 +184,12 @@ public class OneDriveSession {
      * Authorize and register the OAuth2 feature on the client
      */
     private void redeemAccessToken() {
+        LOG.info("Authorizing to OneDrive API and requesting an accessToken by url: {}",
+                 ONEDRIVE_OAUTH20_TOKEN_URI);
         this.accessToken = flow.finish(authorizationCode, state);
         this.lastRefresh = System.currentTimeMillis();
         saveConfiguration();
-        LOG.debug("Acquired new accessToken.");
+        LOG.debug("Acquired a new accessToken");
         LOG.debug("Authorization to OneDrive API succeeded");
     }
 
@@ -183,8 +205,7 @@ public class OneDriveSession {
     /**
      * Request an AccessToken or refresh if expired.
      * <p>
-     * XXX Explicitly package local for testing, create unit test for
-     * OneDriveOAuthHelper
+     * XXX Explicitly package local for testing, create unit test
      * </p>
      */
     void requestAccessToken() {
@@ -195,6 +216,7 @@ public class OneDriveSession {
                 refreshAccessToken();
             }
             this.client.register(flow.getOAuth2Feature());
+            LOG.debug("OAuth2 feauture registred on client");
         } else if (hasRefreshToken() && isTokenExpired()) {
             refreshAccessToken();
         }
@@ -204,6 +226,7 @@ public class OneDriveSession {
      * Refresh an AccessToken if expired
      */
     private void refreshAccessToken() {
+        LOG.debug("Refreshing accessToken");
         this.accessToken = flow
             .refreshAccessToken(accessToken.getRefreshToken());
         this.lastRefresh = System.currentTimeMillis();
@@ -224,7 +247,7 @@ public class OneDriveSession {
         }
         long now = System.currentTimeMillis();
         if ((now - lastRefresh) > (accessToken.getExpiresIn() * 1000)) {
-            LOG.debug("AccessToken has expired.");
+            LOG.info("AccessToken has expired.");
             return true;
         }
         return false;
@@ -261,13 +284,13 @@ public class OneDriveSession {
      * Logout from the OneDrive API and clear auth tokens
      */
     public void logOut() {
+        LOG.info("Logging out from OneDrive API");
         Response response = client.target(ONEDRIVE_OAUTH20_LOGOUT)
-            .resolveTemplate("client_id", clientId)
-            .resolveTemplate("redirect_uri", DEFAULT_REDIRECT_URI)
+            .resolveTemplate(CLIENT_ID, clientId)
+            .resolveTemplate(REDIRECT_URI, DEFAULT_REDIRECT_URI)
             .request(MediaType.TEXT_PLAIN_TYPE).get();
         if (response.getStatus() == 200) {
-            LOG.info("Succesfully logged out clientId: {} from OneDrive API.",
-                     clientId);
+            LOG.info("Succesfully logged from OneDrive API");
         } else {
             throw new OneDriveException("Failure logging out from OneDrive API: "
                                         + response.getStatusInfo()
@@ -332,7 +355,7 @@ public class OneDriveSession {
         try {
             Map<String, String> params = URLHelper
                 .splitQuery(new URL(tokenURL));
-            String code = params.get("code");
+            String code = params.get(CODE);
             if (code == null) {
                 throw new OneDriveException("The token URL does not contain an authorization code");
             }
