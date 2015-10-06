@@ -74,15 +74,13 @@ public class LocalDrive implements LocalResource {
     private void hasExtendedAttributesCapability() {
         try {
             MetadataUtil.readAttribute(path, ATTRIBUTE_ONEDRIVE_ITEMID);
-        } catch (UnsupportedOperationException e) {
-            throw new OneDriveException("The extended attributes capability is disabled for the filesystem, which is mandatory for "
-                                        + "the synchronization process to function, this depends on extended attributes to relate "
-                                        + "the local item with the corresponding OneDrive item by storing the Item id as extended "
-                                        + "attribute. Enable this on Linux by remounting the partition with user_xattr flag. "
-                                        + "For more information see https://docs.oracle.com/javase/tutorial/essential/io/fileAttr.html#user",
+        } catch (UnsupportedOperationException | IOException e) {
+            throw new OneDriveException("The extended attributes capability is disabled for the filesystem or cannot be determined."
+                                        + "This which is mandatory for the synchronization process to function, this depends on "
+                                        + "extended attributes to relate the local item with the corresponding OneDrive item by  "
+                                        + "storing the Item id as extended attribute. Enable this on Linux by remounting the partition "
+                                        + "with user_xattr flag. For more information see https://docs.oracle.com/javase/tutorial/essential/io/fileAttr.html#user",
                                         e);
-        } catch (IOException e) {
-            // do nothing
         }
     }
 
