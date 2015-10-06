@@ -251,6 +251,10 @@ public class Synchronizer {
         LOG.info("Initializing the root of LocalDrive: {}",
                  localDrive.getName());
         registerFolder(localDrive);
+        // TODO https://github.com/robses/onedrive-sdk/issues/10
+        // prevent accidental deletion of complete OneDrive if LocalDrive is not
+        // present. if root folder does not exist but state is available stop,
+        // probably localdrive is deleted
     }
 
     /**
