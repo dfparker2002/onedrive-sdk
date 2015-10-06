@@ -87,10 +87,10 @@ public class OneDriveSession {
     /**
      * Default authentication scopes
      */
-    public static final AuthenticationScope[] DEFAULT_SCOPE = { AuthenticationScope.WL_SIGNIN,
-                                                                AuthenticationScope.WL_OFFLINE_ACCESS,
-                                                                AuthenticationScope.ONEDRIVE_READWRITE,
-                                                                AuthenticationScope.ONEDRIVE_APPFOLDER };
+    private static final AuthenticationScope[] DEFAULT_SCOPE = { AuthenticationScope.WL_SIGNIN,
+                                                                 AuthenticationScope.WL_OFFLINE_ACCESS,
+                                                                 AuthenticationScope.ONEDRIVE_READWRITE,
+                                                                 AuthenticationScope.ONEDRIVE_APPFOLDER };
 
     private final String clientId;
 
