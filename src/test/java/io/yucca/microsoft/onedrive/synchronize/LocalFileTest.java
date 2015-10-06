@@ -52,7 +52,7 @@ public class LocalFileTest {
     public static final String ITEM_ID = "1D230B56A9E3686";
 
     public static final String ITEM_ROOTID = "1D230B56A9E3686A";
-    
+
     public static final String ITEM_PARENTID = "1D230B56A9E3686P";
 
     public static final String ITEM_NAME = "onedrivefile-1.pdf";
