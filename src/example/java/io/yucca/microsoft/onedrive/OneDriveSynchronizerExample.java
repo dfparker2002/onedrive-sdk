@@ -28,7 +28,8 @@ import io.yucca.microsoft.onedrive.synchronize.LocalDrive;
 import io.yucca.microsoft.onedrive.synchronize.Synchronizer;
 
 /**
- * Example in synchronizing an OneDrive through the OneDrive Java SDK
+ * Example in synchronizing an OneDrive to local filesystem and vise-versa
+ * through the OneDrive Java SDK
  *
  * @author yucca.io
  */
