@@ -4,6 +4,10 @@ This SDK allows for quick and easy usage of Microsoft OneDrive in Java
 applications. The [OneDrive RESTful API](https://dev.onedrive.com/index.htm) 
 is thereby used to access Microsoft OneDrive. 
 
+This SDK is still in development and only tested against OneDrive Personal 
+and not yet against OneDrive Business.
+
+
 ## Build
 
 To build the jar invoke:
@@ -58,7 +62,7 @@ is explained in [Creating a Configuration](#create-a-configuration-file)
 
 A connection to the OneDrive API is represented by an OneDriveAPIConnection 
 instance. In constructing this object the OneDrive, the configuration file 
-holding the various parameters for a User Drive or App Drive are passed.  
+holding the various parameters for a User Drive or App Drive is passed.  
 
 This connection instance is the startpoint in performing various actions on 
 the OneDrive API.
@@ -68,18 +72,17 @@ the OneDrive API.
    
 ### Getting Drive information
 
-To use a drive, first request an OneDrive instance, this can be the default 
-or specific drive identified by id.
+To use a drive, first request an OneDrive instance, the default:
 
     OneDrive drive = OneDrive.defaultDrive(api);
     System.out.println("Hello user: " + drive.getUser().getDisplayName());   
 
-or by drive identifier 
+ or a drive identified by id.
  
     OneDrive drive = OneDrive.byDriveId(api, "0123456789abc");
     System.out.println("Hello user: " + drive.getUser().getDisplayName());
     
-### Listing all folders in the Drive
+### Listing folders in a Drive
 
 Requesting all all folders in a drive is done as following.
  
@@ -91,6 +94,7 @@ Requesting all all folders in a drive is done as following.
     }    
 
 For more information see the examples in "src/examples/java or the documentation.
+
 
 ## Integration Testing
 
