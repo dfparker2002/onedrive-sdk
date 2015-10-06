@@ -44,13 +44,13 @@ public class ConfigurationBuilder {
 
     private final OneDriveConfiguration configuration;
 
+    public ConfigurationBuilder() {
+        this.configuration = new OneDriveConfiguration(CONFIGURATION_FILE);
+    }
+
     public static void main(String[] args) throws IOException {
         builder = new ConfigurationBuilder();
         builder.build(CONFIGURATION_FILE);
-    }
-
-    public ConfigurationBuilder() {
-        this.configuration = new OneDriveConfiguration(CONFIGURATION_FILE);
     }
 
     public void build(String configurationFile) throws IOException {
