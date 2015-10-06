@@ -28,10 +28,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author yucca.io
  */
-public class ConfigurationUtil {
+public final class ConfigurationUtil {
 
     private static final Logger LOG = LoggerFactory
         .getLogger(ConfigurationUtil.class);
+
+    private ConfigurationUtil() {
+    }
 
     public static final String CLIENT_ID = "clientId";
 
