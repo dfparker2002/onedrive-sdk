@@ -20,7 +20,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * OneDriveErr@SuppressWarnings("serial") or
+ * OneDriveError
  *
  * @author yucca.io
  */
