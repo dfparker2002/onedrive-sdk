@@ -73,8 +73,7 @@ public class ConfigurationBuilder {
             configuration.setClientSecret(br.readLine());
             ClientIdentifier id = new ClientIdentifier(configuration
                 .getClientId(), configuration.getClientSecret());
-            OAuth2CodeGrantFlow flow = OneDriveSession
-                .buildFlow(id, OneDriveSession.DEFAULT_SCOPE);
+            OAuth2CodeGrantFlow flow = OneDriveSession.buildFlow(id);
 
             LOG.info("3. Enter the following URL in a browser and accept the permissions question.");
             System.out.println(flow.start());
