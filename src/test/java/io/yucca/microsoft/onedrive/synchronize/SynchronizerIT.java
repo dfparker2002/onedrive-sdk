@@ -58,8 +58,7 @@ public class SynchronizerIT {
     }
 
     // @Test
-    public void testSynchronizeDrive()
-        throws IOException, ConfigurationException {
+    public void testSynchronizeDrive() throws IOException {
         OneDrive remoteDrive = OneDrive.defaultDrive(api);
         LocalDrive localDrive = new LocalDrive(tmpFolderPath,
                                                remoteDrive.getDrive());
@@ -77,8 +76,7 @@ public class SynchronizerIT {
      * @throws ConfigurationException
      */
     // @Test
-    public void testSynchronizeFolder()
-        throws IOException, ConfigurationException {
+    public void testSynchronizeFolder() throws IOException {
         OneDrive remoteDrive = OneDrive.defaultDrive(api);
         OneDriveFolder remoteFolder = remoteDrive
             .getSpecialFolder(SpecialFolder.DOCUMENTS, null);
