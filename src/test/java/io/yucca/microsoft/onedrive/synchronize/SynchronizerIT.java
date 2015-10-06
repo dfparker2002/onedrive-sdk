@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import org.apache.commons.configuration.ConfigurationException;
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.ConfigurationUtil;
