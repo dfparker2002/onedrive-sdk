@@ -104,12 +104,10 @@ public final class ClientFactory {
     /**
      * Create an ObjectMapper
      * 
-     * @param configuration OneDriveConfiguration
      * @param jacksonProvider JacksonJaxbJsonProvider
      * @return ObjectMapper
      */
-    public static ObjectMapper createMapper(OneDriveConfiguration configuration,
-                                            JacksonJaxbJsonProvider jacksonProvider) {
+    public static ObjectMapper createMapper(JacksonJaxbJsonProvider jacksonProvider) {
         ObjectMapper mapper = new ObjectMapper();
         // prevents inclusion of null values on serialization
         mapper.setSerializationInclusion(Include.NON_NULL);

@@ -76,8 +76,7 @@ public class OneDriveAPIConnection {
     private void initialiseClient() {
         LOG.info("Initializing Jersey client");
         JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
-        this.mapper = ClientFactory.createMapper(configuration,
-                                                 jacksonProvider);
+        this.mapper = ClientFactory.createMapper(jacksonProvider);
         this.client = ClientFactory.create(configuration, jacksonProvider);
         this.session = new OneDriveSession(configuration, client);
         if (configuration.isDebugLogging()) {
