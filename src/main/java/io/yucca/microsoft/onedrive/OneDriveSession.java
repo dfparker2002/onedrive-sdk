@@ -197,8 +197,7 @@ public class OneDriveSession {
         this.accessToken = flow.finish(authorizationCode, state);
         this.lastRefresh = System.currentTimeMillis();
         saveConfiguration();
-        LOG.debug("Acquired a new accessToken");
-        LOG.debug("Authorization to OneDrive API succeeded");
+        LOG.info("Acquired a accessToken");
     }
 
     /**
@@ -216,20 +215,21 @@ public class OneDriveSession {
         } else if (hasRefreshToken() && isTokenExpired()) {
             refreshAccessToken();
         }
+        LOG.info("Authorization to OneDrive API succeeded");
     }
 
     /**
      * Refresh an AccessToken if expired
      */
     void refreshAccessToken() {
-        LOG.debug("Refreshing accessToken");
+        LOG.info("Refreshing accessToken");
         this.accessToken = flow
             .refreshAccessToken(accessToken.getRefreshToken());
         this.lastRefresh = System.currentTimeMillis();
         this.configuration.setRefreshToken(accessToken.getRefreshToken());
         saveConfiguration();
-        LOG.debug("Refreshed accessToken, valid for {}s.",
-                  accessToken.getExpiresIn());
+        LOG.info("Refreshed accessToken, valid for {}s.",
+                 accessToken.getExpiresIn());
     }
 
     /**
