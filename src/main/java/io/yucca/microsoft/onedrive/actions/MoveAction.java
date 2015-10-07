@@ -102,21 +102,21 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
      * @return Item moved Item
      */
     private Item move() {
-        String address = itemAddress.getAddress();
-        LOG.info("Moving item: {} to folder: {}", address,
-                 parentAddress.absolutePath());
+        LOG.info("Moving item: {} to folder: {}", itemAddress, parentAddress);
         Map<String, Object> map = newParentRefBody(name, parentAddress
             .getItemReference());
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress())
             .request()
             // https://stackoverflow.com/questions/22355235/patch-request-using-jersey-client
             .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
             .method(METHOD_PATCH, Entity.json(map));
         handleError(response, Status.OK,
-                    "Failure moving item: " + address + " to parent folder: "
-                                         + parentAddress.getAddress());
+                    "Failure moving item: " + itemAddress
+                                         + " to parent folder: "
+                                         + parentAddress);
         return response.readEntity(Item.class);
     }
 

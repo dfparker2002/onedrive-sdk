@@ -127,12 +127,12 @@ public class ListChildrenAction extends AbstractAction
      *             the folder has not changed
      */
     public ItemIterable listChildren() {
-        String address = itemAddress.getAddress();
-        LOG.info("Listing children in folder: {} with queryparameters: {}",
-                 address, parameters);
+        LOG.info("Listing children in folder: {} with query parameters: {}",
+                 itemAddress, parameters);
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address);
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress());
         if (parameters != null) {
             target = parameters.configure(target, QueryParameters.EXPAND);
         }
@@ -140,7 +140,7 @@ public class ListChildrenAction extends AbstractAction
             .header(HEADER_IF_NONE_MATCH, createEtag(eTag)).get();
         handleNotModified(response);
         handleError(response, Status.OK,
-                    "Failed to list children for item:" + address);
+                    "Failed to list children for item:" + itemAddress);
         return response.readEntity(ItemCollection.class).setApi(api);
     }
 

@@ -81,16 +81,16 @@ public class DeleteAction extends AbstractAction implements Callable<Void> {
     }
 
     private Void delete() {
-        String address = itemAddress.getAddress();
-        LOG.info("Deleting item: {}", address);
+        LOG.info("Deleting item: {}", itemAddress);
         EntityTag tag = createEtag(eTag);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress())
             .request(MediaType.APPLICATION_JSON_TYPE)
             .header(HEADER_IF_MATCH, tag).delete();
         handleError(response, Status.NO_CONTENT,
-                    "Failure deleting item: " + address);
+                    "Failure deleting item: " + itemAddress);
         return null;
     }
 

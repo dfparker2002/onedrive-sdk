@@ -103,15 +103,15 @@ public class DownloadAction extends AbstractAction
      *             the Item has not changed
      */
     private OneDriveContent download() {
-        String address = itemAddress.getAddress();
-        LOG.info("Downloading item: {}", address);
+        LOG.info("Downloading item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress())
             .request().header(HEADER_IF_NONE_MATCH, createEtag(eTag)).get();
         handleNotModified(response);
         handleError(response, Status.OK,
-                    "Failure downloading item: " + address);
+                    "Failure downloading item: " + itemAddress);
         return response.readEntity(OneDriveContent.class);
     }
 

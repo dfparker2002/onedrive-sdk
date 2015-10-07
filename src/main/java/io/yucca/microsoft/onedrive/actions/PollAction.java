@@ -90,7 +90,7 @@ public class PollAction extends AbstractAction implements Callable<Item> {
                                    String action, long duration,
                                    TimeUnit unit) {
         LOG.info("Polling completing of action: {} for item: {} ", action,
-                 itemAddress.getAddress());
+                 itemAddress);
         int errorcount = 5;
         while (true) {
             Response response = api.webTarget(uri).request().get();

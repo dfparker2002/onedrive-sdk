@@ -86,17 +86,16 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
      * @return Item created folder
      */
     private Item create() {
-        String address = parentAddress.getAddress();
-        LOG.info("Creating new folder: {} in folder: {}", name,
-                 parentAddress.absolutePath());
+        LOG.info("Creating new folder: {} in folder: {}", name, parentAddress);
         Map<String, Object> map = newFolderBody(name, behavior);
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        parentAddress.getAddress())
             .request().post(Entity.json(toJson(map)));
         handleError(response, Status.CREATED,
                     "Failure creating folder: " + name + " in parent folder: "
-                                              + address);
+                                              + parentAddress);
         return response.readEntity(Item.class);
     }
 

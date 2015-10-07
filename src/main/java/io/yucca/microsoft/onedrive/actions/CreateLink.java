@@ -78,18 +78,18 @@ public class CreateLink extends AbstractAction
      * @return PermissionFacet facet with the link information
      */
     private PermissionFacet createLink() {
-        String address = itemAddress.getAddress();
         LinkType linkType = (type == null) ? LinkType.VIEW : type;
-        LOG.info("Creating link to item: {} of type: {}", address,
+        LOG.info("Creating link to item: {} of type: {}", itemAddress,
                  linkType.name());
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress())
             .request(MediaType.APPLICATION_JSON_TYPE)
             .post(Entity.json(linkType));
         Status[] successCodes = { Status.CREATED, Status.OK };
         handleError(response, successCodes,
-                    "Failure creating sharing link for item: " + address);
+                    "Failure creating sharing link for item: " + itemAddress);
         return response.readEntity(PermissionFacet.class);
     }
 

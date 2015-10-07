@@ -159,7 +159,7 @@ public class UploadResumableAction extends AbstractAction
      */
     public Item upload() {
         LOG.info("Uploading file: {} using resumable method into folder: {}",
-                 content.getName(), parentAddress.getAddress());
+                 content.getName(), parentAddress);
         createSession();
         try {
             return uploadFragments();
@@ -180,22 +180,23 @@ public class UploadResumableAction extends AbstractAction
      */
     public void createSession() {
         LOG.info("Creating session for uploading file: {} into folder: {}",
-                 content.getName(), parentAddress.getAddress());
+                 content.getName(), parentAddress);
         Map<String, Object> map = newCreateSessionBody(content, behavior);
-        String address = parentAddress.getAddress();
-        Response response = createUploadTarget(address, content.getName())
-            .request().post(Entity.json(toJson(map)));
+        Response response = createUploadTarget(parentAddress, content).request()
+            .post(Entity.json(toJson(map)));
         handleError(response, Status.OK,
                     "Failure creating session to upload item: "
                                          + content.getName() + " into folder: "
-                                         + address);
+                                         + parentAddress);
         this.session = response.readEntity(UploadSession.class);
     }
 
-    private WebTarget createUploadTarget(String address, String filename) {
+    private WebTarget createUploadTarget(ItemAddress itemAddress,
+                                         OneDriveFile content) {
         return api.webTarget()
             .path(parentAddress.getPathWithAddressAndFilename(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress())
             .resolveTemplateFromEncoded(ItemAddress.FILENAME,
                                         content.getName());
     }
@@ -302,7 +303,7 @@ public class UploadResumableAction extends AbstractAction
      */
     public void cancelSession() {
         LOG.info("Cancelling session for uploading file: {} into folder: {}",
-                 content.getName(), parentAddress.getAddress());
+                 content.getName(), parentAddress);
         Response response = api.getClient().target(session.getUploadUrl())
             .request().delete();
         handleError(response, Status.NO_CONTENT,

@@ -100,18 +100,18 @@ public class CopyAction extends AbstractAction implements Callable<URI> {
      * @return URI location to get of asynchronous job status, used in polling
      */
     private URI copy() {
-        String address = itemAddress.getAddress();
-        LOG.info("Copying item: {} to folder: {}", address,
-                 parentAddress.absolutePath());
+        LOG.info("Copying item: {} to folder: {}", itemAddress, parentAddress);
         Map<String, Object> map = newParentRefBody(name, parentAddress
             .getItemReference());
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress())
             .request().header(HEADER_PREFER, RESPOND_ASYNC)
             .post(Entity.json(map));
         handleError(response,
-                    Status.ACCEPTED, "Failed to copy item: " + address + " to: "
+                    Status.ACCEPTED, "Failed to copy item: " + itemAddress
+                                     + " to: "
                                      + parentAddress.getPathWithAddress());
         return response.getLocation();
     }

@@ -71,14 +71,14 @@ public class ThumbnailsAction extends AbstractAction
      * @return ThumbnailSet
      */
     private ThumbnailSet thumbnails() {
-        String address = itemAddress.getAddress();
-        LOG.info("Getting thumbsnails for item: {}", address);
+        LOG.info("Getting thumbsnails for item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress())
             .request().get();
         handleError(response, Status.OK,
-                    "Failure acquiring thumbnails for item: " + address);
+                    "Failure acquiring thumbnails for item: " + itemAddress);
         return response.readEntity(ThumbnailSet.class);
     }
 

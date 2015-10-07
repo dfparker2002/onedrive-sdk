@@ -115,12 +115,12 @@ public class SearchAction extends AbstractAction
      * @return ItemCollection matching items
      */
     private ItemIterable search() {
-        String address = parentAddress.getAddress();
         LOG.info("Searching for items in folder: {} matching query: {}, with query parameter: {}",
-                 address, query, parameters);
+                 parentAddress, query, parameters);
         WebTarget target = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        parentAddress.getAddress())
             .queryParam("q", URLHelper.encodeURIComponent(query));
         if (parameters != null) {
             // XXX when the top parameter is set, the last page of the total
@@ -133,7 +133,7 @@ public class SearchAction extends AbstractAction
         Response response = target.request().get();
         handleError(response, Status.OK,
                     "Failure searching for items that match query: " + query
-                                         + " within item: " + address);
+                                         + " within folder: " + parentAddress);
         return response.readEntity(ItemCollection.class).setApi(api);
     }
 

@@ -96,11 +96,11 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
      * @return Item updated Item
      */
     private Item update() {
-        ItemAddress itemAddress = new IdAddress(item.getId());
+        ItemAddress itemAddress = new IdAddress(item);
         if (item.getParentReference() != null) {
             item.setParentReference(null);
         }
-        LOG.info("Updating item: {}", itemAddress.getAddress());
+        LOG.info("Updating item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
@@ -113,7 +113,7 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
             .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
             .method(METHOD_PATCH, Entity.json(item));
         handleError(response, Status.OK,
-                    "Failure updating item: " + item.getName());
+                    "Failure updating item: " + itemAddress);
         return response.readEntity(Item.class);
     }
 

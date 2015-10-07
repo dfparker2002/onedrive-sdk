@@ -97,20 +97,20 @@ public class UploadMultipartAction extends AbstractAction
      * @return Item uploaded content
      */
     private Item upload() {
-        String address = parentAddress.getAddress();
         LOG.info("Uploading file: {} using multipart method into folder: {}",
-                 content.getName(), address);
+                 content.getName(), parentAddress);
         // TODO add check for file above 100MB
         MultiPart multipart = createMultipart(content, behavior);
         Status[] successCodes = { Status.CREATED };
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        parentAddress.getAddress())
             .request().post(Entity.entity(multipart, MULTIPART_RELATED_TYPE));
         handleError(response, successCodes,
                     "Failure uploading file: " + content.getName()
                                             + " as multipart into folder: "
-                                            + address);
+                                            + parentAddress);
         return response.readEntity(Item.class);
     }
 

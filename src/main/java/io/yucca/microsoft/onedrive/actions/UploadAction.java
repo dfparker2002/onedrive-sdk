@@ -96,22 +96,22 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
      * @return Item representing uploaded content
      */
     private Item upload() {
-        String address = parentAddress.getAddress();
         String conflictBehavior = (behavior == null)
             ? null : behavior.getName();
         LOG.info("Uploading file: {} into folder: {}", content.getName(),
-                 address);
+                 parentAddress);
         String path = parentAddress.getPathWithAddressAndFilename(ACTION);
         Status[] successCodes = { Status.CREATED, Status.OK };
         Response response = api.webTarget().path(path)
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        parentAddress.getAddress())
             .resolveTemplateFromEncoded(ItemAddress.FILENAME, content.getName())
             .queryParam(QueryParameters.CONFLICT_BEHAVIOR, conflictBehavior)
             .request(MediaType.TEXT_PLAIN)
             .put(Entity.entity(content, MediaType.APPLICATION_OCTET_STREAM));
         handleError(response, successCodes,
                     "Failure uploading file: " + content.getName() + " into: "
-                                            + address);
+                                            + parentAddress);
         return response.readEntity(Item.class);
     }
 

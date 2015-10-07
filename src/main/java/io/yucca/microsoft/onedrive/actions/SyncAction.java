@@ -108,16 +108,16 @@ public class SyncAction extends AbstractAction
      */
     private SyncResponse sync() {
         LOG.info("Enumerate the synchronization changes for folder: {}",
-                 parentAddress.absolutePath());
-        String address = parentAddress.getAddress();
+                 parentAddress);
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
             .queryParam(QueryParameters.TOKEN, token)
             .queryParam(QueryParameters.TOP, top)
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        parentAddress.getAddress())
             .request().get();
         handleError(response, Status.OK,
-                    "Failure enumerating changes for folder: " + address);
+                    "Failure enumerating changes for folder: " + parentAddress);
         return (SyncResponse)response.readEntity(SyncResponse.class)
             .setApi(api);
     }

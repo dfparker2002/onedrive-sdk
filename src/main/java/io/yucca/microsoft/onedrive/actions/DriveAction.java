@@ -79,7 +79,7 @@ public class DriveAction extends AbstractAction implements Callable<Drive> {
     public Drive drive() {
         String path = (driveId == null) ? "/drive" : "/drives/{drive-id}";
         String name = (driveId == null) ? "default" : driveId;
-        LOG.info("Getting information for Drive: {}", path);
+        LOG.info("Getting information for drive: {}", path);
         WebTarget target = api.webTarget().path(path);
         if (driveId != null) {
             target = target.resolveTemplateFromEncoded("drive-id", driveId);
@@ -87,7 +87,7 @@ public class DriveAction extends AbstractAction implements Callable<Drive> {
         Response response = target.request(MediaType.APPLICATION_JSON_TYPE)
             .get();
         handleError(response, Status.OK,
-                    "Failed to get properties for drive:" + name);
+                    "Failed to get properties for drive: " + name);
         return response.readEntity(Drive.class);
     }
 

@@ -96,4 +96,8 @@ public abstract class AbstractItemAddress implements ItemAddress {
         return ref;
     }
 
+    @Override
+    public String toString() {
+        return absolutePath();
+    }
 }

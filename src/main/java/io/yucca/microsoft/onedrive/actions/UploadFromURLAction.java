@@ -83,18 +83,18 @@ public class UploadFromURLAction extends AbstractAction
     }
 
     private URI upload() {
-        String address = parentAddress.getAddress();
         LOG.info("Uploading content from URL: {} into folder: {}",
-                 url.toString(), address);
+                 url.toString(), parentAddress);
         Map<String, Object> map = newUploadURLBody(url, name);
         Status successCodes = Status.ACCEPTED;
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address)
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        parentAddress.getAddress())
             .request().header(HEADER_PREFER, RESPOND_ASYNC)
             .post(Entity.json(map));
         handleError(response, successCodes, "Failure uploading file from URL: "
-                                            + url + " to: " + address);
+                                            + url + " to: " + parentAddress);
         return response.getLocation();
     }
 

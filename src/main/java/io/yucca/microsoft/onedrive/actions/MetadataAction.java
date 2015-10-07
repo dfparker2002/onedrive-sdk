@@ -39,7 +39,7 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  * @author yucca.io
  */
 public class MetadataAction extends AbstractAction implements Callable<Item> {
-    
+
     private final Logger LOG = LoggerFactory.getLogger(MetadataAction.class);
 
     private final ItemAddress itemAddress;
@@ -113,11 +113,11 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
      *             provided
      */
     private Item metadata() throws NotModifiedException {
-        String address = itemAddress.getAddress();
-        LOG.info("Get metadata for item: {}",address);
+        LOG.info("Get metadata for item: {}", itemAddress);
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS, address);
+            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+                                        itemAddress.getAddress());
         if (parameters != null) {
             target = parameters.configure(target);
         }
@@ -125,7 +125,7 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
             .header(HEADER_IF_NONE_MATCH, createEtag(eTag)).get();
         handleNotModified(response);
         handleError(response, Status.OK,
-                    "Failure getting metadata for item: " + address);
+                    "Failure getting metadata for item: " + itemAddress);
         return response.readEntity(Item.class);
     }
 
@@ -140,7 +140,7 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
         Response response = api.webTarget(uri).request().get();
         if (response.getStatus() != Status.OK.getStatusCode()) {
             OneDriveError e = response.readEntity(OneDriveError.class);
-            throw new OneDriveException("Failure acquiring metadat for item: "
+            throw new OneDriveException("Failure acquiring metadata for item: "
                                         + uri, response.getStatus(), e);
         }
         return response.readEntity(Item.class);
