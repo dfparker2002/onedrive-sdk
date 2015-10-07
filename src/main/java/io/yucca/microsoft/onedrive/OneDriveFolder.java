@@ -63,6 +63,7 @@ public class OneDriveFolder extends OneDriveItem {
      *            is used
      * @return OneDriveFolder copied folder
      */
+    @Override
     public OneDriveFolder copy(OneDriveFolder destination, String name) {
         CopyAction action = new CopyAction(api, getAddress(), name,
                                            destination.getAddress());
@@ -160,6 +161,7 @@ public class OneDriveFolder extends OneDriveItem {
     /**
      * Delete this folder and (recursively) all the children contents
      */
+    @Override
     public void delete() {
         super.delete();
     }
@@ -169,6 +171,7 @@ public class OneDriveFolder extends OneDriveItem {
      * 
      * @throws UnsupportedOperationException
      */
+    @Override
     public OneDriveContent download() {
         throw new UnsupportedOperationException("download is not supported for a item type: folder");
     }
@@ -179,6 +182,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @param destination OneDriveFolder
      * @return Item moved item
      */
+    @Override
     public OneDriveFolder move(OneDriveFolder destination) {
         MoveAction action = new MoveAction(api, getAddress(), null,
                                            destination.getAddress());
@@ -214,6 +218,7 @@ public class OneDriveFolder extends OneDriveItem {
      * 
      * @param name String new name
      */
+    @Override
     public void rename(String name) {
         super.rename(name);
     }
