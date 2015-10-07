@@ -129,6 +129,13 @@ public class OneDriveSession {
         this.clientIdentifier = new ClientIdentifier(clientId, clientSecret);
         this.authorizationCode = configuration.getAuthorizationCode();
         this.scope = DEFAULT_SCOPE;
+        this.initialize();
+    }
+
+    /**
+     * Initialize the OAuth2.0 flow
+     */
+    private void initialize() {
         initFlow(client);
         initTokenResult(configuration.getRefreshToken());
     }
@@ -139,7 +146,7 @@ public class OneDriveSession {
      * @param client
      */
     private void initFlow(Client client) {
-        LOG.info("Initializing authorizing flow to the OneDrive API: {}",
+        LOG.info("Initializing authorization flow by url: {}",
                  ONEDRIVE_OAUTH20_AUTH_URI);
         if (flow == null) {
             this.flow = buildFlow(clientIdentifier, scope);
@@ -150,6 +157,7 @@ public class OneDriveSession {
             throw new IllegalStateException("No authorization code was provided, which is needed to acquire an accessToken for the OneDrive API.\n"
                                             + "Write the authorization code in the configuration file or build this configuration with the commandline utility.\n");
         }
+        LOG.info("Initialized authorization flow");
     }
 
     /**
@@ -184,7 +192,7 @@ public class OneDriveSession {
      * Authorize and register the OAuth2 feature on the client
      */
     private void redeemAccessToken() {
-        LOG.info("Authorizing to OneDrive API and requesting an accessToken by url: {}",
+        LOG.info("Authorizing and requesting an accessToken by url: {}",
                  ONEDRIVE_OAUTH20_TOKEN_URI);
         this.accessToken = flow.finish(authorizationCode, state);
         this.lastRefresh = System.currentTimeMillis();
@@ -194,22 +202,10 @@ public class OneDriveSession {
     }
 
     /**
-     * Determine if client is authorized
-     * 
-     * @return true if
-     */
-    private boolean isAuthorized() {
-        return hasAccessToken();
-    }
-
-    /**
      * Request an AccessToken or refresh if expired.
-     * <p>
-     * XXX Explicitly package local for testing, create unit test
-     * </p>
      */
     void requestAccessToken() {
-        if (isAuthorized() == false) {
+        if (hasAccessToken() == false) {
             if (hasRefreshToken() == false) {
                 redeemAccessToken();
             } else {
@@ -225,7 +221,7 @@ public class OneDriveSession {
     /**
      * Refresh an AccessToken if expired
      */
-    private void refreshAccessToken() {
+    void refreshAccessToken() {
         LOG.debug("Refreshing accessToken");
         this.accessToken = flow
             .refreshAccessToken(accessToken.getRefreshToken());
@@ -241,7 +237,7 @@ public class OneDriveSession {
      * 
      * @return true if token is expired
      */
-    private boolean isTokenExpired() {
+    boolean isTokenExpired() {
         if (hasExpiration() == false) {
             return true;
         }
@@ -258,7 +254,7 @@ public class OneDriveSession {
      * 
      * @return boolean
      */
-    private boolean hasAccessToken() {
+    boolean hasAccessToken() {
         return (accessToken != null && accessToken.getAccessToken() != null);
     }
 
@@ -267,7 +263,7 @@ public class OneDriveSession {
      * 
      * @return boolean
      */
-    private boolean hasRefreshToken() {
+    boolean hasRefreshToken() {
         return (accessToken != null && accessToken.getRefreshToken() != null);
     }
 
@@ -276,26 +272,8 @@ public class OneDriveSession {
      * 
      * @return boolean true if set
      */
-    private boolean hasExpiration() {
+    boolean hasExpiration() {
         return (accessToken.getExpiresIn() != null);
-    }
-
-    /**
-     * Logout from the OneDrive API and clear auth tokens
-     */
-    public void logOut() {
-        LOG.info("Logging out from OneDrive API");
-        Response response = client.target(ONEDRIVE_OAUTH20_LOGOUT)
-            .resolveTemplate(CLIENT_ID, clientId)
-            .resolveTemplate(REDIRECT_URI, DEFAULT_REDIRECT_URI)
-            .request(MediaType.TEXT_PLAIN_TYPE).get();
-        if (response.getStatus() == 200) {
-            LOG.info("Succesfully logged from OneDrive API");
-        } else {
-            throw new OneDriveException("Failure logging out from OneDrive API: "
-                                        + response.getStatusInfo()
-                                            .getReasonPhrase());
-        }
     }
 
     /**
@@ -303,8 +281,19 @@ public class OneDriveSession {
      * 
      * @return TokenResult
      */
-    public TokenResult getAccessToken() {
+    TokenResult getAccessToken() {
         return accessToken;
+    }
+
+    /**
+     * Save configuration
+     */
+    void saveConfiguration() {
+        try {
+            ConfigurationUtil.save(configuration);
+        } catch (ConfigurationException e) {
+            throw new OneDriveException("Failure saving configuration", e);
+        }
     }
 
     /**
@@ -318,13 +307,21 @@ public class OneDriveSession {
     }
 
     /**
-     * @param configurationFile String
+     * Logout from the OneDrive API
      */
-    void saveConfiguration() {
-        try {
-            ConfigurationUtil.save(configuration);
-        } catch (ConfigurationException e) {
-            throw new OneDriveException("Failure saving configuration", e);
+    public void logOut() {
+        LOG.info("Logging out from OneDrive API by url: {}",
+                 ONEDRIVE_OAUTH20_LOGOUT);
+        Response response = client.target(ONEDRIVE_OAUTH20_LOGOUT)
+            .resolveTemplate(CLIENT_ID, clientId)
+            .resolveTemplate(REDIRECT_URI, DEFAULT_REDIRECT_URI)
+            .request(MediaType.TEXT_PLAIN_TYPE).get();
+        if (response.getStatus() == 200) {
+            LOG.info("Succesfully logged from OneDrive API");
+        } else {
+            throw new OneDriveException("Failure logging out from OneDrive API: "
+                                        + response.getStatusInfo()
+                                            .getReasonPhrase());
         }
     }
 

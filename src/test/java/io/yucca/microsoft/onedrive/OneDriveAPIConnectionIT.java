@@ -15,12 +15,13 @@
  */
 package io.yucca.microsoft.onedrive;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 
+import javax.ws.rs.client.Client;
+
 import org.apache.commons.configuration.ConfigurationException;
-import org.glassfish.jersey.client.oauth2.TokenResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,13 +40,10 @@ public class OneDriveAPIConnectionIT {
     }
 
     @Test
-    public void testGetToken() {
-        TokenResult token = api.getAccessToken();
-        assertNotNull(token);
-        assertNotNull(token.getAccessToken());
-        assertNotNull(token.getExpiresIn());
-        assertNotNull(token.getRefreshToken());
-        assertNotNull(token.getTokenType());
+    public void testGetAuthorizedClient() {
+        Client client = api.getClient();
+        assertNotNull(client);
+        assertTrue(api.isAuthorized());
     }
 
     @Test

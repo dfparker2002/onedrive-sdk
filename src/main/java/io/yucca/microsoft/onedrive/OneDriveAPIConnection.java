@@ -22,7 +22,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.glassfish.jersey.client.oauth2.TokenResult;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ import io.yucca.microsoft.onedrive.util.JulFacade;
  * 
  * @author yucca.io
  */
-public class OneDriveAPIConnection {
+public class OneDriveAPIConnection implements AutoCloseable {
 
     private static final Logger LOG = LoggerFactory
         .getLogger(OneDriveAPIConnection.class);
@@ -85,22 +84,21 @@ public class OneDriveAPIConnection {
     }
 
     /**
-     * Get an access token.
-     * 
-     * @return TokenResult
-     */
-    TokenResult getAccessToken() {
-        session.requestAccessToken();
-        return session.getAccessToken();
-    }
-
-    /**
      * Get authorized client.
      * 
      * @return Client
      */
     public Client getClient() {
         return session.getClient();
+    }
+
+    /**
+     * Determine if client is authorized
+     * 
+     * @return true if authorized
+     */
+    public boolean isAuthorized() {
+        return session.hasAccessToken();
     }
 
     /**
@@ -126,10 +124,13 @@ public class OneDriveAPIConnection {
     }
 
     /**
-     * Closes the client and all webTargets
+     * Closes the client with all webTargets
      */
+    @Override
     public void close() {
-        client.close();
+        if (client != null) {
+            client.close();
+        }
     }
 
     /**
