@@ -87,7 +87,7 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
      */
     private Item create() {
         String address = parentAddress.getAddress();
-        LOG.info("Creating new folder: {} in folder: {}", address,
+        LOG.info("Creating new folder: {} in folder: {}", name,
                  parentAddress.absolutePath());
         Map<String, Object> map = newFolderBody(name, behavior);
         Response response = api.webTarget()
