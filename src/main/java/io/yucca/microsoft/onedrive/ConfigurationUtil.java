@@ -64,7 +64,7 @@ public final class ConfigurationUtil {
      */
     public static OneDriveConfiguration read(String configurationFile)
         throws FileNotFoundException, ConfigurationException {
-        LOG.info("Reading configuration from file:", configurationFile);
+        LOG.info("Reading configuration from file: {}", configurationFile);
         File file = new File(configurationFile);
         if (file.exists() == false) {
             throw new FileNotFoundException("Failure reading configuration, file: "
