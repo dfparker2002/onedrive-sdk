@@ -53,7 +53,7 @@ public class OneDriveExample {
         System.out.println("The OneDrive contains the following folders: ");
         for (OneDriveItem item : drive.listChildren()) {
             if (item instanceof OneDriveFolder) {
-                System.out.format(" %s\n", item.getItem().getName());
+                System.out.format(" %s%n", item.getItem().getName());
             }
         }
     }
