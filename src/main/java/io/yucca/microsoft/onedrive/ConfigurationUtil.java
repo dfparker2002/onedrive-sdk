@@ -136,7 +136,7 @@ public final class ConfigurationUtil {
      */
     public static void save(OneDriveConfiguration configuration)
         throws ConfigurationException {
-        LOG.info("Saved configuration to file:",
+        LOG.info("Saved configuration to file: {}",
                  configuration.getConfigurationFile());
         setProperties(configuration);
         // XXX is this correct?
