@@ -38,7 +38,7 @@ public final class ISO8061 {
      */
     public static String fromCalendar(final Calendar calendar) {
         calendar.setTimeZone(TimeZone.getTimeZone("Z"));
-        return String.format("%tFT%<tT.%<tLZ", calendar);
+        return String.format("%tFT%<tT.%<tLZ", calendar, calendar, calendar);
     }
 
     /**
