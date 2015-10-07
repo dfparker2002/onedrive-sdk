@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import io.yucca.microsoft.onedrive.ItemIterable;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
 

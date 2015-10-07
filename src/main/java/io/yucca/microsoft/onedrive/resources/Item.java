@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
-import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.facets.AudioFacet;
 import io.yucca.microsoft.onedrive.facets.DeletedFacet;
 import io.yucca.microsoft.onedrive.facets.FileFacet;
@@ -408,11 +407,6 @@ public class Item {
     @JsonIgnore
     public boolean isDeleted() {
         return (deleted != null);
-    }
-
-    @JsonIgnore
-    public ItemAddress getItemAddress() {
-        return new IdAddress(id);
     }
 
     /**

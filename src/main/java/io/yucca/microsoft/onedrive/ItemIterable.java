@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources;
+package io.yucca.microsoft.onedrive;
 
 import java.net.URL;
 import java.util.Iterator;
 
-import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
+import io.yucca.microsoft.onedrive.resources.Item;
+import io.yucca.microsoft.onedrive.resources.ItemIterator;
 
 /**
  * ItemIterable defines an collection of Items that can be iterated

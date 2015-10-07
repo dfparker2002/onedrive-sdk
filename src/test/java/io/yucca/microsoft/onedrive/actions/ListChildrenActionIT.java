@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
+import io.yucca.microsoft.onedrive.ItemIterable;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.QueryParameters.Builder;
@@ -27,7 +28,6 @@ import io.yucca.microsoft.onedrive.TestMother;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.ItemIterable;
 import io.yucca.microsoft.onedrive.resources.Order;
 
 public class ListChildrenActionIT extends AbstractActionIT {
