@@ -46,7 +46,9 @@ public class OneDriveError implements Serializable {
         this.error = error;
     }
 
-    public static class InnerError {
+    public static class InnerError implements Serializable {
+
+        private static final long serialVersionUID = -7291143544067333269L;
 
         private String code;
 
