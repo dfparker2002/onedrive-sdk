@@ -19,7 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
-import io.yucca.microsoft.onedrive.actions.Addressing;
+import io.yucca.microsoft.onedrive.Addressing;
 
 /**
  * URLAddress, addressing of items or external resources by URL
