@@ -88,6 +88,7 @@ public class OneDriveInputStream implements OneDriveContent {
      * 
      * @throws IOException
      */
+    @Override
     public void close() throws IOException {
         stream.close();
     }
