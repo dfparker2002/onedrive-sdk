@@ -101,15 +101,6 @@ public class Item {
     @JsonIgnore
     private List<ThumbnailSet> thumbnails;
 
-    // Unknown Properties
-    // set only when creating folders
-    // @JsonProperty(value = "@odata.context")
-    // private URL contextUrl;
-
-    // URL to children. Set if getMetadata is used with expand=true
-    // @JsonProperty(value = "children@odata.context")
-    // private URL childrenUrl;
-
     public Item() {
     }
 
