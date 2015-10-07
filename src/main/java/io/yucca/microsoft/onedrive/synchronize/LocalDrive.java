@@ -39,7 +39,7 @@ public class LocalDrive implements LocalResource {
 
     private static final String ONEDRIVE_ID_POSTFIX = "!0";
 
-    private final Path path;
+    private transient final Path path;
 
     private String id;
 
