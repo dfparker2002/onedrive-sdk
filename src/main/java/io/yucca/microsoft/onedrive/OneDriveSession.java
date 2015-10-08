@@ -255,7 +255,7 @@ public class OneDriveSession {
      * @return boolean
      */
     boolean hasAccessToken() {
-        return (accessToken != null && accessToken.getAccessToken() != null);
+        return accessToken != null && accessToken.getAccessToken() != null;
     }
 
     /**
@@ -264,7 +264,7 @@ public class OneDriveSession {
      * @return boolean
      */
     boolean hasRefreshToken() {
-        return (accessToken != null && accessToken.getRefreshToken() != null);
+        return accessToken != null && accessToken.getRefreshToken() != null;
     }
 
     /**
@@ -273,7 +273,7 @@ public class OneDriveSession {
      * @return boolean true if set
      */
     boolean hasExpiration() {
-        return (accessToken.getExpiresIn() != null);
+        return accessToken.getExpiresIn() != null;
     }
 
     /**
