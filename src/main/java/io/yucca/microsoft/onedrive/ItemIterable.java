@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.Iterator;
 
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.ItemIterator;
 
 /**
  * ItemIterable defines an collection of Items that can be iterated
@@ -38,10 +37,10 @@ public interface ItemIterable extends Iterable<Item> {
     /**
      * Get Iterator for the paged collection
      * 
-     * @return ItemIterator
+     * @return Iterator<Item>
      */
     @Override
-    ItemIterator iterator();
+    Iterator<Item> iterator();
 
     /**
      * Get iterator for the inner Item collection
