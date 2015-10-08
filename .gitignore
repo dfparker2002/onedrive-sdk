@@ -23,6 +23,7 @@ buildNumber.properties
 
 # Sonar
 .sonar
+sonar-runner.sh
 
 # Package Files
 *.jar
