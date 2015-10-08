@@ -39,7 +39,6 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  */
 public abstract class AbstractAction {
 
-    // TODO move to OneDrive...?
     public static final String HEADER_IF_MATCH = "if-match";
 
     public static final String HEADER_IF_NONE_MATCH = "if-none-match";
