@@ -136,8 +136,8 @@
        <value>org.sonar.java.jacoco.JUnitListener</value>
       </property>
      </properties>
-     <!-- workaround to have test report for IT in sonar, see http://stackoverflow.com/a/15567782/936729 -->
-     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+     <!-- workaround to have test report for IT in sonar, see http://stackoverflow.com/a/15567782/936729 --> 
+      <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
     </configuration>
     <executions>
      <execution>
