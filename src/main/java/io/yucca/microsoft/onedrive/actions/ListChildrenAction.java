@@ -131,7 +131,7 @@ public class ListChildrenAction extends AbstractAction
                  itemAddress, parameters);
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress());
         if (parameters != null) {
             target = parameters.configure(target, QueryParameters.EXPAND);

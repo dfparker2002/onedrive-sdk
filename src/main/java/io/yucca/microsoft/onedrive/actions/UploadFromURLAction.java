@@ -89,7 +89,7 @@ public class UploadFromURLAction extends AbstractAction
         Status successCodes = Status.ACCEPTED;
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         parentAddress.getAddress())
             .request().header(HEADER_PREFER, RESPOND_ASYNC)
             .post(Entity.json(map));

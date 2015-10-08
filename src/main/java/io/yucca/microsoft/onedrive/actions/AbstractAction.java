@@ -39,6 +39,12 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  */
 public abstract class AbstractAction {
 
+    public static final String ITEM_ADDRESS = "item-address";
+
+    public static final String FILENAME = "filename";
+
+    public static final String PARENT_REFERENCE = "parentReference";
+
     public static final String HEADER_IF_MATCH = "if-match";
 
     public static final String HEADER_IF_NONE_MATCH = "if-none-match";
@@ -168,7 +174,7 @@ public abstract class AbstractAction {
     protected Map<String, Object> newParentRefBody(String name,
                                                    ItemReference parentRef) {
         Map<String, Object> map = new HashMap<>();
-        map.put(ItemAddress.PARENT_REFERENCE, parentRef);
+        map.put(PARENT_REFERENCE, parentRef);
         if (name != null && !name.isEmpty()) {
             map.put("name", name);
         }

@@ -113,7 +113,7 @@ public class SyncAction extends AbstractAction
             .path(parentAddress.getPathWithAddress(ACTION))
             .queryParam(QueryParameters.TOKEN, token)
             .queryParam(QueryParameters.TOP, top)
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         parentAddress.getAddress())
             .request().get();
         handleError(response, Status.OK,

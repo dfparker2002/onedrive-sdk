@@ -105,7 +105,7 @@ public class CopyAction extends AbstractAction implements Callable<URI> {
                                                    getItemReference(parentAddress));
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request().header(HEADER_PREFER, RESPOND_ASYNC)
             .post(Entity.json(map));

@@ -104,7 +104,7 @@ public class UploadMultipartAction extends AbstractAction
         Status[] successCodes = { Status.CREATED };
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         parentAddress.getAddress())
             .request().post(Entity.entity(multipart, MULTIPART_RELATED_TYPE));
         handleError(response, successCodes,

@@ -74,7 +74,7 @@ public class ThumbnailsAction extends AbstractAction
         LOG.info("Getting thumbsnails for item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request().get();
         handleError(response, Status.OK,

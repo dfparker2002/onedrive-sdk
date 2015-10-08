@@ -23,22 +23,6 @@ package io.yucca.microsoft.onedrive;
  */
 public interface ItemAddress {
 
-    String ITEM_ADDRESS = "item-address";
-
-    String FILENAME = "filename";
-
-    String PARENT_REFERENCE = "parentReference";
-
-    String SPECIAL_FOLDER_NAME = "special-folder-name";
-
-    String DRIVE_ROOT = "/drive/root";
-
-    String DRIVE_ITEMS = "/drive/items";
-
-    String DRIVE_SPECIAL = "/drive/special";
-
-    String DRIVES = "/drives";
-
     /**
      * Build a base resource path based on underlying addressing method, like
      * /drive/items or /drive/root

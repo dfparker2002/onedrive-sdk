@@ -83,7 +83,7 @@ public class CreateLink extends AbstractAction
                  linkType.name());
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request(MediaType.APPLICATION_JSON_TYPE)
             .post(Entity.json(linkType));

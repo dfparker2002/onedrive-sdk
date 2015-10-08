@@ -119,7 +119,7 @@ public class SearchAction extends AbstractAction
                  parentAddress, query, parameters);
         WebTarget target = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         parentAddress.getAddress())
             .queryParam("q", URLHelper.encodeURIComponent(query));
         if (parameters != null) {

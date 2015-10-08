@@ -103,9 +103,9 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
         String path = parentAddress.getPathWithAddressAndFilename(ACTION);
         Status[] successCodes = { Status.CREATED, Status.OK };
         Response response = api.webTarget().path(path)
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         parentAddress.getAddress())
-            .resolveTemplateFromEncoded(ItemAddress.FILENAME, content.getName())
+            .resolveTemplateFromEncoded(FILENAME, content.getName())
             .queryParam(QueryParameters.CONFLICT_BEHAVIOR, conflictBehavior)
             .request(MediaType.TEXT_PLAIN)
             .put(Entity.entity(content, MediaType.APPLICATION_OCTET_STREAM));

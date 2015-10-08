@@ -24,6 +24,14 @@ import io.yucca.microsoft.onedrive.ItemAddress;
  * @author yucca.io
  */
 public abstract class AbstractItemAddress implements ItemAddress {
+    
+    String DRIVE_ROOT = "/drive/root";
+    
+    String DRIVE_ITEMS = "/drive/items";
+    
+    String DRIVE_SPECIAL = "/drive/special";
+    
+    String DRIVES = "/drives";
 
     protected Addressing method;
 

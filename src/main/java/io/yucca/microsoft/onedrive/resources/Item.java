@@ -428,7 +428,7 @@ public class Item {
     @JsonIgnore
     public String getRelativePath() {
         String rel = getParentReference().getPath()
-            .replaceAll(ItemAddress.DRIVE_ROOT + ":\\/?", "");
+            .replaceAll("/drive/root" + ":\\/?", "");
         return rel.isEmpty() ? name : rel + "/" + name;
     }
 

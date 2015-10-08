@@ -90,7 +90,7 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
         Map<String, Object> map = newFolderBody(name, behavior);
         Response response = api.webTarget()
             .path(parentAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         parentAddress.getAddress())
             .request().post(Entity.json(toJson(map)));
         handleError(response, Status.CREATED,

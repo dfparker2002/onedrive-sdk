@@ -106,7 +106,7 @@ public class DownloadAction extends AbstractAction
         LOG.info("Downloading item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request().header(HEADER_IF_NONE_MATCH, createEtag(eTag)).get();
         handleNotModified(response);

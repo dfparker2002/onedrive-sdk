@@ -85,7 +85,7 @@ public class DeleteAction extends AbstractAction implements Callable<Void> {
         EntityTag tag = createEtag(eTag);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request(MediaType.APPLICATION_JSON_TYPE)
             .header(HEADER_IF_MATCH, tag).delete();

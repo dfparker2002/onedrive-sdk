@@ -195,10 +195,8 @@ public class UploadResumableAction extends AbstractAction
                                          OneDriveFile content) {
         return api.webTarget()
             .path(parentAddress.getPathWithAddressAndFilename(ACTION))
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
-                                        itemAddress.getAddress())
-            .resolveTemplateFromEncoded(ItemAddress.FILENAME,
-                                        content.getName());
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
+            .resolveTemplateFromEncoded(FILENAME, content.getName());
     }
 
     /**

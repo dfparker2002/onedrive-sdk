@@ -116,7 +116,7 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
         LOG.info("Get metadata for item: {}", itemAddress);
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress());
         if (parameters != null) {
             target = parameters.configure(target);

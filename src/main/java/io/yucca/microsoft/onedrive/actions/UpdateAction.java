@@ -103,7 +103,7 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
         LOG.info("Updating item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request().header(HEADER_IF_MATCH, createEtag(eTag))
             // patch method is not default available in jersey 2, so use a

@@ -107,7 +107,7 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
                                                    getItemReference(parentAddress));
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,
+            .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         itemAddress.getAddress())
             .request()
             // https://stackoverflow.com/questions/22355235/patch-request-using-jersey-client
