@@ -28,6 +28,8 @@ import io.yucca.microsoft.onedrive.actions.PollAction;
 import io.yucca.microsoft.onedrive.actions.SearchAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
+import io.yucca.microsoft.onedrive.addressing.SpecialAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.ItemReference;
@@ -39,7 +41,8 @@ import io.yucca.microsoft.onedrive.resources.SpecialFolder;
  * 
  * @author yucca.io
  */
-public class OneDriveFolderImpl extends OneDriveItemImpl implements OneDriveFolder {
+public class OneDriveFolderImpl extends OneDriveItemImpl
+    implements OneDriveFolder {
 
     /**
      * Construct a OneDriveFolder
@@ -83,7 +86,8 @@ public class OneDriveFolderImpl extends OneDriveItemImpl implements OneDriveFold
      * @return OneDriveFolder created folder
      */
     @Override
-    public OneDriveFolderImpl createFolder(String name, ConflictBehavior behavior) {
+    public OneDriveFolderImpl createFolder(String name,
+                                           ConflictBehavior behavior) {
         CreateAction action = new CreateAction(api, name, getAddress(),
                                                behavior);
         return new OneDriveFolderImpl(api, action.call());
@@ -185,7 +189,7 @@ public class OneDriveFolderImpl extends OneDriveItemImpl implements OneDriveFold
      * Move this folder to destination
      * 
      * @param destination OneDriveFolder
-     * @return Item moved item
+     * @return OneDriveFolder moved item
      */
     @Override
     public OneDriveFolder move(OneDriveFolderImpl destination) {
@@ -198,12 +202,12 @@ public class OneDriveFolderImpl extends OneDriveItemImpl implements OneDriveFold
      * Move this folder to special folder
      * 
      * @param destination SpecialFolder
-     * @return Item moved item
+     * @return OneDriveFolder moved item
      */
     @Override
     public OneDriveFolder move(SpecialFolder destination) {
         MoveAction action = new MoveAction(api, getAddress(), null,
-                                           destination.getPath());
+                                           new SpecialAddress(destination));
         return new OneDriveFolderImpl(api, action.call());
     }
 
@@ -211,12 +215,13 @@ public class OneDriveFolderImpl extends OneDriveItemImpl implements OneDriveFold
      * Move this folder to root of Drive
      * 
      * @param destination OneDrive
-     * @return Item moved item
+     * @return OneDriveItem moved item
      */
     @Override
     public OneDriveFolder move(OneDrive destination) {
+        // TODO should use DriveAddress for specification of drive
         MoveAction action = new MoveAction(api, getAddress(), null,
-                                           destination.getAddress());
+                                           new RootAddress());
         return new OneDriveFolderImpl(api, action.call());
     }
 
@@ -239,7 +244,8 @@ public class OneDriveFolderImpl extends OneDriveItemImpl implements OneDriveFold
      * @return Collection<OneDriveItem> results
      */
     @Override
-    public List<OneDriveItemImpl> search(String query, QueryParameters parameters) {
+    public List<OneDriveItemImpl> search(String query,
+                                         QueryParameters parameters) {
         List<OneDriveItemImpl> children = new LinkedList<>();
         SearchAction action = new SearchAction(api, getAddress(), query,
                                                parameters);

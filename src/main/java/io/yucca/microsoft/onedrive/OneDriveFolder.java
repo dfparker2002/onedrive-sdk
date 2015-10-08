@@ -37,6 +37,7 @@ public interface OneDriveFolder extends OneDriveItem {
      *            is used
      * @return OneDriveFolder copied folder
      */
+    @Override
     OneDriveFolder copy(OneDriveFolderImpl destination, String name);
 
     /**
@@ -88,6 +89,7 @@ public interface OneDriveFolder extends OneDriveItem {
     /**
      * Delete this folder and (recursively) all the children contents
      */
+    @Override
     void delete();
 
     /**
@@ -95,30 +97,34 @@ public interface OneDriveFolder extends OneDriveItem {
      * 
      * @throws UnsupportedOperationException
      */
+    @Override
     OneDriveContent download();
 
     /**
      * Move this folder to destination
      * 
      * @param destination OneDriveFolder
-     * @return Item moved item
+     * @return OneDriveFolder moved item
      */
+    @Override
     OneDriveFolder move(OneDriveFolderImpl destination);
 
     /**
      * Move this folder to special folder
      * 
      * @param destination SpecialFolder
-     * @return Item moved item
+     * @return OneDriveFolder moved item
      */
+    @Override
     OneDriveFolder move(SpecialFolder destination);
 
     /**
      * Move this folder to root of Drive
      * 
      * @param destination OneDrive
-     * @return Item moved item
+     * @return OneDriveFolder moved item
      */
+    @Override
     OneDriveFolder move(OneDrive destination);
 
     /**
@@ -126,6 +132,7 @@ public interface OneDriveFolder extends OneDriveItem {
      * 
      * @param name String new name
      */
+    @Override
     void rename(String name);
 
     /**

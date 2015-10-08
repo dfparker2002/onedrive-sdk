@@ -16,6 +16,7 @@
 package io.yucca.microsoft.onedrive;
 
 import io.yucca.microsoft.onedrive.resources.Item;
+import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 /**
  * Represent an item stored on OneDrive
@@ -58,12 +59,33 @@ public interface OneDriveItem {
     OneDriveItem move(OneDriveFolderImpl destination);
 
     /**
+     * Move this item to destination
+     * 
+     * @param destination SpecialFolder
+     * @return OneDriveItem moved item
+     */
+    OneDriveItem move(SpecialFolder destination);
+
+    /**
+     * Move this folder to root of Drive
+     * 
+     * @param destination OneDrive
+     * @return OneDriveItem moved item
+     */
+    OneDriveItem move(OneDrive destination);
+
+    /**
      * Rename the item
      * 
      * @param name String
      */
     void rename(String name);
 
+    /**
+     * Get item identifier
+     * 
+     * @return String
+     */
     String getItemId();
 
     /**

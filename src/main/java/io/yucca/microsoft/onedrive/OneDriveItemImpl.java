@@ -23,7 +23,10 @@ import io.yucca.microsoft.onedrive.actions.MoveAction;
 import io.yucca.microsoft.onedrive.actions.PollAction;
 import io.yucca.microsoft.onedrive.actions.UpdateAction;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.RootAddress;
+import io.yucca.microsoft.onedrive.addressing.SpecialAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
+import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 /**
  * Represent an item stored on OneDrive
@@ -103,6 +106,32 @@ public class OneDriveItemImpl implements OneDriveItem {
     public OneDriveItem move(OneDriveFolderImpl destination) {
         MoveAction action = new MoveAction(api, getAddress(), null,
                                            destination.getAddress());
+        return new OneDriveItemImpl(api, action.call());
+    }
+
+    /**
+     * Move this folder to root of Drive
+     * 
+     * @param destination OneDrive
+     * @return OneDriveItem moved item
+     */
+    @Override
+    public OneDriveItem move(OneDrive destination) {
+        MoveAction action = new MoveAction(api, getAddress(), null,
+                                           new RootAddress());
+        return new OneDriveItemImpl(api, action.call());
+    }
+
+    /**
+     * Move this folder to special folder
+     * 
+     * @param destination SpecialFolder
+     * @return OneDriveItem moved item
+     */
+    @Override
+    public OneDriveItem move(SpecialFolder destination) {
+        MoveAction action = new MoveAction(api, getAddress(), null,
+                                           new SpecialAddress(destination));
         return new OneDriveItemImpl(api, action.call());
     }
 

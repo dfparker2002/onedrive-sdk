@@ -25,6 +25,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.yucca.microsoft.onedrive.resources.SpecialFolder;
+
 public class OneDriveItemIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
@@ -58,8 +60,8 @@ public class OneDriveItemIT {
 
     @Test
     public void testCopy() {
-        OneDriveItem copyItem = uploadedFile.copy(apitestFolder,
-                                              TestMother.ITEM_UPLOAD_1_COPY);
+        OneDriveItem copyItem = uploadedFile
+            .copy(apitestFolder, TestMother.ITEM_UPLOAD_1_COPY);
         assertNotNull(copyItem);
     }
 
@@ -82,6 +84,20 @@ public class OneDriveItemIT {
     public void testMove() throws FileNotFoundException {
         movedFolder = apitestFolder.createFolder(TestMother.FOLDER_MOVED);
         assertNotNull(uploadedFile.move(movedFolder));
+    }
+
+    @Test
+    public void testMoveToSpecialFolder() {
+        OneDriveItem movedItem = uploadedFile.move(SpecialFolder.DOCUMENTS);
+        assertNotNull(movedItem);
+        movedItem.delete();
+    }
+
+    @Test
+    public void testMoveToDriveRoot() {
+        OneDriveItem movedItem = uploadedFile.move(drive);
+        assertNotNull(movedItem);
+        movedItem.delete();
     }
 
     @Test
