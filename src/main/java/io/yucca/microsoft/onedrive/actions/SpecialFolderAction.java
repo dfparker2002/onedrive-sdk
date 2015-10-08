@@ -25,7 +25,6 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
@@ -93,9 +92,7 @@ public class SpecialFolderAction extends AbstractAction
     public Item specialFolder() {
         String path = new SpecialAddress(folder).getPath();
         LOG.info("Getting metadata for special folder: {}", path);
-        WebTarget target = api.webTarget().path(path)
-            .resolveTemplateFromEncoded(ItemAddress.SPECIAL_FOLDER_NAME,
-                                        folder.getName());
+        WebTarget target = api.webTarget().path(path);
         if (parameters != null) {
             target = parameters.configure(target);
         }

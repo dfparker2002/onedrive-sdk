@@ -32,11 +32,11 @@ public class SpecialAddress extends AbstractItemAddress {
      * @param folder SpecialFolder
      */
     public SpecialAddress(SpecialFolder folder) {
-        super(folder.getName());
+        super("");
         this.method = Addressing.SPECIAL;
         this.seperatorStart = ":";
         this.seperatorEnd = ":/";
-        this.basePath = DRIVE_SPECIAL + "/{special-folder-name}";
+        this.basePath = DRIVE_SPECIAL + "/" + folder.getName();
         this.addressWithFileName = "{item-address}/{filename}";
     }
 }

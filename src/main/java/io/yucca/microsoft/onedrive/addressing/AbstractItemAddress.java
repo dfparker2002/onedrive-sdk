@@ -85,6 +85,9 @@ public abstract class AbstractItemAddress implements ItemAddress {
 
     @Override
     public String absolutePath() {
+        if (address == null || address.isEmpty()) {
+            return getPath();
+        }
         return getPath() + seperatorStart + address;
     }
 
