@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.facets.PermissionFacet;
 import io.yucca.microsoft.onedrive.resources.LinkType;
+import io.yucca.microsoft.onedrive.resources.facets.PermissionFacet;
 
 /**
  * Action to create a link

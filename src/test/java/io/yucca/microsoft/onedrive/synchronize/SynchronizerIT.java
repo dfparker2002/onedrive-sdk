@@ -28,9 +28,11 @@ import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.ConfigurationUtil;
 import io.yucca.microsoft.onedrive.OneDrive;
+import io.yucca.microsoft.onedrive.OneDriveImpl;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
+import io.yucca.microsoft.onedrive.OneDriveAPIConnectionImpl;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
-import io.yucca.microsoft.onedrive.OneDriveFolder;
+import io.yucca.microsoft.onedrive.OneDriveFolderImpl;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 public class SynchronizerIT {
@@ -53,13 +55,13 @@ public class SynchronizerIT {
     @Before()
     public void setUp() throws FileNotFoundException, ConfigurationException {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
-        this.api = new OneDriveAPIConnection(configuration);
+        this.api = new OneDriveAPIConnectionImpl(configuration);
         this.tmpFolderPath = Paths.get(testFolder.getRoot().getAbsolutePath());
     }
 
     // @Test
     public void testSynchronizeDrive() throws IOException {
-        OneDrive remoteDrive = OneDrive.defaultDrive(api);
+        OneDrive remoteDrive = OneDriveImpl.defaultDrive(api);
         LocalDrive localDrive = new LocalDrive(tmpFolderPath,
                                                remoteDrive.getDrive());
         synchronizer = new Synchronizer(localDrive, remoteDrive, api,
@@ -77,8 +79,8 @@ public class SynchronizerIT {
      */
     // @Test
     public void testSynchronizeFolder() throws IOException {
-        OneDrive remoteDrive = OneDrive.defaultDrive(api);
-        OneDriveFolder remoteFolder = remoteDrive
+        OneDrive remoteDrive = OneDriveImpl.defaultDrive(api);
+        OneDriveFolderImpl remoteFolder = remoteDrive
             .getSpecialFolder(SpecialFolder.DOCUMENTS, null);
         LocalDrive localDrive = new LocalDrive(tmpFolderPath,
                                                remoteDrive.getDrive());

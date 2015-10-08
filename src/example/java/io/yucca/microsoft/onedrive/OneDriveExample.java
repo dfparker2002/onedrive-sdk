@@ -35,7 +35,7 @@ public class OneDriveExample {
     public static void main(String[] args) {
         try {
             configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
-            api = new OneDriveAPIConnection(configuration);
+            api = new OneDriveAPIConnectionImpl(configuration);
             info();
             list();
         } catch (FileNotFoundException | ConfigurationException e) {
@@ -44,15 +44,15 @@ public class OneDriveExample {
     }
 
     public static void info() {
-        OneDrive drive = OneDrive.defaultDrive(api);
+        OneDrive drive = OneDriveImpl.defaultDrive(api);
         System.out.println("Hello user: " + drive.getUser().getDisplayName());
     }
 
     public static void list() {
-        OneDrive drive = OneDrive.defaultDrive(api);
+        OneDrive drive = OneDriveImpl.defaultDrive(api);
         System.out.println("The OneDrive contains the following folders: ");
         for (OneDriveItem item : drive.listChildren()) {
-            if (item instanceof OneDriveFolder) {
+            if (item instanceof OneDriveFolderImpl) {
                 System.out.format(" %s%n", item.getItem().getName());
             }
         }

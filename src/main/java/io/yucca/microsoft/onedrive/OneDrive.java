@@ -16,75 +16,20 @@
 package io.yucca.microsoft.onedrive;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
-import io.yucca.microsoft.onedrive.actions.CreateAction;
-import io.yucca.microsoft.onedrive.actions.DriveAction;
-import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
-import io.yucca.microsoft.onedrive.actions.MetadataAction;
-import io.yucca.microsoft.onedrive.actions.SearchAction;
-import io.yucca.microsoft.onedrive.actions.SpecialFolderAction;
-import io.yucca.microsoft.onedrive.actions.UploadAction;
-import io.yucca.microsoft.onedrive.addressing.PathAddress;
-import io.yucca.microsoft.onedrive.addressing.RootAddress;
-import io.yucca.microsoft.onedrive.facets.QuotaFacet;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Drive;
 import io.yucca.microsoft.onedrive.resources.Identity;
-import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
+import io.yucca.microsoft.onedrive.resources.facets.QuotaFacet;
 
 /**
  * OneDrive represents a drive in OneDrive
  *
  * @author yucca.io
  */
-public class OneDrive {
-
-    private final OneDriveAPIConnection api;
-
-    private final String driveId;
-
-    /**
-     * Construct an OneDrive instance
-     * 
-     * @param api OneDriveAPIConnection connection to the OneDrive API
-     * @param driveId String drive identifier
-     */
-    public OneDrive(OneDriveAPIConnection api, String driveId) {
-        this.api = api;
-        this.driveId = driveId;
-    }
-
-    OneDrive(OneDriveAPIConnection api, Drive drive) {
-        this.api = api;
-        this.driveId = drive.getId();
-    }
-
-    /**
-     * Get the default drive for the user
-     * 
-     * @param api OneDriveAPIConnection connection to the OneDrive API
-     * @return OneDrive
-     */
-    public static OneDrive defaultDrive(OneDriveAPIConnection api) {
-        DriveAction action = new DriveAction(api);
-        return new OneDrive(api, action.call());
-    }
-
-    /**
-     * Get the default drive for the user
-     * 
-     * @param api OneDriveAPIConnection connection to the OneDrive API
-     * @param driveId String drive identifier
-     * @return OneDrive
-     */
-    public static OneDrive byDriveId(OneDriveAPIConnection api,
-                                        String driveId) {
-        DriveAction action = new DriveAction(api, driveId);
-        return new OneDrive(api, action.call());
-    }
+public interface OneDrive {
 
     /**
      * Create a new folder inside this drive
@@ -95,11 +40,7 @@ public class OneDrive {
      *            {@link ConflictBehavior#FAIL}
      * @return OneDriveFolder created folder
      */
-    public OneDriveFolder createFolder(String name,
-                                       ConflictBehavior behaviour) {
-        return new OneDriveFolder(api, CreateAction
-            .createFolderInRoot(api, name, behaviour));
-    }
+    OneDriveFolder createFolder(String name, ConflictBehavior behaviour);
 
     /**
      * Create a new folder inside this drive, if the folder already exist
@@ -108,19 +49,14 @@ public class OneDrive {
      * @param name String name of the folder
      * @return created folder
      */
-    public OneDriveFolder createFolder(String name) {
-        return createFolder(name, ConflictBehavior.FAIL);
-    }
+    OneDriveFolderImpl createFolder(String name);
 
     /**
      * Get the root folder of this drive
      * 
      * @return OneDriveFolder
      */
-    public OneDriveFolder getRootFolder() {
-        MetadataAction action = new MetadataAction(api, getAddress());
-        return new OneDriveFolder(api, action.call());
-    }
+    OneDriveFolderImpl getRootFolder();
 
     /**
      * Get a special folder in this drive
@@ -130,23 +66,8 @@ public class OneDrive {
      *            the result is returned
      * @return OneDriveFolder
      */
-    public OneDriveFolder getSpecialFolder(SpecialFolder folder,
-                                           QueryParameters parameters) {
-        SpecialFolderAction action = new SpecialFolderAction(api, folder,
-                                                             parameters);
-        return new OneDriveFolder(api, action.call());
-    }
-
-    /**
-     * Get a folder by address
-     * 
-     * @param address ItemAddress address of Item
-     * @return OneDriveFolder
-     */
-    private OneDriveFolder getFolder(ItemAddress address) {
-        MetadataAction action = new MetadataAction(api, address);
-        return new OneDriveFolder(api, action.call());
-    }
+    OneDriveFolderImpl getSpecialFolder(SpecialFolder folder,
+                                    QueryParameters parameters);
 
     /**
      * Get a folder by path
@@ -155,20 +76,7 @@ public class OneDrive {
      *            "Documents"
      * @return OneDriveFolder
      */
-    public OneDriveFolder getFolder(String path) {
-        return getFolder(new PathAddress(path));
-    }
-
-    /**
-     * Get an item by address
-     * 
-     * @param address ItemAddress address of Item
-     * @return OneDriveItem
-     */
-    private OneDriveItem getItem(ItemAddress address) {
-        MetadataAction action = new MetadataAction(api, address);
-        return new OneDriveItem(api, action.call());
-    }
+    OneDriveFolderImpl getFolder(String path);
 
     /**
      * Get an item by path
@@ -176,9 +84,7 @@ public class OneDrive {
      * @param path String path to item relative to the drive root
      * @return OneDriveItem
      */
-    public OneDriveItem getItem(String path) {
-        return getItem(new PathAddress(path));
-    }
+    OneDriveItem getItem(String path);
 
     /**
      * Get all children in this drive
@@ -187,23 +93,14 @@ public class OneDrive {
      *            the result is returned
      * @return Collection<OneDriveItem>
      */
-    public Collection<OneDriveItem> listChildren(QueryParameters parameters) {
-        List<OneDriveItem> children = new LinkedList<>();
-        ListChildrenAction action = new ListChildrenAction(api, parameters);
-        for (Item item : action.call()) {
-            children.add(OneDriveItemFactory.build(api, item));
-        }
-        return children;
-    }
+    Collection<OneDriveItemImpl> listChildren(QueryParameters parameters);
 
     /**
      * Get all children in this drive
      * 
      * @return Collection<OneDriveItem>
      */
-    public Collection<OneDriveItem> listChildren() {
-        return listChildren(null);
-    }
+    Collection<OneDriveItemImpl> listChildren();
 
     /**
      * Search for items in this drive matching the query
@@ -213,15 +110,7 @@ public class OneDrive {
      *            the result is returned
      * @return Collection<OneDriveItem> results
      */
-    public List<OneDriveItem> search(String query, QueryParameters parameters) {
-        List<OneDriveItem> children = new LinkedList<>();
-        SearchAction action = new SearchAction(api, getAddress(), query,
-                                               parameters);
-        for (Item item : action.call()) {
-            children.add(OneDriveItemFactory.build(api, item));
-        }
-        return children;
-    }
+    List<OneDriveItemImpl> search(String query, QueryParameters parameters);
 
     /**
      * Upload the content into this folder
@@ -231,12 +120,7 @@ public class OneDrive {
      *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
      * @return OneDriveItem uploaded item
      */
-    public OneDriveItem upload(OneDriveContent content,
-                               ConflictBehavior behavior) {
-        UploadAction action = new UploadAction(api, content, getAddress(),
-                                               behavior);
-        return new OneDriveItem(api, action.call());
-    }
+    OneDriveItem upload(OneDriveContent content, ConflictBehavior behavior);
 
     /**
      * Upload the content into this folder, if the file already exist uploading
@@ -245,56 +129,41 @@ public class OneDrive {
      * @param content OneDriveContent
      * @return OneDriveItem uploaded item
      */
-    public OneDriveItem upload(OneDriveContent content) {
-        return upload(content, ConflictBehavior.FAIL);
-    }
+    OneDriveItem upload(OneDriveContent content);
 
     /**
      * Get ItemAddress
      * 
      * @return ItemAddress
      */
-    public ItemAddress getAddress() {
-        return new RootAddress();
-    }
+    ItemAddress getAddress();
 
     /**
      * Get drive resource, never cached because there is not eTag value
      * 
      * @return Drive
      */
-    public Drive getDrive() {
-        return new DriveAction(api, driveId).call();
-    }
+    Drive getDrive();
 
     /**
      * Get User information
      * 
      * @return Identity
      */
-    public Identity getUser() {
-        return getDrive().getOwner().getUser();
-    }
+    Identity getUser();
 
     /**
      * Get Quota information
      * 
      * @return QuotaFacet
      */
-    public QuotaFacet getQuota() {
-        return getDrive().getQuota();
-    }
+    QuotaFacet getQuota();
 
     /**
      * Get drive identifier
      * 
      * @return String
      */
-    public String getDriveId() {
-        return driveId;
-    }
+    String getDriveId();
 
-    public String toString() {
-        return "OneDrive: " + driveId + ", user: " + getUser().getDisplayName();
-    }
 }

@@ -45,7 +45,7 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.OneDriveFolder;
+import io.yucca.microsoft.onedrive.OneDriveFolderImpl;
 import io.yucca.microsoft.onedrive.OneDriveItem;
 import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DeleteAction;
@@ -136,7 +136,7 @@ public class Synchronizer {
      * @param api connection used for synchronization
      */
     public Synchronizer(LocalDrive localDrive, LocalFolder localFolder,
-                        OneDrive remoteDrive, OneDriveFolder remoteFolder,
+                        OneDrive remoteDrive, OneDriveFolderImpl remoteFolder,
                         OneDriveAPIConnection api,
                         OneDriveConfiguration configuration) {
         this.localDrive = localDrive;

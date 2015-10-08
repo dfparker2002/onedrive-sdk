@@ -28,7 +28,7 @@ import javax.ws.rs.core.UriBuilderException;
 
 import org.junit.Test;
 
-import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
+import io.yucca.microsoft.onedrive.OneDriveAPIConnectionImpl;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.QueryParameters.Builder;
 import io.yucca.microsoft.onedrive.resources.Order;
@@ -40,7 +40,7 @@ public class QueryParametersTest {
     public void testConfigure() throws IllegalArgumentException,
         UriBuilderException, URISyntaxException {
         Client c = ClientBuilder.newClient();
-        WebTarget target = c.target(OneDriveAPIConnection.ONEDRIVE_URL)
+        WebTarget target = c.target(OneDriveAPIConnectionImpl.ONEDRIVE_URL)
             .path("/drive/root/children");
 
         Builder builder = QueryParameters.Builder.newQueryParameters();

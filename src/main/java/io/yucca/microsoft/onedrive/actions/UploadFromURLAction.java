@@ -32,7 +32,7 @@ import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.URLAddress;
-import io.yucca.microsoft.onedrive.facets.FileFacet;
+import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
 
 /**
  * Action to upload an Item from a specified URL

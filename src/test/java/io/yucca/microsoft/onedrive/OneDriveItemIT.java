@@ -29,7 +29,7 @@ public class OneDriveItemIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private OneDriveAPIConnection api;
+    private OneDriveAPIConnectionImpl api;
 
     private OneDriveConfiguration configuration;
 
@@ -37,19 +37,19 @@ public class OneDriveItemIT {
 
     private OneDriveFile file;
 
-    private OneDriveFolder apitestFolder;
+    private OneDriveFolderImpl apitestFolder;
 
-    private OneDriveFolder movedFolder;
+    private OneDriveFolderImpl movedFolder;
 
     private OneDriveItem uploadedFile;
 
     @Before
     public void setUp() throws FileNotFoundException, ConfigurationException {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
-        this.api = new OneDriveAPIConnection(configuration);
+        this.api = new OneDriveAPIConnectionImpl(configuration);
 
         TestMother.deleteAPITestFolder(api);
-        this.drive = OneDrive.defaultDrive(api);
+        this.drive = OneDriveImpl.defaultDrive(api);
         this.apitestFolder = drive.createFolder(TestMother.FOLDER_APITEST);
         this.file = new OneDriveFile(Paths.get(TestMother.ITEM_UPLOAD_1_PATH),
                                      TestMother.ITEM_UPLOAD_1);

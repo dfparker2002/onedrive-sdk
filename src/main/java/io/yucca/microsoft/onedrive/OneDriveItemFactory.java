@@ -34,12 +34,12 @@ public final class OneDriveItemFactory {
      * @param item Item
      * @return OneDriveItem
      */
-    public final static OneDriveItem build(OneDriveAPIConnection api,
+    public final static OneDriveItemImpl build(OneDriveAPIConnection api,
                                            Item item) {
         if (item.isFile()) {
-            return new OneDriveItem(api, item);
+            return new OneDriveItemImpl(api, item);
         } else if (item.isDirectory()) {
-            return new OneDriveFolder(api, item);
+            return new OneDriveFolderImpl(api, item);
         } else {
             throw new OneDriveException("Unsupported type for item : "
                                         + item.getId() + ", name: "

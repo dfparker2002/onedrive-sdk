@@ -56,7 +56,7 @@ public class OneDriveSynchronizerExample {
     public OneDriveSynchronizerExample() {
         try {
             this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
-            this.api = new OneDriveAPIConnection(configuration);
+            this.api = new OneDriveAPIConnectionImpl(configuration);
         } catch (FileNotFoundException | ConfigurationException e) {
             LOG.error("Failed reading configuration", e);
         }
@@ -64,7 +64,7 @@ public class OneDriveSynchronizerExample {
 
     public void synchronize() {
         try {
-            OneDrive drive = OneDrive.defaultDrive(api);
+            OneDrive drive = OneDriveImpl.defaultDrive(api);
             Path home = Paths
                 .get(System.getProperty("user.home") + "/onedrive");
             LocalDrive localDrive = new LocalDrive(home, drive.getDrive());

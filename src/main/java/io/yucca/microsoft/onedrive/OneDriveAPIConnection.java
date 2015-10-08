@@ -15,91 +15,33 @@
  */
 package io.yucca.microsoft.onedrive;
 
-import java.io.FileNotFoundException;
 import java.net.URI;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.glassfish.jersey.filter.LoggingFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-
-import io.yucca.microsoft.onedrive.util.JulFacade;
 
 /**
  * Represents an authenticated connection to the OneDrive API
- * 
+ *
  * @author yucca.io
  */
-public class OneDriveAPIConnection implements AutoCloseable {
-
-    private static final Logger LOG = LoggerFactory
-        .getLogger(OneDriveAPIConnection.class);
-
-    public static final String ONEDRIVE_URL = "https://api.onedrive.com/v1.0";
-
-    public static final String ONEDRIVE_BUSINESS_URL = "https://{tenant}-my.sharepoint.com/_api/v2.0";
-
-    private final OneDriveConfiguration configuration;
-
-    private Client client;
-
-    private ObjectMapper mapper;
-
-    private OneDriveSession session;
-
-    /**
-     * Constructs the connection to the OneDrive API, the authorization is
-     * delayed until the first API request
-     * 
-     * @param configuration OneDriveConfiguration
-     * @throws ConfigurationException if configuration is invalid
-     * @throws FileNotFoundException if configuration file does not exist
-     */
-    public OneDriveAPIConnection(OneDriveConfiguration configuration)
-        throws FileNotFoundException, ConfigurationException {
-        LOG.info("Creating connection to OneDrive: {}", ONEDRIVE_URL);
-        this.configuration = configuration;
-        initialiseClient();
-        LOG.info("Successfully established connection to OneDrive");
-    }
-
-    /**
-     * Initialize Jersey Client
-     */
-    private void initialiseClient() {
-        LOG.info("Initializing Jersey client");
-        JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
-        this.mapper = ClientFactory.createMapper(jacksonProvider);
-        this.client = ClientFactory.create(configuration, jacksonProvider);
-        this.session = new OneDriveSession(configuration, client);
-        if (configuration.isDebugLogging()) {
-            this.client.register(new LoggingFilter(new JulFacade(LOG), true));
-        }
-    }
+public interface OneDriveAPIConnection {
 
     /**
      * Get authorized client.
      * 
      * @return Client
      */
-    public Client getClient() {
-        return session.getClient();
-    }
+    Client getClient();
 
     /**
      * Determine if client is authorized
      * 
      * @return true if authorized
      */
-    public boolean isAuthorized() {
-        return session.hasAccessToken();
-    }
+    boolean isAuthorized();
 
     /**
      * Get WebTarget based on authorized client.
@@ -109,9 +51,7 @@ public class OneDriveAPIConnection implements AutoCloseable {
      * 
      * @return WebTarget
      */
-    public WebTarget webTarget() {
-        return session.getClient().target(ONEDRIVE_URL);
-    }
+    WebTarget webTarget();
 
     /**
      * Get WebTarget based on authorized client.
@@ -119,34 +59,23 @@ public class OneDriveAPIConnection implements AutoCloseable {
      * @param uri URI to target
      * @return WebTarget
      */
-    public WebTarget webTarget(URI uri) {
-        return session.getClient().target(uri);
-    }
+    WebTarget webTarget(URI uri);
 
     /**
      * Closes the client with all webTargets
      */
-    @Override
-    public void close() {
-        if (client != null) {
-            client.close();
-        }
-    }
+    void close();
 
     /**
      * Logout from OneDrive API
      */
-    public void logOut() {
-        session.logOut();
-    }
+    void logOut();
 
     /**
      * Get ObjectMapper
      * 
      * @return ObjectMapper
      */
-    public ObjectMapper getMapper() {
-        return mapper;
-    }
+    ObjectMapper getMapper();
 
 }

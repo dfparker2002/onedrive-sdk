@@ -15,45 +15,14 @@
  */
 package io.yucca.microsoft.onedrive;
 
-import io.yucca.microsoft.onedrive.actions.CopyAction;
-import io.yucca.microsoft.onedrive.actions.DeleteAction;
-import io.yucca.microsoft.onedrive.actions.DownloadAction;
-import io.yucca.microsoft.onedrive.actions.MetadataAction;
-import io.yucca.microsoft.onedrive.actions.MoveAction;
-import io.yucca.microsoft.onedrive.actions.PollAction;
-import io.yucca.microsoft.onedrive.actions.UpdateAction;
-import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
  * Represent an item stored on OneDrive
- * 
+ *
  * @author yucca.io
  */
-public class OneDriveItem {
-
-    protected final OneDriveAPIConnection api;
-
-    protected final String itemId;
-
-    protected Item item;
-
-    /**
-     * Constructor
-     * 
-     * @param api OneDriveAPIConnection connection used by the folder
-     * @param itemId String identifier of the folder
-     */
-    public OneDriveItem(OneDriveAPIConnection api, String itemId) {
-        this.api = api;
-        this.itemId = itemId;
-    }
-
-    OneDriveItem(OneDriveAPIConnection api, Item item) {
-        this.api = api;
-        this.item = item;
-        this.itemId = item.getId();
-    }
+public interface OneDriveItem {
 
     /**
      * Copy this item recursively to the destination folder
@@ -63,20 +32,12 @@ public class OneDriveItem {
      *            used
      * @return OneDriveItem copied item
      */
-    public OneDriveItem copy(OneDriveFolder destination, String name) {
-        CopyAction action = new CopyAction(api, getAddress(), name,
-                                           destination.getAddress());
-        PollAction pollAction = new PollAction(api, action.call(), getAddress(),
-                                               CopyAction.ACTION);
-        return new OneDriveItem(api, pollAction.call());
-    }
+    OneDriveItem copy(OneDriveFolderImpl destination, String name);
 
     /**
      * Delete this item
      */
-    public void delete() {
-        new DeleteAction(api, getAddress(), getEtag()).call();
-    }
+    void delete();
 
     /**
      * Download the content
@@ -86,9 +47,7 @@ public class OneDriveItem {
      * 
      * @return OneDriveContent
      */
-    public OneDriveContent download() {
-        return new DownloadAction(api, getAddress()).call();
-    }
+    OneDriveContent download();
 
     /**
      * Move this item to destination
@@ -96,68 +55,29 @@ public class OneDriveItem {
      * @param destination OneDriveFolder
      * @return OneDriveItem moved item
      */
-    public OneDriveItem move(OneDriveFolder destination) {
-        MoveAction action = new MoveAction(api, getAddress(), null,
-                                           destination.getAddress());
-        return new OneDriveItem(api, action.call());
-    }
+    OneDriveItem move(OneDriveFolderImpl destination);
 
     /**
      * Rename the item
      * 
      * @param name String
      */
-    public void rename(String name) {
-        Item changed = (item == null) ? changed = new Item(itemId) : item;
-        changed.setName(name);
-        this.item = new UpdateAction(api, item).call();
-    }
+    void rename(String name);
 
-    public String getItemId() {
-        return itemId;
-    }
+    String getItemId();
 
     /**
      * Get the (cached) item resource or update them item if it was changed
      * 
      * @return Item
      */
-    public Item getItem() {
-        try {
-            MetadataAction action = new MetadataAction(api, getAddress(),
-                                                       getEtag(), null);
-            this.item = action.call();
-        } catch (NotModifiedException e) {
-            // do nothing return cached item
-        }
-        return item;
-    }
+    Item getItem();
 
     /**
      * Get ItemAddress
      * 
      * @return ItemAddress
      */
-    public ItemAddress getAddress() {
-        return new IdAddress(itemId);
-    }
-
-    /**
-     * Get the eTag of the Item
-     * 
-     * @return String
-     */
-    String getEtag() {
-        return (item == null) ? null : item.geteTag();
-    }
-
-    /**
-     * Get the cTag of the Item
-     * 
-     * @return String
-     */
-    String getCtag() {
-        return (item == null) ? null : item.getcTag();
-    }
+    ItemAddress getAddress();
 
 }

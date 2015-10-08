@@ -36,7 +36,7 @@ public class OneDriveAPIConnectionIT {
     @Before()
     public void setUp() throws FileNotFoundException, ConfigurationException {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
-        this.api = new OneDriveAPIConnection(configuration);
+        this.api = new OneDriveAPIConnectionImpl(configuration);
     }
 
     @Test

@@ -16,44 +16,18 @@
 package io.yucca.microsoft.onedrive;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
-import io.yucca.microsoft.onedrive.actions.CopyAction;
-import io.yucca.microsoft.onedrive.actions.CreateAction;
-import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
-import io.yucca.microsoft.onedrive.actions.MetadataAction;
-import io.yucca.microsoft.onedrive.actions.MoveAction;
-import io.yucca.microsoft.onedrive.actions.PollAction;
-import io.yucca.microsoft.onedrive.actions.SearchAction;
-import io.yucca.microsoft.onedrive.actions.UploadAction;
-import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
-import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.ItemReference;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 /**
  * OneDriveFolder represent a folder within a OneDrive in which items like
  * audio, files, images, videos or others folders are stored.
- * 
+ *
  * @author yucca.io
  */
-public class OneDriveFolder extends OneDriveItem {
-
-    /**
-     * Construct a OneDriveFolder
-     * 
-     * @param api OneDriveAPIConnection connection used by the folder
-     * @param itemId String identifier of the folder
-     */
-    public OneDriveFolder(OneDriveAPIConnection api, String itemId) {
-        super(api, itemId);
-    }
-
-    OneDriveFolder(OneDriveAPIConnection api, Item item) {
-        super(api, item);
-    }
+public interface OneDriveFolder extends OneDriveItem {
 
     /**
      * Copy this folder recursively to the destination folder
@@ -63,14 +37,7 @@ public class OneDriveFolder extends OneDriveItem {
      *            is used
      * @return OneDriveFolder copied folder
      */
-    @Override
-    public OneDriveFolder copy(OneDriveFolder destination, String name) {
-        CopyAction action = new CopyAction(api, getAddress(), name,
-                                           destination.getAddress());
-        PollAction pollAction = new PollAction(api, action.call(), getAddress(),
-                                               CopyAction.ACTION);
-        return new OneDriveFolder(api, pollAction.call());
-    }
+    OneDriveFolder copy(OneDriveFolderImpl destination, String name);
 
     /**
      * Create a new folder inside this folder
@@ -82,11 +49,7 @@ public class OneDriveFolder extends OneDriveItem {
      *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
      * @return OneDriveFolder created folder
      */
-    public OneDriveFolder createFolder(String name, ConflictBehavior behavior) {
-        CreateAction action = new CreateAction(api, name, getAddress(),
-                                               behavior);
-        return new OneDriveFolder(api, action.call());
-    }
+    OneDriveFolder createFolder(String name, ConflictBehavior behavior);
 
     /**
      * Create a new folder inside this folder, if the folder already exists
@@ -95,20 +58,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @param name String name of the folder
      * @return OneDriveFolder created folder
      */
-    public OneDriveFolder createFolder(String name) {
-        return createFolder(name, null);
-    }
-
-    /**
-     * Get a folder located inside this folder
-     * 
-     * @param address ItemAddress address of Item, relative to this folder
-     * @return OneDriveFolder
-     */
-    private OneDriveFolder getFolder(ItemAddress address) {
-        MetadataAction action = new MetadataAction(api, address, getEtag());
-        return new OneDriveFolder(api, action.call());
-    }
+    OneDriveFolder createFolder(String name);
 
     /**
      * Get a folder located inside this folder
@@ -116,9 +66,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @param path String name or path of folder, relative to this folder
      * @return OneDriveFolder
      */
-    public OneDriveFolder getFolder(String path) {
-        return getFolder(new PathAddress(getItem(), path));
-    }
+    OneDriveFolder getFolder(String path);
 
     /**
      * Get an item inside this folder
@@ -126,20 +74,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @param path String name or path of item, relative to this folder
      * @return OneDriveItem
      */
-    private OneDriveItem getItem(ItemAddress address) {
-        MetadataAction action = new MetadataAction(api, address, getEtag());
-        return new OneDriveItem(api, action.call());
-    }
-
-    /**
-     * Get an item inside this folder
-     * 
-     * @param path String name or path of item, relative to this folder
-     * @return OneDriveItem
-     */
-    public OneDriveItem getItem(String path) {
-        return getItem(new PathAddress(getItem(), path));
-    }
+    OneDriveItem getItem(String path);
 
     /**
      * Get all children in this folder
@@ -148,33 +83,19 @@ public class OneDriveFolder extends OneDriveItem {
      *            the result is returned
      * @return Collection<OneDriveItem>
      */
-    public Collection<OneDriveItem> listChildren(QueryParameters parameters) {
-        List<OneDriveItem> children = new LinkedList<>();
-        ListChildrenAction action = new ListChildrenAction(api, getAddress(),
-                                                           null, parameters);
-        for (Item item : action.call()) {
-            children.add(OneDriveItemFactory.build(api, item));
-        }
-        return children;
-    }
+    Collection<OneDriveItemImpl> listChildren(QueryParameters parameters);
 
     /**
      * Delete this folder and (recursively) all the children contents
      */
-    @Override
-    public void delete() {
-        super.delete();
-    }
+    void delete();
 
     /**
      * Download of a folder is unsupported
      * 
      * @throws UnsupportedOperationException
      */
-    @Override
-    public OneDriveContent download() {
-        throw new UnsupportedOperationException("download is not supported for a item type: folder");
-    }
+    OneDriveContent download();
 
     /**
      * Move this folder to destination
@@ -182,12 +103,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @param destination OneDriveFolder
      * @return Item moved item
      */
-    @Override
-    public OneDriveFolder move(OneDriveFolder destination) {
-        MoveAction action = new MoveAction(api, getAddress(), null,
-                                           destination.getAddress());
-        return new OneDriveFolder(api, action.call());
-    }
+    OneDriveFolder move(OneDriveFolderImpl destination);
 
     /**
      * Move this folder to special folder
@@ -195,11 +111,7 @@ public class OneDriveFolder extends OneDriveItem {
      * @param destination SpecialFolder
      * @return Item moved item
      */
-    public OneDriveFolder move(SpecialFolder destination) {
-        MoveAction action = new MoveAction(api, getAddress(), null,
-                                           destination.getPath());
-        return new OneDriveFolder(api, action.call());
-    }
+    OneDriveFolder move(SpecialFolder destination);
 
     /**
      * Move this folder to root of Drive
@@ -207,21 +119,14 @@ public class OneDriveFolder extends OneDriveItem {
      * @param destination OneDrive
      * @return Item moved item
      */
-    public OneDriveFolder move(OneDrive destination) {
-        MoveAction action = new MoveAction(api, getAddress(), null,
-                                           destination.getAddress());
-        return new OneDriveFolder(api, action.call());
-    }
+    OneDriveFolder move(OneDrive destination);
 
     /**
      * Rename the folder
      * 
      * @param name String new name
      */
-    @Override
-    public void rename(String name) {
-        super.rename(name);
-    }
+    void rename(String name);
 
     /**
      * Search for items in this folder matching the query
@@ -231,15 +136,7 @@ public class OneDriveFolder extends OneDriveItem {
      *            the result is returned
      * @return Collection<OneDriveItem> results
      */
-    public List<OneDriveItem> search(String query, QueryParameters parameters) {
-        List<OneDriveItem> children = new LinkedList<>();
-        SearchAction action = new SearchAction(api, getAddress(), query,
-                                               parameters);
-        for (Item item : action.call()) {
-            children.add(OneDriveItemFactory.build(api, item));
-        }
-        return children;
-    }
+    List<OneDriveItemImpl> search(String query, QueryParameters parameters);
 
     /**
      * Upload the content into this folder
@@ -249,12 +146,7 @@ public class OneDriveFolder extends OneDriveItem {
      *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
      * @return OneDriveItem uploaded item
      */
-    public OneDriveItem upload(OneDriveContent content,
-                               ConflictBehavior behavior) {
-        UploadAction action = new UploadAction(api, content, getAddress(),
-                                               behavior);
-        return new OneDriveItem(api, action.call());
-    }
+    OneDriveItem upload(OneDriveContent content, ConflictBehavior behavior);
 
     /**
      * Upload the content into this folder, if the file already exist uploading
@@ -263,19 +155,6 @@ public class OneDriveFolder extends OneDriveItem {
      * @param content OneDriveContent
      * @return OneDriveItem uploaded item
      */
-    public OneDriveItem upload(OneDriveContent content) {
-        return upload(content, ConflictBehavior.FAIL);
-    }
-
-    /**
-     * Get ItemReference for this Folder
-     * 
-     * @return ItemReference based on itemId
-     */
-    ItemReference getParentRef() {
-        ItemReference ref = new ItemReference();
-        ref.setId(itemId);
-        return ref;
-    }
+    OneDriveItem upload(OneDriveContent content);
 
 }

@@ -33,24 +33,24 @@ public class OneDriveFolderIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private OneDriveAPIConnection api;
+    private OneDriveAPIConnectionImpl api;
 
     private OneDriveConfiguration configuration;
 
     private OneDrive drive;
 
-    private OneDriveFolder apitestFolder;
+    private OneDriveFolderImpl apitestFolder;
 
     @Before()
     public void setUp() throws FileNotFoundException, ConfigurationException {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
-        this.api = new OneDriveAPIConnection(configuration);
+        this.api = new OneDriveAPIConnectionImpl(configuration);
 
         // create test directory and file
         TestMother.createAPITestFolder(api);
         TestMother.uploadTestItem(api);
 
-        this.drive = OneDrive.defaultDrive(api);
+        this.drive = OneDriveImpl.defaultDrive(api);
         this.apitestFolder = drive.getFolder(TestMother.FOLDER_APITEST);
     }
 
@@ -84,7 +84,7 @@ public class OneDriveFolderIT {
 
     @Test
     public void testListChildren() {
-        Collection<OneDriveItem> children = apitestFolder
+        Collection<OneDriveItemImpl> children = apitestFolder
             .listChildren(TestMother.fullQueryParameters());
         assertNotNull(children);
         assertTrue(children.size() > 0);
@@ -121,7 +121,7 @@ public class OneDriveFolderIT {
 
     @Test
     public void testSearch() {
-        Collection<OneDriveItem> children = apitestFolder
+        Collection<OneDriveItemImpl> children = apitestFolder
             .search("e", TestMother.fullQueryParameters());
         assertNotNull(children);
         assertTrue(children.size() > 0);

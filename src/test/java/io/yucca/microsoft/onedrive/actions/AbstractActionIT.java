@@ -22,7 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import io.yucca.microsoft.onedrive.ConfigurationUtil;
-import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
+import io.yucca.microsoft.onedrive.OneDriveAPIConnectionImpl;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
 import io.yucca.microsoft.onedrive.TestMother;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
@@ -31,7 +31,7 @@ public abstract class AbstractActionIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    protected OneDriveAPIConnection api;
+    protected OneDriveAPIConnectionImpl api;
 
     protected OneDriveConfiguration configuration;
 
@@ -42,7 +42,7 @@ public abstract class AbstractActionIT {
     @Before()
     public void setUp() throws FileNotFoundException, ConfigurationException {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
-        this.api = new OneDriveAPIConnection(configuration);
+        this.api = new OneDriveAPIConnectionImpl(configuration);
         this.apiTestFolderId = TestMother.createAPITestFolder(api).getId();
         this.uploadedItemId = TestMother.uploadTestItem(api).getId();
     }
