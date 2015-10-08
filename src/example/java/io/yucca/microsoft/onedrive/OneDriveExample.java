@@ -32,6 +32,9 @@ public class OneDriveExample {
 
     private static OneDriveConfiguration configuration;
 
+    private OneDriveExample() {
+    }
+
     public static void main(String[] args) {
         try {
             configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
