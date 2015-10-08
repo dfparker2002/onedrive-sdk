@@ -13,32 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.facets;
+package io.yucca.microsoft.onedrive.resources.facets;
 
 /**
- * ImageFacet
+ * LocationFacet
  *
  * @author yucca.io
  */
-public class ImageFacet {
+public class LocationFacet {
 
-    private Integer width;
-    private Integer height;
+    private Float altitude;
+    private Float latitude;
+    private Float longitude;
 
-    public Integer getWidth() {
-        return width;
+    public Float getAltitude() {
+        return altitude;
     }
 
-    public void setWidth(Integer width) {
-        this.width = width;
+    public void setAltitude(Float altitude) {
+        this.altitude = altitude;
     }
 
-    public Integer getHeight() {
-        return height;
+    public Float getLatitude() {
+        return latitude;
     }
 
-    public void setHeight(Integer height) {
-        this.height = height;
+    public void setLatitude(Float latitude) {
+        this.latitude = latitude;
+    }
+
+    public Float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Float longitude) {
+        this.longitude = longitude;
     }
 
 }

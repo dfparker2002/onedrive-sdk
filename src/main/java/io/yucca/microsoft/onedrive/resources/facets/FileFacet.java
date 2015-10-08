@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.facets;
+package io.yucca.microsoft.onedrive.resources.facets;
 
 /**
- * HashesType
+ * FileFacet
  *
  * @author yucca.io
  */
-public class HashesFacet {
+public class FileFacet {
 
-    private String sha1Hash;
-    private String crc32Hash;
+    private String mimeType;
+    private HashesFacet hashes;
 
-    public String getSha1Hash() {
-        return sha1Hash;
+    public String getMimeType() {
+        return mimeType;
     }
 
-    public void setSha1Hash(String sha1Hash) {
-        this.sha1Hash = sha1Hash;
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
-    public String getCrc32Hash() {
-        return crc32Hash;
+    public HashesFacet getHashes() {
+        return hashes;
     }
 
-    public void setCrc32Hash(String crc32Hash) {
-        this.crc32Hash = crc32Hash;
+    public void setHashes(HashesFacet hashes) {
+        this.hashes = hashes;
     }
 
 }

@@ -31,10 +31,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.OneDriveFile;
-import io.yucca.microsoft.onedrive.facets.FileFacet;
-import io.yucca.microsoft.onedrive.facets.HashesFacet;
 import io.yucca.microsoft.onedrive.resources.Drive;
 import io.yucca.microsoft.onedrive.resources.Item;
+import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
+import io.yucca.microsoft.onedrive.resources.facets.HashesFacet;
 
 /**
  * TODO use @Rule TemporaryFolder

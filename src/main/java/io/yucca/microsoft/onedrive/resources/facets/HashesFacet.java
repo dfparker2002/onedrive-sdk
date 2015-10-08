@@ -13,41 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.facets;
+package io.yucca.microsoft.onedrive.resources.facets;
 
 /**
- * LocationFacet
+ * HashesType
  *
  * @author yucca.io
  */
-public class LocationFacet {
+public class HashesFacet {
 
-    private Float altitude;
-    private Float latitude;
-    private Float longitude;
+    private String sha1Hash;
+    private String crc32Hash;
 
-    public Float getAltitude() {
-        return altitude;
+    public String getSha1Hash() {
+        return sha1Hash;
     }
 
-    public void setAltitude(Float altitude) {
-        this.altitude = altitude;
+    public void setSha1Hash(String sha1Hash) {
+        this.sha1Hash = sha1Hash;
     }
 
-    public Float getLatitude() {
-        return latitude;
+    public String getCrc32Hash() {
+        return crc32Hash;
     }
 
-    public void setLatitude(Float latitude) {
-        this.latitude = latitude;
-    }
-
-    public Float getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Float longitude) {
-        this.longitude = longitude;
+    public void setCrc32Hash(String crc32Hash) {
+        this.crc32Hash = crc32Hash;
     }
 
 }

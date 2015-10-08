@@ -13,32 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.facets;
+package io.yucca.microsoft.onedrive.resources.facets;
 
 /**
- * FileSystemInfoFacet
+ * DeletedFacet
  *
  * @author yucca.io
  */
-public class FileSystemInfoFacet {
+public class DeletedFacet {
 
-    private String createdDateTime;
-    private String lastModifiedDateTime;
-
-    public String getCreatedDateTime() {
-        return createdDateTime;
+    Boolean isDeleted() {
+        return true;
     }
-
-    public void setCreatedDateTime(String createdDateTime) {
-        this.createdDateTime = createdDateTime;
-    }
-
-    public String getLastModifiedDateTime() {
-        return lastModifiedDateTime;
-    }
-
-    public void setLastModifiedDateTime(String lastModifiedDateTime) {
-        this.lastModifiedDateTime = lastModifiedDateTime;
-    }
-
 }

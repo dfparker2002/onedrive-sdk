@@ -13,32 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.facets;
+package io.yucca.microsoft.onedrive.resources.facets;
 
 /**
- * FileFacet
+ * FolderFacet
  *
  * @author yucca.io
  */
-public class FileFacet {
+public class FolderFacet {
 
-    private String mimeType;
-    private HashesFacet hashes;
+    private Long childCount;
 
-    public String getMimeType() {
-        return mimeType;
+    public Long getChildCount() {
+        return childCount;
     }
 
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-    }
-
-    public HashesFacet getHashes() {
-        return hashes;
-    }
-
-    public void setHashes(HashesFacet hashes) {
-        this.hashes = hashes;
+    public void setChildCount(Long childCount) {
+        this.childCount = childCount;
     }
 
 }

@@ -22,16 +22,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
-import io.yucca.microsoft.onedrive.facets.AudioFacet;
-import io.yucca.microsoft.onedrive.facets.DeletedFacet;
-import io.yucca.microsoft.onedrive.facets.FileFacet;
-import io.yucca.microsoft.onedrive.facets.FileSystemInfoFacet;
-import io.yucca.microsoft.onedrive.facets.FolderFacet;
-import io.yucca.microsoft.onedrive.facets.ImageFacet;
-import io.yucca.microsoft.onedrive.facets.LocationFacet;
-import io.yucca.microsoft.onedrive.facets.PhotoFacet;
-import io.yucca.microsoft.onedrive.facets.SpecialFolderFacet;
-import io.yucca.microsoft.onedrive.facets.VideoFacet;
+import io.yucca.microsoft.onedrive.resources.facets.AudioFacet;
+import io.yucca.microsoft.onedrive.resources.facets.DeletedFacet;
+import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
+import io.yucca.microsoft.onedrive.resources.facets.FileSystemInfoFacet;
+import io.yucca.microsoft.onedrive.resources.facets.FolderFacet;
+import io.yucca.microsoft.onedrive.resources.facets.ImageFacet;
+import io.yucca.microsoft.onedrive.resources.facets.LocationFacet;
+import io.yucca.microsoft.onedrive.resources.facets.PhotoFacet;
+import io.yucca.microsoft.onedrive.resources.facets.SpecialFolderFacet;
+import io.yucca.microsoft.onedrive.resources.facets.VideoFacet;
 
 /**
  * The Item resource represents an item stored in OneDrive

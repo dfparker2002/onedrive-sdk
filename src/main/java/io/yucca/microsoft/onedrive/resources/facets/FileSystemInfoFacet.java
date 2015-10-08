@@ -13,23 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.facets;
+package io.yucca.microsoft.onedrive.resources.facets;
 
 /**
- * FolderFacet
+ * FileSystemInfoFacet
  *
  * @author yucca.io
  */
-public class FolderFacet {
+public class FileSystemInfoFacet {
 
-    private Long childCount;
+    private String createdDateTime;
+    private String lastModifiedDateTime;
 
-    public Long getChildCount() {
-        return childCount;
+    public String getCreatedDateTime() {
+        return createdDateTime;
     }
 
-    public void setChildCount(Long childCount) {
-        this.childCount = childCount;
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
+    }
+
+    public String getLastModifiedDateTime() {
+        return lastModifiedDateTime;
+    }
+
+    public void setLastModifiedDateTime(String lastModifiedDateTime) {
+        this.lastModifiedDateTime = lastModifiedDateTime;
     }
 
 }

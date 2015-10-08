@@ -13,16 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.facets;
+package io.yucca.microsoft.onedrive.resources.facets;
 
 /**
- * DeletedFacet
+ * ImageFacet
  *
  * @author yucca.io
  */
-public class DeletedFacet {
+public class ImageFacet {
 
-    Boolean isDeleted() {
-        return true;
+    private Integer width;
+    private Integer height;
+
+    public Integer getWidth() {
+        return width;
     }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
 }
