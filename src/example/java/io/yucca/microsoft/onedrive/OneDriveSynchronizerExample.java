@@ -48,11 +48,6 @@ public class OneDriveSynchronizerExample {
 
     private Synchronizer synchronizer;
 
-    public static void main(String[] args) {
-        odse = new OneDriveSynchronizerExample();
-        odse.synchronize();
-    }
-
     public OneDriveSynchronizerExample() {
         try {
             this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
@@ -60,6 +55,11 @@ public class OneDriveSynchronizerExample {
         } catch (FileNotFoundException | ConfigurationException e) {
             LOG.error("Failed reading configuration", e);
         }
+    }
+
+    public static void main(String[] args) {
+        odse = new OneDriveSynchronizerExample();
+        odse.synchronize();
     }
 
     public void synchronize() {
