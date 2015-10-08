@@ -103,8 +103,8 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
      */
     private Item move() {
         LOG.info("Moving item: {} to folder: {}", itemAddress, parentAddress);
-        Map<String, Object> map = newParentRefBody(name, parentAddress
-            .getItemReference());
+        Map<String, Object> map = newParentRefBody(name,
+                                                   getItemReference(parentAddress));
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
             .resolveTemplateFromEncoded(ItemAddress.ITEM_ADDRESS,

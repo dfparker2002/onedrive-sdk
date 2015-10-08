@@ -176,6 +176,12 @@ public abstract class AbstractAction {
         return map;
     }
 
+    protected ItemReference getItemReference(ItemAddress address) {
+        ItemReference ref = new ItemReference();
+        ref.setPath(address.absolutePath());
+        return ref;
+    }
+
     /**
      * Create an EntityTag
      * 
