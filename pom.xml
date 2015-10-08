@@ -136,8 +136,8 @@
        <value>org.sonar.java.jacoco.JUnitListener</value>
       </property>
      </properties>
-     <!-- workaround to have test report for IT in sonar, see http://stackoverflow.com/a/15567782/936729 --> 
-      <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+     <!-- workaround to have test report for IT in sonar, see http://stackoverflow.com/a/15567782/936729 -->
+     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
     </configuration>
     <executions>
      <execution>
@@ -181,6 +181,22 @@
       <goals>
        <goal>test-jar</goal>
       </goals>
+     </execution>
+    </executions>
+   </plugin>
+   <!-- copy dependencies to ${project.build.directory}/lib for sonar analysis, 
+    not further used -->
+   <plugin>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <executions>
+     <execution>
+      <phase>package</phase>
+      <goals>
+       <goal>copy-dependencies</goal>
+      </goals>
+      <configuration>
+       <outputDirectory>${project.build.directory}/lib</outputDirectory>
+      </configuration>
      </execution>
     </executions>
    </plugin>
