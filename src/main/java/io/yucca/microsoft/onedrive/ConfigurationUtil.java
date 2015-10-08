@@ -33,9 +33,6 @@ public final class ConfigurationUtil {
     private static final Logger LOG = LoggerFactory
         .getLogger(ConfigurationUtil.class);
 
-    private ConfigurationUtil() {
-    }
-
     public static final String CLIENT_ID = "clientId";
 
     public static final String CLIENT_SECRET = "clientSecret";
@@ -53,6 +50,9 @@ public final class ConfigurationUtil {
     public static final String DEBUG_LOGGING = "debugLogging";
 
     private static PropertiesConfiguration config = new PropertiesConfiguration();
+
+    private ConfigurationUtil() {
+    }
 
     /**
      * Read configuration from properties file
