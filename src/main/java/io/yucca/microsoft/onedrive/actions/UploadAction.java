@@ -118,7 +118,7 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
      * Upload by URI
      * 
      * @param api OneDriveAPIConnection
-     * @param uri URI to an externel resource
+     * @param uri URI to an external resource
      * @return OneDriveContent
      */
     public static OneDriveContent byURI(OneDriveAPIConnection api, URI uri) {
