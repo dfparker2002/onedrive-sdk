@@ -103,6 +103,34 @@ public class OneDriveError implements Serializable {
             return "code: " + code + ", message: " + message;
         }
 
+        /**
+         * Recursively test if this error or an innererror equals the expected
+         * code
+         * 
+         * @param expectedErrorCode ErrorCodes
+         * @return true
+         */
+        public boolean equalsError(ErrorCodes expectedErrorCode) {
+            if (code == null) {
+                return false;
+            }
+            if (code.equals(expectedErrorCode.getCode())) {
+                return true;
+            } else if (innererror != null) {
+                return innererror.equalsError(expectedErrorCode);
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Recursively test if this error or an innererror equals the expected code
+     * 
+     * @param expectedErrorCode ErrorCodes
+     * @return true
+     */
+    public boolean equalsError(ErrorCodes expectedErrorCode) {
+        return error.equalsError(expectedErrorCode);
     }
 
     public String toString() {
