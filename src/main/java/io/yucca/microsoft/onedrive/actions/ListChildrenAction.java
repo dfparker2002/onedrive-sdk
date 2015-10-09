@@ -34,7 +34,6 @@ import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ItemCollection;
-import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
  * Action to list children in a folder or drive item
@@ -131,8 +130,7 @@ public class ListChildrenAction extends AbstractAction
                  itemAddress, parameters);
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress());
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress());
         if (parameters != null) {
             target = parameters.configure(target, QueryParameters.EXPAND);
         }
@@ -149,17 +147,15 @@ public class ListChildrenAction extends AbstractAction
      * {@link ItemCollection#getNextLink()}
      * 
      * @param api OneDriveAPIConnection
-     * @param uri URI
+     * @param uri URI to as returned in the Location header
      * @return ItemIterable
      */
     public static ItemIterable byURI(OneDriveAPIConnection api, URI uri) {
         Response response = api.webTarget(uri)
             .request(MediaType.APPLICATION_JSON_TYPE).get();
         if (response.getStatus() != Status.OK.getStatusCode()) {
-            // XXX e == always null -> NullPoint
-            OneDriveError e = response.readEntity(OneDriveError.class);
             throw new OneDriveException("Failure listing children by URL: "
-                                        + uri, response.getStatus(), e);
+                                        + uri, response.getStatus());
         }
         return response.readEntity(ItemCollection.class).setApi(api);
     }

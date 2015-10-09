@@ -30,7 +30,6 @@ import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
  * Action to download Item content
@@ -106,8 +105,7 @@ public class DownloadAction extends AbstractAction
         LOG.info("Downloading item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress())
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
             .request().header(HEADER_IF_NONE_MATCH, createEtag(eTag)).get();
         handleNotModified(response);
         handleError(response, Status.OK,
@@ -126,9 +124,8 @@ public class DownloadAction extends AbstractAction
         Response response = api.webTarget(uri)
             .request(MediaType.APPLICATION_OCTET_STREAM).get();
         if (response.getStatus() != Status.FOUND.getStatusCode()) {
-            OneDriveError e = response.readEntity(OneDriveError.class);
-            throw new OneDriveException("Failure downloading item: " + uri,
-                                        response.getStatus(), e);
+            throw new OneDriveException("Failure downloading item by URI: "
+                                        + uri, response.getStatus());
         }
         return response.readEntity(OneDriveContent.class);
     }

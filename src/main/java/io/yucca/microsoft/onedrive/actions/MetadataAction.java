@@ -31,7 +31,6 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
  * Action to request Item metadata
@@ -116,8 +115,7 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
         LOG.info("Get metadata for item: {}", itemAddress);
         WebTarget target = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress());
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress());
         if (parameters != null) {
             target = parameters.configure(target);
         }
@@ -139,9 +137,8 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
     public static Item byURI(URI uri, OneDriveAPIConnection api) {
         Response response = api.webTarget(uri).request().get();
         if (response.getStatus() != Status.OK.getStatusCode()) {
-            OneDriveError e = response.readEntity(OneDriveError.class);
             throw new OneDriveException("Failure acquiring metadata for item: "
-                                        + uri, response.getStatus(), e);
+                                        + uri, response.getStatus());
         }
         return response.readEntity(Item.class);
     }

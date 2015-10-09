@@ -34,7 +34,6 @@ import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
  * Action to upload an Item. Only files below 100MB can be uploaded by this
@@ -116,19 +115,18 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
     }
 
     /**
-     * XXX Upload by URI
+     * Upload by URI
      * 
      * @param api OneDriveAPIConnection
-     * @param uri URI to an Item or as returned in the Location header
+     * @param uri URI to an externel resource
      * @return OneDriveContent
      */
     public static OneDriveContent byURI(OneDriveAPIConnection api, URI uri) {
         Response response = api.webTarget(uri)
             .request(MediaType.APPLICATION_OCTET_STREAM).get();
         if (response.getStatus() != Status.FOUND.getStatusCode()) {
-            OneDriveError e = response.readEntity(OneDriveError.class);
-            throw new OneDriveException("Failure downloading item: " + uri,
-                                        response.getStatus(), e);
+            throw new OneDriveException("Failure downloading item by URI: "
+                                        + uri, response.getStatus());
         }
         return response.readEntity(OneDriveContent.class);
     }
