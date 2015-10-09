@@ -45,9 +45,6 @@ public interface OneDriveAPIConnection {
 
     /**
      * Get WebTarget based on authorized client.
-     * <p>
-     * TODO determine URL based on configuration parameter
-     * </p>
      * 
      * @return WebTarget
      */
