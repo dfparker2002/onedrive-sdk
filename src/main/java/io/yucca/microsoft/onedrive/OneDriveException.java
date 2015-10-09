@@ -28,35 +28,15 @@ public class OneDriveException extends RuntimeException {
     private static final long serialVersionUID = -7206345485593647831L;
 
     private final OneDriveError error;
-    
+
     public OneDriveException() {
         super();
         this.error = null;
     }
 
-    public OneDriveException(String message, Throwable cause,
-                             boolean enableSuppression,
-                             boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.error = null;
-    }
-
-    public OneDriveException(String message, Throwable cause,
-                             OneDriveError error, boolean enableSuppression,
-                             boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.error = error;
-    }
-
     public OneDriveException(String message, Throwable cause) {
         super(message, cause);
         this.error = null;
-    }
-
-    public OneDriveException(String message, Throwable cause,
-                             OneDriveError error) {
-        super(message, cause);
-        this.error = error;
     }
 
     public OneDriveException(String message) {
@@ -69,21 +49,10 @@ public class OneDriveException extends RuntimeException {
         this.error = error;
     }
 
-    public OneDriveException(String message, int status, OneDriveError error) {
+    public OneDriveException(String message, int status) {
         super(message + ", reason: " + status + " "
-              + ErrorCodes.getMessage(status) + ", cause: "
-              + error.getError().getMessage());
-        this.error = error;
-    }
-
-    public OneDriveException(Throwable cause) {
-        super(cause);
+              + ErrorCodes.getMessage(status));
         this.error = null;
-    }
-
-    public OneDriveException(Throwable cause, OneDriveError error) {
-        super(cause);
-        this.error = error;
     }
 
     public OneDriveError getError() {
