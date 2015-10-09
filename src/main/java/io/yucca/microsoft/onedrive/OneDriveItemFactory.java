@@ -34,8 +34,8 @@ public final class OneDriveItemFactory {
      * @param item Item
      * @return OneDriveItem
      */
-    public final static OneDriveItemImpl build(OneDriveAPIConnection api,
-                                           Item item) {
+    public static final OneDriveItemImpl build(OneDriveAPIConnection api,
+                                               Item item) {
         if (item.isFile()) {
             return new OneDriveItemImpl(api, item);
         } else if (item.isDirectory()) {
