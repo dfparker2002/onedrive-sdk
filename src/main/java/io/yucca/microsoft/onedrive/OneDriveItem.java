@@ -42,9 +42,6 @@ public interface OneDriveItem {
 
     /**
      * Download the content
-     * <p>
-     * FIXME [ec]tag handling?
-     * </p>
      * 
      * @return OneDriveContent
      */
