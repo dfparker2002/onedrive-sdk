@@ -21,7 +21,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.facets.AudioFacet;
 import io.yucca.microsoft.onedrive.resources.facets.DeletedFacet;
 import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
