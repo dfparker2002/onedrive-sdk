@@ -15,8 +15,6 @@
  */
 package io.yucca.microsoft.onedrive.addressing;
 
-import io.yucca.microsoft.onedrive.Addressing;
-
 /**
  * RootAddress, addressing of items in root folder by path
  * 

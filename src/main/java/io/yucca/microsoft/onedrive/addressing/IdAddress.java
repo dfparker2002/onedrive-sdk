@@ -15,7 +15,6 @@
  */
 package io.yucca.microsoft.onedrive.addressing;
 
-import io.yucca.microsoft.onedrive.Addressing;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
