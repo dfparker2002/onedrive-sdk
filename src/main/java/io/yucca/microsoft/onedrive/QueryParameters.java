@@ -66,12 +66,13 @@ public class QueryParameters {
      * @throws OneDriveException if encoding of a parameter fails
      */
     public WebTarget configure(WebTarget target) {
+        WebTarget expanded = target;
         for (Entry<String, String> parameter : parameters.entrySet()) {
-            target = target
+            expanded = target
                 .queryParam(parameter.getKey(),
                             URLHelper.encodeURIComponent(parameter.getValue()));
         }
-        return target;
+        return expanded;
     }
 
     /**
@@ -89,12 +90,13 @@ public class QueryParameters {
         for (String unallowed : unAllowedQueryParameters) {
             parameters.remove(unallowed);
         }
+        WebTarget expanded = target;
         for (Entry<String, String> parameter : parameters.entrySet()) {
-            target = target
+            expanded = target
                 .queryParam(parameter.getKey(),
                             URLHelper.encodeURIComponent(parameter.getValue()));
         }
-        return target;
+        return expanded;
     }
 
     public String toString() {
