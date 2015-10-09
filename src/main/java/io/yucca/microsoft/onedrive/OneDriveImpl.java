@@ -81,7 +81,7 @@ public class OneDriveImpl implements OneDrive {
      * @return OneDrive
      */
     public static OneDrive byDriveId(OneDriveAPIConnection api,
-                                        String driveId) {
+                                     String driveId) {
         DriveAction action = new DriveAction(api, driveId);
         return new OneDriveImpl(api, action.call());
     }
@@ -97,7 +97,7 @@ public class OneDriveImpl implements OneDrive {
      */
     @Override
     public OneDriveFolderImpl createFolder(String name,
-                                       ConflictBehavior behaviour) {
+                                           ConflictBehavior behaviour) {
         return new OneDriveFolderImpl(api, CreateAction
             .createFolderInRoot(api, name, behaviour));
     }
@@ -135,7 +135,7 @@ public class OneDriveImpl implements OneDrive {
      */
     @Override
     public OneDriveFolderImpl getSpecialFolder(SpecialFolder folder,
-                                           QueryParameters parameters) {
+                                               QueryParameters parameters) {
         SpecialFolderAction action = new SpecialFolderAction(api, folder,
                                                              parameters);
         return new OneDriveFolderImpl(api, action.call());
@@ -222,7 +222,8 @@ public class OneDriveImpl implements OneDrive {
      * @return Collection<OneDriveItem> results
      */
     @Override
-    public List<OneDriveItemImpl> search(String query, QueryParameters parameters) {
+    public List<OneDriveItemImpl> search(String query,
+                                         QueryParameters parameters) {
         List<OneDriveItemImpl> children = new LinkedList<>();
         SearchAction action = new SearchAction(api, getAddress(), query,
                                                parameters);
@@ -310,6 +311,7 @@ public class OneDriveImpl implements OneDrive {
         return driveId;
     }
 
+    @Override
     public String toString() {
         return "OneDrive: " + driveId + ", user: " + getUser().getDisplayName();
     }
