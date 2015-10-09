@@ -55,6 +55,4 @@ public class MetadataActionIT extends AbstractActionIT {
         assertNotNull(item.getChildren());
     }
 
-    // TODO testgetMetadataByURI(URI uri)
-
 }

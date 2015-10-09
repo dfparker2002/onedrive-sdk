@@ -15,7 +15,6 @@
  */
 package io.yucca.microsoft.onedrive.actions;
 
-import java.net.URI;
 import java.util.concurrent.Callable;
 
 import javax.ws.rs.client.WebTarget;
@@ -39,7 +38,8 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class MetadataAction extends AbstractAction implements Callable<Item> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MetadataAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(MetadataAction.class);
 
     private final ItemAddress itemAddress;
 
@@ -124,22 +124,6 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
         handleNotModified(response);
         handleError(response, Status.OK,
                     "Failure getting metadata for item: " + itemAddress);
-        return response.readEntity(Item.class);
-    }
-
-    /**
-     * Get metadata by URI
-     * 
-     * @param api OneDriveAPIConnection
-     * @param uri URI to an Item or as returned in the Location header
-     * @return Item
-     */
-    public static Item byURI(URI uri, OneDriveAPIConnection api) {
-        Response response = api.webTarget(uri).request().get();
-        if (response.getStatus() != Status.OK.getStatusCode()) {
-            throw new OneDriveException("Failure acquiring metadata for item: "
-                                        + uri, response.getStatus());
-        }
         return response.readEntity(Item.class);
     }
 

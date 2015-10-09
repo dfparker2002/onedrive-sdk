@@ -103,7 +103,7 @@ public class PollAction extends AbstractAction implements Callable<Item> {
                 // with the Item as response body. Understanding is untested XXX
                 LOG.info("Operation: {} for item: {} completed.", action,
                          itemAddress);
-                return MetadataAction.byURI(response.getLocation(), api);
+                return byURI(response.getLocation(), api);
             } else if (equalsStatus(response, Status.OK)) {
                 LOG.info("Operation: {} for item: {} completed.", action,
                          itemAddress);
@@ -128,5 +128,21 @@ public class PollAction extends AbstractAction implements Callable<Item> {
                 // do nothing
             }
         }
+    }
+
+    /**
+     * Get metadata by URI
+     * 
+     * @param api OneDriveAPIConnection
+     * @param uri URI as returned in the Location header
+     * @return Item
+     */
+    public Item byURI(URI uri, OneDriveAPIConnection api) {
+        Response response = api.webTarget(uri).request().get();
+        if (response.getStatus() != Status.OK.getStatusCode()) {
+            throw new OneDriveException("Failure acquiring metadata for item: "
+                                        + uri, response.getStatus());
+        }
+        return response.readEntity(Item.class);
     }
 }
