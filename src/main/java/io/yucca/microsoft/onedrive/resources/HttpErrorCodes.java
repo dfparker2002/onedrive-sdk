@@ -96,6 +96,6 @@ public enum HttpErrorCodes {
                 return e.getMessage();
             }
         }
-        return "Unknown error code";
+        return "Unknown HTTP Status code";
     }
 }
