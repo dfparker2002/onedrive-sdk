@@ -38,7 +38,7 @@ import io.yucca.microsoft.onedrive.addressing.PathAddress;
  */
 public class CopyAction extends AbstractAction implements Callable<URI> {
 
-    private final Logger LOG = LoggerFactory.getLogger(CopyAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CopyAction.class);
 
     public static final String ACTION = "action.copy";
 

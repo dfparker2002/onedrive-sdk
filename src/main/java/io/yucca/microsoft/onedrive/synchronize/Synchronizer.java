@@ -68,7 +68,7 @@ public class Synchronizer {
 
     public static final String FILE_LOCAL_DRIVE_STATE = ".onedrivestate_";
 
-    private final Logger LOG = LoggerFactory.getLogger(Synchronizer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Synchronizer.class);
 
     private final LocalDrive localDrive;
 

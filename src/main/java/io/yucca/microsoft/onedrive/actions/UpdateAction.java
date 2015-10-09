@@ -38,7 +38,7 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class UpdateAction extends AbstractAction implements Callable<Item> {
 
-    private final Logger LOG = LoggerFactory.getLogger(UpdateAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UpdateAction.class);
 
     private final Item item;
 

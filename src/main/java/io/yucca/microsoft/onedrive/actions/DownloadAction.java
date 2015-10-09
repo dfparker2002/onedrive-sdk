@@ -39,7 +39,7 @@ import io.yucca.microsoft.onedrive.OneDriveException;
 public class DownloadAction extends AbstractAction
     implements Callable<OneDriveContent> {
 
-    private final Logger LOG = LoggerFactory.getLogger(DownloadAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DownloadAction.class);
 
     public static final String ACTION = "content";
 

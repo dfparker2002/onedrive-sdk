@@ -39,7 +39,7 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class MetadataAction extends AbstractAction implements Callable<Item> {
 
-    private final Logger LOG = LoggerFactory.getLogger(MetadataAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetadataAction.class);
 
     private final ItemAddress itemAddress;
 

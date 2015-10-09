@@ -39,7 +39,7 @@ import io.yucca.microsoft.onedrive.resources.facets.PermissionFacet;
 public class CreateLink extends AbstractAction
     implements Callable<PermissionFacet> {
 
-    private final Logger LOG = LoggerFactory.getLogger(CreateLink.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CreateLink.class);
 
     public static final String ACTION = "action.createLink";
 

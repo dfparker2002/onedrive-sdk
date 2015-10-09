@@ -39,7 +39,7 @@ import io.yucca.microsoft.onedrive.resources.SyncResponse;
 public class SyncAction extends AbstractAction
     implements Callable<SyncResponse> {
 
-    private final Logger LOG = LoggerFactory.getLogger(SyncAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SyncAction.class);
 
     public static final String ACTION = "view.delta";
 

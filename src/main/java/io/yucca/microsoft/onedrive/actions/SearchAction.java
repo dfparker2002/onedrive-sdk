@@ -41,7 +41,7 @@ import io.yucca.microsoft.onedrive.util.URLHelper;
 public class SearchAction extends AbstractAction
     implements Callable<ItemIterable> {
 
-    private final Logger LOG = LoggerFactory.getLogger(SearchAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SearchAction.class);
 
     public static final String ACTION = "view.search";
 

@@ -36,7 +36,7 @@ import io.yucca.microsoft.onedrive.OneDriveException;
  */
 public class DeleteAction extends AbstractAction implements Callable<Void> {
 
-    private final Logger LOG = LoggerFactory.getLogger(DeleteAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DeleteAction.class);
 
     private final ItemAddress itemAddress;
 

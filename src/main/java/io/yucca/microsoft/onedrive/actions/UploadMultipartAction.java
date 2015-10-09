@@ -48,7 +48,7 @@ import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
 public class UploadMultipartAction extends AbstractAction
     implements Callable<Item> {
 
-    private final Logger LOG = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(UploadMultipartAction.class);
 
     public static final String ACTION = "children";

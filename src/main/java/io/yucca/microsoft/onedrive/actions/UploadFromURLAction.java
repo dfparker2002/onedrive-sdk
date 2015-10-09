@@ -42,7 +42,7 @@ import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
 public class UploadFromURLAction extends AbstractAction
     implements Callable<URI> {
 
-    private final Logger LOG = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(UploadFromURLAction.class);
 
     public static final String ACTION = "children";

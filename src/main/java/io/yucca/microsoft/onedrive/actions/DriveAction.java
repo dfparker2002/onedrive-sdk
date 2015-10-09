@@ -36,7 +36,7 @@ import io.yucca.microsoft.onedrive.resources.Drive;
  */
 public class DriveAction extends AbstractAction implements Callable<Drive> {
 
-    private final Logger LOG = LoggerFactory.getLogger(DriveAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DriveAction.class);
 
     private final String driveId;
 

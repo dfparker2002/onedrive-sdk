@@ -32,7 +32,8 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalFileVisitor implements FileVisitor<Path> {
 
-    final Logger LOG = LoggerFactory.getLogger(LocalFileVisitor.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(LocalFileVisitor.class);
 
     private final Synchronizer sychronizer;
 

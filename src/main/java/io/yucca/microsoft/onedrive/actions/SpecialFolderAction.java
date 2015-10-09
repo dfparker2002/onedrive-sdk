@@ -41,7 +41,7 @@ import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 public class SpecialFolderAction extends AbstractAction
     implements Callable<Item> {
 
-    private final Logger LOG = LoggerFactory
+    private static final Logger LOG = LoggerFactory
         .getLogger(SpecialFolderAction.class);
 
     private final SpecialFolder folder;

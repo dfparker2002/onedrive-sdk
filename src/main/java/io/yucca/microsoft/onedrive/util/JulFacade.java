@@ -24,7 +24,7 @@ import org.slf4j.Logger;
  */
 public class JulFacade extends java.util.logging.Logger {
 
-    private Logger LOG;
+    private final Logger LOG;
 
     private boolean debug = true;
 

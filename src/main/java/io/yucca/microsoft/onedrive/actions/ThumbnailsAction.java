@@ -37,7 +37,7 @@ import io.yucca.microsoft.onedrive.resources.ThumbnailSet;
 public class ThumbnailsAction extends AbstractAction
     implements Callable<ThumbnailSet> {
 
-    private final Logger LOG = LoggerFactory.getLogger(ThumbnailsAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ThumbnailsAction.class);
 
     public static final String ACTION = "thumbnails";
 

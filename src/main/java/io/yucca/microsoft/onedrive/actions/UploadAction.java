@@ -43,7 +43,7 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class UploadAction extends AbstractAction implements Callable<Item> {
 
-    private final Logger LOG = LoggerFactory.getLogger(UploadAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UploadAction.class);
 
     public static final String ACTION = "content";
 

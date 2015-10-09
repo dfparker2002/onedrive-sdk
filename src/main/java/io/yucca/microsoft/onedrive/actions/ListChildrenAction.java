@@ -43,7 +43,7 @@ import io.yucca.microsoft.onedrive.resources.ItemCollection;
 public class ListChildrenAction extends AbstractAction
     implements Callable<ItemIterable> {
 
-    private final Logger LOG = LoggerFactory.getLogger(DriveAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DriveAction.class);
 
     public static final String ACTION = "children";
 
