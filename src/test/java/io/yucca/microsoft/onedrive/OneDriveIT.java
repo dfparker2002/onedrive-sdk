@@ -104,6 +104,14 @@ public class OneDriveIT {
     }
 
     @Test
+    public void testGetRootFolder() {
+        OneDrive drive = OneDriveImpl.defaultDrive(api);
+        assertNotNull(drive);
+        OneDriveFolder folder = drive.getRootFolder();
+        assertNotNull(folder);
+    }
+
+    @Test
     public void testListChildren() {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
         assertNotNull(drive);
