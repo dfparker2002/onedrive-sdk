@@ -15,7 +15,7 @@
  */
 package io.yucca.microsoft.onedrive;
 
-import io.yucca.microsoft.onedrive.resources.ErrorCodes;
+import io.yucca.microsoft.onedrive.resources.HttpErrorCodes;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
@@ -49,14 +49,28 @@ public class OneDriveException extends RuntimeException {
         this.error = error;
     }
 
-    public OneDriveException(String message, int status) {
-        super(message + ", reason: " + status + " "
-              + ErrorCodes.getMessage(status));
+    public OneDriveException(String message, int httpStatus) {
+        super(message + ", reason: " + httpStatus + " "
+              + HttpErrorCodes.getMessage(httpStatus));
         this.error = null;
+    }
+
+    public OneDriveException(String message, int httpStatus, OneDriveError error) {
+        super(message + ", reason: " + httpStatus + " "
+              + HttpErrorCodes.getMessage(httpStatus));
+        this.error = error;
     }
 
     public OneDriveError getError() {
         return error;
     }
 
+    public String getOneDriveErrorMessage() {
+        return (error == null) ? "unknown code" : error.getError().toString();
+    }
+
+    @Override
+    public String getMessage() {
+        return super.getMessage() + ", onedrive errorcode:" + getCause();
+    }
 }

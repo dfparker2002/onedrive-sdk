@@ -28,7 +28,7 @@ import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.resources.ErrorCodes;
+import io.yucca.microsoft.onedrive.resources.HttpErrorCodes;
 import io.yucca.microsoft.onedrive.resources.ItemReference;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
@@ -72,9 +72,7 @@ public abstract class AbstractAction {
                                String errorMessage) {
         if (equalsStatus(response, successStatus) == false) {
             OneDriveError e = response.readEntity(OneDriveError.class);
-            throw new OneDriveException(formatError(response.getStatus(),
-                                                    errorMessage, e),
-                                        e);
+            throw new OneDriveException(errorMessage, response.getStatus(), e);
         }
     }
 
@@ -91,9 +89,7 @@ public abstract class AbstractAction {
             return;
         }
         OneDriveError e = response.readEntity(OneDriveError.class);
-        throw new OneDriveException(formatError(response.getStatus(),
-                                                errorMessage, e),
-                                    e);
+        throw new OneDriveException(errorMessage, response.getStatus(), e);
     }
 
     /**
@@ -148,7 +144,7 @@ public abstract class AbstractAction {
     protected String formatError(int status, String message,
                                  OneDriveError cause) {
         throw new OneDriveException(message + ", reason: " + status + " "
-                                    + ErrorCodes.getMessage(status)
+                                    + HttpErrorCodes.getMessage(status)
                                     + ", cause: " + cause);
     }
 
@@ -161,7 +157,7 @@ public abstract class AbstractAction {
      */
     protected String formatError(int status, String message) {
         throw new OneDriveException(message + ", reason: " + status + " "
-                                    + ErrorCodes.getMessage(status));
+                                    + HttpErrorCodes.getMessage(status));
     }
 
     /**
