@@ -53,7 +53,7 @@ public class LocalDrive implements LocalResource {
     public LocalDrive(Path path, Drive drive) throws IOException {
         this.path = path;
         this.id = drive.getId().toUpperCase() + ONEDRIVE_ID_POSTFIX;
-        if (exists() == false) {
+        if (!exists()) {
             create();
         }
         hasExtendedAttributesCapability();
@@ -61,7 +61,7 @@ public class LocalDrive implements LocalResource {
     }
 
     private void create() throws IOException {
-        if (exists() == false) {
+        if (!exists()) {
             Files.createDirectory(path);
         }
         writeMetadata();

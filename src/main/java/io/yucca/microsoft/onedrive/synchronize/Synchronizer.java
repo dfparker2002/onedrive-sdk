@@ -312,14 +312,14 @@ public class Synchronizer {
      */
     private void processLocalDeletions(boolean deltaSynchronization,
                                        Map<String, Item> deltaMap) {
-        if (deltaSynchronization == false) {
+        if (!deltaSynchronization) {
             return;
         }
         LOG.info("Processing deletions in LocalDrive: {} with OneDrive: {}",
                  localDrive, remoteDrive);
         for (LocalItem local : savedState) {
             try {
-                if (items.containsKey(local.getId()) == false) {
+                if (!items.containsKey(local.getId())) {
                     LOG.info("Item: {}, id: {}, was deleted localy, deleting item from OneDrive",
                              local.getPath(), local.getId());
                     new DeleteAction(api, new IdAddress(local.getId())).call();

@@ -245,11 +245,11 @@ public class LocalFile implements LocalItem {
     @Override
     public boolean isContentModified(Item item) throws IOException {
         String sha1 = item.getFile().getHashes().getSha1Hash();
-        return (sha1.equalsIgnoreCase(ChecksumUtil.sha1(path)) == false);
+        return !sha1.equalsIgnoreCase(ChecksumUtil.sha1(path));
     }
 
     protected boolean isRenamed(String name) {
-        return (path.getFileName().toString().equals(name) == false);
+        return !path.getFileName().toString().equals(name);
     }
 
     /**
@@ -313,7 +313,7 @@ public class LocalFile implements LocalItem {
 
     @Override
     public boolean hasId() {
-        return (this.id != null);
+        return this.id != null;
     }
 
     @Override

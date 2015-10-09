@@ -53,7 +53,7 @@ public final class PathEncodingUtil {
      * @throws OneDriveException if name/path is invalid
      */
     public static void validate(String path) {
-        if (isValid(path) == false) {
+        if (!isValid(path)) {
             throw new OneDriveException("Filename or path contains reserved characters and is invalid: "
                                         + path);
         }
@@ -76,7 +76,7 @@ public final class PathEncodingUtil {
      * @throws OneDriveException if name/path is invalid
      */
     public static void validateBussiness(String path) {
-        if (isValidBusiness(path) == false) {
+        if (!isValidBusiness(path)) {
             throw new OneDriveException("Filename or path contains reserved characters and is invalid: "
                                         + path);
         }

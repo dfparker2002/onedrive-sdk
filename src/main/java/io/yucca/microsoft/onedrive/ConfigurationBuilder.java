@@ -54,7 +54,9 @@ public class ConfigurationBuilder {
     }
 
     public void build(String configurationFile) throws IOException {
-        if (exists(configurationFile) == false) {
+        if (!exists(configurationFile)) {
+            LOG.error("Configuration file already exists: {}",
+                      configurationFile);
             return;
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

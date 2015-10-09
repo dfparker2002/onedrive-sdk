@@ -46,7 +46,7 @@ public class OneDriveFile implements OneDriveContent {
     public OneDriveFile(String name) throws FileNotFoundException {
         this.file = Paths.get(name);
         this.name = file.getFileName().toString();
-        if (exists() == false) {
+        if (!exists()) {
             throw new FileNotFoundException("File does not exist: " + name);
         }
     }
@@ -60,7 +60,7 @@ public class OneDriveFile implements OneDriveContent {
     public OneDriveFile(Path file) throws FileNotFoundException {
         this.file = file;
         this.name = file.getFileName().toString();
-        if (exists() == false) {
+        if (!exists()) {
             throw new FileNotFoundException("File does not exist: " + name);
         }
     }
@@ -75,7 +75,7 @@ public class OneDriveFile implements OneDriveContent {
     public OneDriveFile(Path file, String name) throws FileNotFoundException {
         this.file = file;
         this.name = name;
-        if (exists() == false) {
+        if (!exists()) {
             throw new FileNotFoundException("File does not exist: " + name);
         }
     }

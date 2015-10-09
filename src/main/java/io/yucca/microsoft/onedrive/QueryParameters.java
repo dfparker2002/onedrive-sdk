@@ -298,7 +298,7 @@ public class QueryParameters {
         private String[] addMandatory(String[] values, String[] mandatory) {
             List<String> t = new ArrayList<String>(Arrays.asList(values));
             for (int i = 0; i < mandatory.length; i++) {
-                if (t.contains(mandatory[i]) == false) {
+                if (!t.contains(mandatory[i])) {
                     t.add(mandatory[i]);
                 }
             }

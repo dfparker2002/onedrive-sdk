@@ -66,7 +66,7 @@ public class LocalFolder extends LocalFile {
      * @throws IOException
      */
     private void create(LocalResource parent) throws IOException {
-        if (exists() == false) {
+        if (!exists()) {
             Files.createDirectory(path);
         }
         writeMetadata();
@@ -116,7 +116,7 @@ public class LocalFolder extends LocalFile {
      * @throws IOException
      */
     public boolean isLocalRoot() throws IOException {
-        // FIXME root marker
+        // TODO root marker
         return FOLDER_ROOT.equals(name);
         // && LocalDrive.ONEDRIVE_ROOT_MARKER.equals(getParentId()));
     }

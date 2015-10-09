@@ -204,8 +204,8 @@ public class OneDriveSession {
      * Request an AccessToken or refresh if expired.
      */
     void requestAccessToken() {
-        if (hasAccessToken() == false) {
-            if (hasRefreshToken() == false) {
+        if (!hasAccessToken()) {
+            if (!hasRefreshToken()) {
                 redeemAccessToken();
             } else {
                 refreshAccessToken();
@@ -238,7 +238,7 @@ public class OneDriveSession {
      * @return true if token is expired
      */
     boolean isTokenExpired() {
-        if (hasExpiration() == false) {
+        if (!hasExpiration()) {
             return true;
         }
         long now = System.currentTimeMillis();

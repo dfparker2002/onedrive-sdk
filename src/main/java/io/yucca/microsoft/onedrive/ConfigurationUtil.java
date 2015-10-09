@@ -66,7 +66,7 @@ public final class ConfigurationUtil {
         throws FileNotFoundException, ConfigurationException {
         LOG.info("Reading configuration from file: {}", configurationFile);
         File file = new File(configurationFile);
-        if (file.exists() == false) {
+        if (!file.exists()) {
             throw new FileNotFoundException("Failure reading configuration, file: "
                                             + configurationFile
                                             + " does not exist");

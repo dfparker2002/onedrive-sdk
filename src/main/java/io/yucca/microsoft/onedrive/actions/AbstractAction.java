@@ -70,7 +70,7 @@ public abstract class AbstractAction {
      */
     protected void handleError(Response response, Status successStatus,
                                String errorMessage) {
-        if (equalsStatus(response, successStatus) == false) {
+        if (!equalsStatus(response, successStatus)) {
             OneDriveError e = response.readEntity(OneDriveError.class);
             throw new OneDriveException(errorMessage, response.getStatus(), e);
         }
