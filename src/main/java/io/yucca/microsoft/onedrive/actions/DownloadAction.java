@@ -123,7 +123,7 @@ public class DownloadAction extends AbstractAction
     public static OneDriveContent byURI(OneDriveAPIConnection api, URI uri) {
         Response response = api.webTarget(uri)
             .request(MediaType.APPLICATION_OCTET_STREAM).get();
-        if (response.getStatus() != Status.FOUND.getStatusCode()) {
+        if (response.getStatus() != Status.OK.getStatusCode()) {
             throw new OneDriveException("Failure downloading item by URI: "
                                         + uri, response.getStatus());
         }
