@@ -68,7 +68,7 @@ public class QueryParameters {
     public WebTarget configure(WebTarget target) {
         WebTarget expanded = target;
         for (Entry<String, String> parameter : parameters.entrySet()) {
-            expanded = target
+            expanded = expanded
                 .queryParam(parameter.getKey(),
                             URLHelper.encodeURIComponent(parameter.getValue()));
         }
@@ -92,7 +92,7 @@ public class QueryParameters {
         }
         WebTarget expanded = target;
         for (Entry<String, String> parameter : parameters.entrySet()) {
-            expanded = target
+            expanded = expanded
                 .queryParam(parameter.getKey(),
                             URLHelper.encodeURIComponent(parameter.getValue()));
         }
