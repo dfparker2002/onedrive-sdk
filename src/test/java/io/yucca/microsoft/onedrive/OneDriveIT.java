@@ -70,6 +70,13 @@ public class OneDriveIT {
     }
 
     @Test
+    public void testGetDriveById() {
+        OneDrive drive = OneDriveImpl.defaultDrive(api);
+        assertNotNull(drive);
+        assertNotNull(OneDriveImpl.byDriveId(api, drive.getDriveId()));
+    }
+
+    @Test
     public void testGetFolder() {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
         OneDriveFolder folder = drive.getFolder(TestMother.FOLDER_APITEST);
