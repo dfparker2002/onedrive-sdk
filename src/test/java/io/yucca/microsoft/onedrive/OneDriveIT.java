@@ -60,6 +60,8 @@ public class OneDriveIT {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
         assertNotNull(drive);
         assertNotNull(drive.getDriveId());
+        assertNotNull(drive.getQuota());
+        assertNotNull(drive.getUser());
     }
 
     @Test
