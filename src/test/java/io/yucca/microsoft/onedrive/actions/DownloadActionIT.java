@@ -17,6 +17,8 @@ package io.yucca.microsoft.onedrive.actions;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.net.URISyntaxException;
+
 import org.junit.Test;
 
 import io.yucca.microsoft.onedrive.ItemAddress;
@@ -38,10 +40,21 @@ public class DownloadActionIT extends AbstractActionIT {
 
     @Test
     public void testDownloadByPath() throws NotModifiedException {
-        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST + "/"
-                       + TestMother.ITEM_UPLOAD_1);
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST
+                                                  + "/"
+                                                  + TestMother.ITEM_UPLOAD_1);
         DownloadAction action = new DownloadAction(api, itemAddress);
         assertNotNull(action.call());
+    }
+
+    @Test
+    public void testDownloadByURL()
+        throws NotModifiedException, URISyntaxException {
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST
+                                                  + "/"
+                                                  + TestMother.ITEM_UPLOAD_1);
+        Item item = new MetadataAction(api, itemAddress).call();
+        assertNotNull(DownloadAction.byURI(api, item.getDownloadUrl().toURI()));
     }
 
     @Test(expected = OneDriveException.class)
