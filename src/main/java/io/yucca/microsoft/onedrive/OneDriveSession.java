@@ -50,7 +50,8 @@ import io.yucca.microsoft.onedrive.util.URLHelper;
  */
 public class OneDriveSession {
 
-    private static Logger LOG = LoggerFactory.getLogger(OneDriveSession.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(OneDriveSession.class);
 
     public static final String CLIENT_ID = "client_id";
 
