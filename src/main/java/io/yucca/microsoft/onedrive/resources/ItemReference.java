@@ -57,18 +57,4 @@ public class ItemReference {
         this.path = path;
     }
 
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        if (id != null) {
-            s.append("id: ").append(this.id);
-        }
-        if (s.length() != 0) {
-            s.append(", ");
-        }
-        if (path != null) {
-            s.append(" path: ").append(this.path);
-        }
-        return s.toString();
-    }
-
 }
