@@ -81,7 +81,7 @@ public class OneDriveIT {
         OneDriveFile file = new OneDriveFile(Paths
             .get(TestMother.ITEM_UPLOAD_1_PATH), TestMother.ITEM_UPLOAD_1);
         OneDriveItem uploaded = drive.upload(file);
-        assertNotNull(apitestFolder.getItem(TestMother.ITEM_UPLOAD_1));
+        assertNotNull(drive.getItem(TestMother.ITEM_UPLOAD_1));
         uploaded.delete();
     }
 
