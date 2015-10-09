@@ -212,10 +212,10 @@ public class OneDriveSession {
             }
             this.client.register(flow.getOAuth2Feature());
             LOG.debug("OAuth2 feauture registred on client");
+            LOG.info("Authorization to OneDrive API succeeded");
         } else if (hasRefreshToken() && isTokenExpired()) {
             refreshAccessToken();
         }
-        LOG.info("Authorization to OneDrive API succeeded");
     }
 
     /**
