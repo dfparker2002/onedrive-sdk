@@ -46,9 +46,7 @@ public class OneDriveFile implements OneDriveContent {
     public OneDriveFile(String name) throws FileNotFoundException {
         this.file = Paths.get(name);
         this.name = file.getFileName().toString();
-        if (!exists()) {
-            throw new FileNotFoundException("File does not exist: " + name);
-        }
+        checkFileExistance(name);
     }
 
     /**
@@ -60,9 +58,7 @@ public class OneDriveFile implements OneDriveContent {
     public OneDriveFile(Path file) throws FileNotFoundException {
         this.file = file;
         this.name = file.getFileName().toString();
-        if (!exists()) {
-            throw new FileNotFoundException("File does not exist: " + name);
-        }
+        checkFileExistance(name);
     }
 
     /**
@@ -75,9 +71,7 @@ public class OneDriveFile implements OneDriveContent {
     public OneDriveFile(Path file, String name) throws FileNotFoundException {
         this.file = file;
         this.name = name;
-        if (!exists()) {
-            throw new FileNotFoundException("File does not exist: " + name);
-        }
+        checkFileExistance(name);
     }
 
     public Path getFile() {
@@ -100,6 +94,19 @@ public class OneDriveFile implements OneDriveContent {
                                 new OpenOption[] { StandardOpenOption.READ });
         } catch (FileNotFoundException e) {
             throw new OneDriveException("Failure getting inputstream", e);
+        }
+    }
+
+    /**
+     * Test existance of file
+     * 
+     * @param filename String
+     * @throws FileNotFoundException
+     */
+    private void checkFileExistance(String filename)
+        throws FileNotFoundException {
+        if (!exists()) {
+            throw new FileNotFoundException("File does not exist: " + filename);
         }
     }
 
