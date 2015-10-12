@@ -39,9 +39,9 @@ public class LocalDrive implements LocalResource {
 
     private static final String ONEDRIVE_ID_POSTFIX = "!0";
 
-    private transient final Path path;
-
     private String id;
+    
+    private transient final Path path;
 
     /**
      * Construct a LocalDrive corresponding with the root of remote OneDrive
