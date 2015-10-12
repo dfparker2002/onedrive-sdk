@@ -137,16 +137,14 @@ public class OneDriveSession {
      * Initialize the OAuth2.0 flow
      */
     private void initialize() {
-        initFlow(client);
+        initFlow();
         initTokenResult(configuration.getRefreshToken());
     }
 
     /**
      * Initialize the OAuth2 flow
-     * 
-     * @param client
      */
-    private void initFlow(Client client) {
+    private void initFlow() {
         LOG.info("Initializing authorization flow by url: {}",
                  ONEDRIVE_OAUTH20_AUTH_URI);
         if (flow == null) {
