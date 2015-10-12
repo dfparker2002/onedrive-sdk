@@ -47,7 +47,7 @@ public class GroupCriteria implements Criteria {
      */
     public static class GroupBuilder {
 
-        public Criteria criteria;
+        protected Criteria criteria;
 
         private GroupBuilder(Criteria criteria) {
             this.criteria = criteria;
@@ -106,9 +106,9 @@ public class GroupCriteria implements Criteria {
      */
     public static class LogicalGroupBuilder extends GroupBuilder {
 
-        public final Criteria logicalCriteria;
+        private final Criteria logicalCriteria;
 
-        public final LogicalOperator operator;
+        private final LogicalOperator operator;
 
         private LogicalGroupBuilder(Criteria logicalCriteria,
                                     Criteria groupCriteria,
