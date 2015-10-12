@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author yucca.io
  */
-public class ExponentionalBackOffWaitStrategy {
+public class SimpleBackOffWaitStrategy {
 
     private static final long DEFAULT_INITIAL = 1000L;
 
@@ -36,7 +36,7 @@ public class ExponentionalBackOffWaitStrategy {
     /**
      * Constructor
      */
-    public ExponentionalBackOffWaitStrategy() {
+    public SimpleBackOffWaitStrategy() {
         this.initialDuration = DEFAULT_INITIAL;
         this.duration = DEFAULT_INITIAL;
     }
@@ -46,7 +46,7 @@ public class ExponentionalBackOffWaitStrategy {
      * 
      * @param duration long initially sleep time in ms
      */
-    public ExponentionalBackOffWaitStrategy(long duration) {
+    public SimpleBackOffWaitStrategy(long duration) {
         this.initialDuration = duration;
         this.duration = duration;
     }

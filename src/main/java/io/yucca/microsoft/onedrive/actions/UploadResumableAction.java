@@ -44,7 +44,7 @@ import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 import io.yucca.microsoft.onedrive.resources.UploadSession;
-import io.yucca.microsoft.onedrive.util.ExponentionalBackOffWaitStrategy;
+import io.yucca.microsoft.onedrive.util.SimpleBackOffWaitStrategy;
 
 /**
  * Action to upload item content larger than 100MB. Content is uploaded in
@@ -231,7 +231,7 @@ public class UploadResumableAction extends AbstractAction
         throws OneDriveResumableUploadException, IOException {
 
         int unknownFailureCount = 0;
-        ExponentionalBackOffWaitStrategy waitStrategy = new ExponentionalBackOffWaitStrategy();
+        SimpleBackOffWaitStrategy waitStrategy = new SimpleBackOffWaitStrategy();
         Set<Range> ranges = Range.getRanges(maxFragmentSize,
                                             content.getLength());
 

@@ -19,15 +19,15 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import io.yucca.microsoft.onedrive.util.ExponentionalBackOffWaitStrategy;
+import io.yucca.microsoft.onedrive.util.SimpleBackOffWaitStrategy;
 
-public class ExponentionalBackOffWaitStrategyTest {
+public class SimpleBackOffWaitStrategyTest {
 
-    private ExponentionalBackOffWaitStrategy ws;
+    private SimpleBackOffWaitStrategy ws;
     
     @Test
     public void testSleep() {
-        this.ws = new ExponentionalBackOffWaitStrategy();
+        this.ws = new SimpleBackOffWaitStrategy();
         assertEquals(2000, ws.sleep());
         assertEquals(4000, ws.sleep());
         assertEquals(8000, ws.sleep());
@@ -35,14 +35,14 @@ public class ExponentionalBackOffWaitStrategyTest {
 
     @Test
     public void testSleep2000() {
-        this.ws = new ExponentionalBackOffWaitStrategy(2000);
+        this.ws = new SimpleBackOffWaitStrategy(2000);
         assertEquals(4000, ws.sleep());
         assertEquals(8000, ws.sleep());
     }
     
     @Test
     public void testReset() {
-        this.ws = new ExponentionalBackOffWaitStrategy();
+        this.ws = new SimpleBackOffWaitStrategy();
         assertEquals(2000, ws.sleep());
         ws.reset();
         assertEquals(1000, ws.getDuration());
