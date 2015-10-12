@@ -47,6 +47,7 @@ import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.OneDriveFolderImpl;
 import io.yucca.microsoft.onedrive.OneDriveItem;
+import io.yucca.microsoft.onedrive.SyncResponse;
 import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DeleteAction;
 import io.yucca.microsoft.onedrive.actions.DownloadAction;
@@ -56,7 +57,6 @@ import io.yucca.microsoft.onedrive.actions.UploadAction;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.SyncResponse;
 
 /**
  * OneDriveFolderSynchronizer, synchronizes the complete OneDrive with the

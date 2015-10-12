@@ -34,7 +34,10 @@ import io.yucca.microsoft.onedrive.util.URLHelper;
  * The parameters are configured invoking {@code Builder#newQueryParameters()},
  * building a QueryParameters instance using {@code Builder#build()} and the
  * applied to a WebTarget using {@code QueryParameters#configure(WebTarget)}
- * 
+ * <p>
+ * TODO: move configure() to AbstractAction cuts dependency on WebTarget and
+ * move this class to io.yucca.microsoft.onedrive.resources package
+ * <p>
  * @author yucca.io
  */
 public class QueryParameters {
@@ -57,24 +60,6 @@ public class QueryParameters {
 
     private QueryParameters() {
         this.parameters = new HashMap<>();
-    }
-
-    /**
-     * Create a new WebTarget instance by configuring the query parameters on
-     * the URI of the current target instance.
-     * 
-     * @param target WebTarget instance
-     * @return WebTarget a new target instance.
-     * @throws OneDriveException if encoding of a parameter fails
-     */
-    public WebTarget configure(WebTarget target) {
-        WebTarget expanded = target;
-        for (Entry<String, String> parameter : parameters.entrySet()) {
-            expanded = expanded
-                .queryParam(parameter.getKey(),
-                            URLHelper.encodeURIComponent(parameter.getValue()));
-        }
-        return expanded;
     }
 
     /**

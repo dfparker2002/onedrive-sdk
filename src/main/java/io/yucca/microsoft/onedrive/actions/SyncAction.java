@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
+import io.yucca.microsoft.onedrive.SyncResponse;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
-import io.yucca.microsoft.onedrive.resources.SyncResponse;
 
 /**
  * Action enumerate the changes for a folder for a specific state, which can be

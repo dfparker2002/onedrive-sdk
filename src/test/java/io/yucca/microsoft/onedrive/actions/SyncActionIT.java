@@ -19,12 +19,12 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import io.yucca.microsoft.onedrive.SyncResponse;
 import io.yucca.microsoft.onedrive.TestMother;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.SyncResponse;
 
 public class SyncActionIT extends AbstractActionIT {
 

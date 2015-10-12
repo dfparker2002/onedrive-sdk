@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources;
+package io.yucca.microsoft.onedrive;
 
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import io.yucca.microsoft.onedrive.ItemIterable;
-import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
+import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
  * ItemIterator, allows iterating over an ItemIterable

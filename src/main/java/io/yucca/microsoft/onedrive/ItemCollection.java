@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources;
+package io.yucca.microsoft.onedrive;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -23,8 +23,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.yucca.microsoft.onedrive.ItemIterable;
-import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
+import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
  * ItemCollection, a collection of items stored in OneDrive
