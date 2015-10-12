@@ -27,7 +27,10 @@ import io.yucca.microsoft.onedrive.resources.Item;
  * 
  * @author yucca.io
  */
-public class LocalResourceFactory {
+public final class LocalResourceFactory {
+
+    private LocalResourceFactory() {
+    }
 
     /**
      * Factory method to build an LocalItem (file or folder) based on Item
