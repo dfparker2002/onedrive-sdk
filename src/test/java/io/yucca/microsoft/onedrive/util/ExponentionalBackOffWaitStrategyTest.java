@@ -30,14 +30,14 @@ public class ExponentionalBackOffWaitStrategyTest {
         this.ws = new ExponentionalBackOffWaitStrategy();
         assertEquals(2000, ws.sleep());
         assertEquals(4000, ws.sleep());
-        assertEquals(16000, ws.sleep());
+        assertEquals(8000, ws.sleep());
     }
 
     @Test
     public void testSleep2000() {
         this.ws = new ExponentionalBackOffWaitStrategy(2000);
         assertEquals(4000, ws.sleep());
-        assertEquals(16000, ws.sleep());
+        assertEquals(8000, ws.sleep());
     }
     
     @Test

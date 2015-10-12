@@ -18,19 +18,18 @@ package io.yucca.microsoft.onedrive.util;
 import java.util.concurrent.TimeUnit;
 
 /**
- * ExponentionalBackOffWaitStrategy, defaults to one second and increases
+ * BasicBackOffWaitStrategy, defaults to one second and increases
  * exponentionally on each call to sleep()
- * <p>
- * TODO add support for definable TimeUnit
- * </p>
  *
  * @author yucca.io
  */
 public class ExponentionalBackOffWaitStrategy {
 
-    private long initialDuration = 1000;
+    private static final long DEFAULT_INITIAL = 1000L;
 
-    private long duration = 1000;
+    private final long initialDuration;
+
+    private long duration;
 
     private TimeUnit unit = TimeUnit.MILLISECONDS;
 
@@ -38,12 +37,14 @@ public class ExponentionalBackOffWaitStrategy {
      * Constructor
      */
     public ExponentionalBackOffWaitStrategy() {
+        this.initialDuration = DEFAULT_INITIAL;
+        this.duration = DEFAULT_INITIAL;
     }
 
     /**
      * Constructor
      * 
-     * @param duration long duration in ms to sleep initially
+     * @param duration long initially sleep time in ms
      */
     public ExponentionalBackOffWaitStrategy(long duration) {
         this.initialDuration = duration;
@@ -57,19 +58,22 @@ public class ExponentionalBackOffWaitStrategy {
      */
     public long sleep() {
         try {
-            this.unit.sleep(duration);
+            unit.sleep(duration);
         } catch (InterruptedException e) {
         }
-        this.duration = (duration == 1000)
-            ? 2000 : duration * (duration / 1000);
-        return this.duration;
+        return increase();
+    }
+
+    private long increase() {
+        duration += duration;
+        return duration;
     }
 
     /**
      * Reset to initial duration
      */
     public void reset() {
-        this.duration = this.initialDuration;
+        duration = initialDuration;
     }
 
     /**
@@ -78,7 +82,7 @@ public class ExponentionalBackOffWaitStrategy {
      * @return long next duration in ms
      */
     public long getDuration() {
-        return this.duration;
+        return duration;
     }
 
 }
