@@ -143,9 +143,12 @@ public class OneDriveItemImpl implements OneDriveItem {
      */
     @Override
     public void rename(String name) {
-        Item changed = (item == null) ? changed = new Item(itemId) : item;
+        Item changed = item;
+        if (item == null) {
+            changed = new Item(itemId);
+        }
         changed.setName(name);
-        this.item = new UpdateAction(api, item).call();
+        this.item = new UpdateAction(api, changed).call();
     }
 
     @Override
