@@ -31,6 +31,8 @@ import org.junit.Test;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnectionImpl;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.QueryParameters.Builder;
+import io.yucca.microsoft.onedrive.filter.Filter;
+import io.yucca.microsoft.onedrive.filter.FilterCriteria;
 import io.yucca.microsoft.onedrive.resources.Order;
 import io.yucca.microsoft.onedrive.resources.Relationship;
 
@@ -43,23 +45,29 @@ public class QueryParametersTest {
         WebTarget target = c.target(OneDriveAPIConnectionImpl.ONEDRIVE_URL)
             .path("/drive/root/children");
 
+        Filter filter = Filter.Builder
+            .filterBy(FilterCriteria.GREATERTHAN("price", "5")).end();
+        
         Builder builder = QueryParameters.Builder.newQueryParameters();
         target = builder.expand(Relationship.CHILDREN)
             .select("name", "createdBy").top(10).orderby("name", Order.ASC)
-            .skipToken("11").configure(target);
+            .skipToken("11").filter(filter).configure(target);
         assertNotNull(target);
-        assertEquals(new URI("https://api.onedrive.com/v1.0/drive/root/children?token=11&select=name%2CcreatedBy%2Cid%2Cfile%2Cfolder%2CeTag%2CparentReference&expand=children&orderby=name%20asc&top=10"),
+        assertEquals(new URI("https://api.onedrive.com/v1.0/drive/root/children?token=11&select=name%2CcreatedBy%2Cid%2Cfile%2Cfolder%2CeTag%2CparentReference&expand=children&orderby=name%20asc&filter=price%20gt%20%275%27&top=10"),
                      target.getUriBuilder().build());
     }
 
     @Test
     public void testToString() {
+        Filter filter = Filter.Builder
+            .filterBy(FilterCriteria.GREATERTHAN("price", "5")).end();
+        
         Builder builder = QueryParameters.Builder.newQueryParameters();
         QueryParameters parameters = builder.expand(Relationship.CHILDREN)
             .select("name", "createdBy").top(10).orderby("name", Order.ASC)
-            .skipToken("11").build();
+            .skipToken("11").filter(filter).build();
         assertNotNull(parameters);
-        assertEquals("?token=11&select=name,createdBy,id,file,folder,eTag,parentReference&expand=children&orderby=name asc&top=10",
+        assertEquals("?token=11&select=name,createdBy,id,file,folder,eTag,parentReference&expand=children&orderby=name asc&filter=price gt '5'&top=10",
                      parameters.toString());
     }
 

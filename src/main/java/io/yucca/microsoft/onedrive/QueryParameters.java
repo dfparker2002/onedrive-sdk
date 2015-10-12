@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 
 import javax.ws.rs.client.WebTarget;
 
+import io.yucca.microsoft.onedrive.filter.Filter;
 import io.yucca.microsoft.onedrive.resources.Order;
 import io.yucca.microsoft.onedrive.resources.Relationship;
 import io.yucca.microsoft.onedrive.util.URLHelper;
@@ -43,6 +44,7 @@ public class QueryParameters {
     public static final String ORDERBY = "orderby";
     public static final String TOP = "top";
     public static final String TOKEN = "token";
+    public static final String FILTER = "filter";
     public static final String CONFLICT_BEHAVIOR = "@name.conflictBehavior";
 
     private static final String[] MANDATORY_FIELDS = new String[] { "id",
@@ -254,6 +256,11 @@ public class QueryParameters {
         public Builder orderby(String[] orderby, Order order) {
             this.qp.parameters
                 .put(ORDERBY, commaSeperated(orderby) + " " + order.getOrder());
+            return this;
+        }
+
+        public Builder filter(Filter filter) {
+            this.qp.parameters.put(FILTER, filter.toString());
             return this;
         }
 

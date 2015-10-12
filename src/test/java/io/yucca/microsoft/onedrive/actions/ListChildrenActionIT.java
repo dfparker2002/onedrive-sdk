@@ -16,6 +16,7 @@
 package io.yucca.microsoft.onedrive.actions;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -27,6 +28,8 @@ import io.yucca.microsoft.onedrive.TestMother;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
+import io.yucca.microsoft.onedrive.filter.Filter;
+import io.yucca.microsoft.onedrive.filter.FilterCriteria;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.Order;
 
@@ -60,6 +63,21 @@ public class ListChildrenActionIT extends AbstractActionIT {
                                                            folder.geteTag(),
                                                            params);
         assertNotNull(action.call());
+    }
+
+    @Test
+    public void testListChildrenFiltered() throws NotModifiedException {
+        Filter filter = Filter.Builder
+            .filterBy(FilterCriteria.EQUAL("folder", null)).end();
+
+        ItemAddress parentAddress = new PathAddress(TestMother.FOLDER_APITEST);
+        QueryParameters params = Builder.newQueryParameters()
+            .orderby("name", Order.ASC).filter(filter).build();
+        ListChildrenAction action = new ListChildrenAction(api, parentAddress,
+                                                           null, params);
+        ItemIterable items = action.call();
+        assertNotNull(items);
+        assertTrue(items.iterator().hasNext());
     }
 
     @Test
