@@ -236,7 +236,7 @@ public class UploadResumableAction extends AbstractAction
                                             content.getLength());
 
         // loop over ranges until all fragments are uploaded
-        while (ranges.size() > 0) {
+        while (!ranges.isEmpty()) {
             Range range = ranges.iterator().next();
             Response response = streamFragment(content, range, session);
             if (equalsStatus(response, Status.ACCEPTED)) {
