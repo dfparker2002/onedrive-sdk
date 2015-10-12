@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.yucca.microsoft.onedrive.resources.Item;
 
@@ -40,7 +41,8 @@ public class ItemCollection implements ItemIterable {
     @JsonIgnore
     protected OneDriveAPIConnection api;
 
-    private LinkedList<Item> value;
+    @JsonDeserialize(as=LinkedList.class)
+    private List<Item> value;
 
     @JsonProperty("@odata.nextLink")
     private URL nextLink;
@@ -49,7 +51,7 @@ public class ItemCollection implements ItemIterable {
         return value;
     }
 
-    public void setValue(LinkedList<Item> value) {
+    public void setValue(List<Item> value) {
         this.value = value;
     }
 
