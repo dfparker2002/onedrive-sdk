@@ -519,13 +519,13 @@ public class Synchronizer {
     @SuppressWarnings("unchecked")
     private boolean readLocalDriveState(boolean deltaSynchronization,
                                         String deltaToken) {
-        if ((deltaSynchronization && hasDeltaToken(deltaToken)) == false) {
+        if (!(deltaSynchronization && hasDeltaToken(deltaToken))) {
             LOG.warn("A delta synchronization is requested, but no deltaToken is available, performing an full synchronization instead.");
             savedState = new LinkedList<>();
             return false;
         }
         Path savedStatePath = localDriveStateFile();
-        if (Files.exists(savedStatePath, LinkOption.NOFOLLOW_LINKS) == false) {
+        if (!Files.exists(savedStatePath, LinkOption.NOFOLLOW_LINKS)) {
             LOG.warn("A delta synchronization is requested, but no local drive state is available, performing an full synchronization instead.");
             savedState = new LinkedList<>();
             return false;
@@ -639,7 +639,7 @@ public class Synchronizer {
      * @return String
      */
     private String syncMethod(boolean deltaSynchronization) {
-        return (deltaSynchronization == true) ? "delta" : "full";
+        return deltaSynchronization ? "delta" : "full";
     }
 
     /**
