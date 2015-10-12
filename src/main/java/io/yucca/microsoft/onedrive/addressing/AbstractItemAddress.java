@@ -15,8 +15,6 @@
  */
 package io.yucca.microsoft.onedrive.addressing;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
-
 /**
  * AbstractItemAddress
  * 

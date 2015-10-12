@@ -22,8 +22,8 @@ import java.net.URI;
 
 import org.junit.Test;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.TestMother;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.addressing.URLAddress;
 import io.yucca.microsoft.onedrive.resources.Item;

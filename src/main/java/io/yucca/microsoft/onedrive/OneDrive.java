@@ -18,6 +18,7 @@ package io.yucca.microsoft.onedrive;
 import java.util.Collection;
 import java.util.List;
 
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Drive;
 import io.yucca.microsoft.onedrive.resources.Identity;

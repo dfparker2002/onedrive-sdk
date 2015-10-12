@@ -15,6 +15,7 @@
  */
 package io.yucca.microsoft.onedrive;
 
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 

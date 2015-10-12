@@ -26,6 +26,7 @@ import io.yucca.microsoft.onedrive.actions.MetadataAction;
 import io.yucca.microsoft.onedrive.actions.SearchAction;
 import io.yucca.microsoft.onedrive.actions.SpecialFolderAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;

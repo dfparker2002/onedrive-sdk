@@ -19,8 +19,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 
 public class ThumbnailsActionIT extends AbstractActionIT {
 

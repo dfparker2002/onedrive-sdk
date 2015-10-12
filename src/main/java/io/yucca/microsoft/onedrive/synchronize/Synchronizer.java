@@ -39,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.ConfigurationUtil;
-import io.yucca.microsoft.onedrive.ItemAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDrive;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
@@ -68,7 +68,8 @@ public class Synchronizer {
 
     public static final String FILE_LOCAL_DRIVE_STATE = ".onedrivestate_";
 
-    private static final Logger LOG = LoggerFactory.getLogger(Synchronizer.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(Synchronizer.class);
 
     private final LocalDrive localDrive;
 

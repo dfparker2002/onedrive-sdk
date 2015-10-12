@@ -23,6 +23,7 @@ import io.yucca.microsoft.onedrive.actions.MoveAction;
 import io.yucca.microsoft.onedrive.actions.PollAction;
 import io.yucca.microsoft.onedrive.actions.UpdateAction;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.addressing.SpecialAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
