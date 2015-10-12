@@ -38,7 +38,7 @@ public class LocalResourceFactory {
      * @return LocalItem
      * @throws OneDriveException on unknown type of Item has invalid timestamps
      */
-    public final static LocalItem build(Item item, OneDriveContent content,
+    public static final LocalItem build(Item item, OneDriveContent content,
                                         LocalResource parent)
                                             throws IOException {
         try {
