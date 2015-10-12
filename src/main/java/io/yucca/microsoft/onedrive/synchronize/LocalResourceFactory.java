@@ -35,8 +35,8 @@ public final class LocalResourceFactory {
     /**
      * Factory method to build an LocalItem (file or folder) based on Item
      * 
-     * @param item Item
-     * @param content OneDriveContent file contents, {@code null} for folders
+     * @param item Item in OneDrive
+     * @param content OneDriveContent file contents or {@code null} for folders
      * @param parent LocalResource parent folder or drive
      * @return LocalItem
      * @throws OneDriveException on unknown type of Item has invalid timestamps
