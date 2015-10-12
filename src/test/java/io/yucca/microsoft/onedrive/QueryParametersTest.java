@@ -53,7 +53,7 @@ public class QueryParametersTest {
             .select("name", "createdBy").top(10).orderby("name", Order.ASC)
             .skipToken("11").filter(filter).configure(target);
         assertNotNull(target);
-        assertEquals(new URI("https://api.onedrive.com/v1.0/drive/root/children?token=11&select=name%2CcreatedBy%2Cid%2Cfile%2Cfolder%2CeTag%2CparentReference&expand=children&orderby=name%20asc&filter=price%20gt%20%275%27&top=10"),
+        assertEquals(new URI("https://api.onedrive.com/v1.0/drive/root/children?token=11&select=name%2CcreatedBy%2Cid%2Cfile%2Cfolder%2CeTag%2CparentReference&expand=children&orderby=name%20asc&filter=price%20gt%205&top=10"),
                      target.getUriBuilder().build());
     }
 
@@ -67,7 +67,7 @@ public class QueryParametersTest {
             .select("name", "createdBy").top(10).orderby("name", Order.ASC)
             .skipToken("11").filter(filter).build();
         assertNotNull(parameters);
-        assertEquals("?token=11&select=name,createdBy,id,file,folder,eTag,parentReference&expand=children&orderby=name asc&filter=price gt '5'&top=10",
+        assertEquals("?token=11&select=name,createdBy,id,file,folder,eTag,parentReference&expand=children&orderby=name asc&filter=price gt 5&top=10",
                      parameters.toString());
     }
 
