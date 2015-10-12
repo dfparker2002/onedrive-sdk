@@ -55,7 +55,7 @@ public class FilterCriteria implements Criteria {
      *            like 'London'
      * @return FilterCriteria
      */
-    public static FilterCriteria NOTEQUAL(String field, String value) {
+    public static final FilterCriteria NOTEQUAL(String field, String value) {
         return new FilterCriteria(field, FilterOperator.NOTEQUAL, value);
     }
 
@@ -67,7 +67,7 @@ public class FilterCriteria implements Criteria {
      *            like 'London'
      * @return FilterCriteria
      */
-    public static FilterCriteria EQUAL(String field, String value) {
+    public static final FilterCriteria EQUAL(String field, String value) {
         return new FilterCriteria(field, FilterOperator.EQUAL, value);
     }
 
@@ -79,7 +79,7 @@ public class FilterCriteria implements Criteria {
      *            like 'London'
      * @return FilterCriteria
      */
-    public static FilterCriteria GREATERTHAN(String field, String value) {
+    public static final FilterCriteria GREATERTHAN(String field, String value) {
         return new FilterCriteria(field, FilterOperator.GREATERTHAN, value);
     }
 
@@ -91,7 +91,8 @@ public class FilterCriteria implements Criteria {
      *            like 'London'
      * @return FilterCriteria
      */
-    public static FilterCriteria GREATEROREQUAL(String field, String value) {
+    public static final FilterCriteria GREATEROREQUAL(String field,
+                                                      String value) {
         return new FilterCriteria(field, FilterOperator.GREATEROREQUAL, value);
     }
 
@@ -103,7 +104,7 @@ public class FilterCriteria implements Criteria {
      *            like 'London'
      * @return FilterCriteria
      */
-    public static FilterCriteria LESSTHAN(String field, String value) {
+    public static final FilterCriteria LESSTHAN(String field, String value) {
         return new FilterCriteria(field, FilterOperator.LESSTHAN, value);
     }
 
@@ -115,7 +116,7 @@ public class FilterCriteria implements Criteria {
      *            like 'London'
      * @return FilterCriteria
      */
-    public static FilterCriteria LESSOREQUAL(String field, String value) {
+    public static final FilterCriteria LESSOREQUAL(String field, String value) {
         return new FilterCriteria(field, FilterOperator.LESSOREQUAL, value);
     }
 }
