@@ -29,6 +29,9 @@ import java.util.TimeZone;
  */
 public final class ISO8061 {
 
+    private ISO8061() {
+    }
+
     /**
      * Convert Calendar to ISO 8601 String in format
      * "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
