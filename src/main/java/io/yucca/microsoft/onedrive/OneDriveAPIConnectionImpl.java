@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 import io.yucca.microsoft.onedrive.util.JulFacade;
 
@@ -75,7 +76,7 @@ public class OneDriveAPIConnectionImpl
      */
     private void initialiseClient() {
         LOG.info("Initializing Jersey client");
-        JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
+        JacksonJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
         this.mapper = ClientFactory.createMapper(jacksonProvider);
         this.client = ClientFactory.create(configuration, jacksonProvider);
         this.session = new OneDriveSession(configuration, client);
