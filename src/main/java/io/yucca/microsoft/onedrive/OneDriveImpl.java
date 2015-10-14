@@ -47,6 +47,8 @@ public class OneDriveImpl implements OneDrive {
 
     private final String driveId;
 
+    private Drive drive;
+
     /**
      * Construct an OneDrive instance
      * 
@@ -273,13 +275,17 @@ public class OneDriveImpl implements OneDrive {
     }
 
     /**
-     * Get drive resource, never cached because there is not eTag value
+     * Get drive resource and cache it. This will become stale over time,
+     * because no eTag value if available to detect modifications of the entity
      * 
      * @return Drive
      */
     @Override
     public Drive getDrive() {
-        return new DriveAction(api, driveId).call();
+        if (drive == null) {
+            drive = new DriveAction(api, driveId).call();
+        }
+        return drive;
     }
 
     /**
