@@ -30,7 +30,7 @@ public class OneDriveItemFactoryTest {
         Item item = new Item();
         item.setId("1");
         item.setFile(new FileFacet());
-        OneDriveItem odi = OneDriveItemFactory.build(null, item);
+        OneDriveItem odi = OneDriveItemFactory.newInstance(null, item);
         assertNotNull(odi);
         assertTrue(odi instanceof OneDriveItem);
     }
@@ -40,7 +40,7 @@ public class OneDriveItemFactoryTest {
         Item item = new Item();
         item.setId("1");
         item.setFolder(new FolderFacet());
-        OneDriveItem odi = OneDriveItemFactory.build(null, item);
+        OneDriveItem odi = OneDriveItemFactory.newInstance(null, item);
         assertNotNull(odi);
         assertTrue(odi instanceof OneDriveFolder);
     }
@@ -49,7 +49,7 @@ public class OneDriveItemFactoryTest {
     public void testBuildUnknown() {
         Item item = new Item();
         item.setId("1");
-        OneDriveItemFactory.build(null, item);
+        OneDriveItemFactory.newInstance(null, item);
     }
 
 }

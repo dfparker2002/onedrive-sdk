@@ -31,7 +31,7 @@ public class OneDriveItemIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private OneDriveAPIConnectionImpl api;
+    private OneDriveAPIConnection api;
 
     private OneDriveConfiguration configuration;
 
@@ -39,9 +39,9 @@ public class OneDriveItemIT {
 
     private OneDriveFile file;
 
-    private OneDriveFolderImpl apitestFolder;
+    private OneDriveFolder apitestFolder;
 
-    private OneDriveFolderImpl movedFolder;
+    private OneDriveFolder movedFolder;
 
     private OneDriveItem uploadedFile;
 

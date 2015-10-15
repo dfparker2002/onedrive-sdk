@@ -30,11 +30,11 @@ public interface OneDriveItem {
      * Copy this item recursively to the destination folder
      * 
      * @param destination OneDriveFolder
-     * @param name String name of the new item, if {@code null} same name is
-     *            used
+     * @param name String name of the new item, if {@code null} name is left
+     *            unchanged
      * @return OneDriveItem copied item
      */
-    OneDriveItem copy(OneDriveFolderImpl destination, String name);
+    OneDriveItem copy(OneDriveFolder destination, String name);
 
     /**
      * Delete this item
@@ -49,15 +49,15 @@ public interface OneDriveItem {
     OneDriveContent download();
 
     /**
-     * Move this item to destination
+     * Move this item to the destination folder
      * 
      * @param destination OneDriveFolder
      * @return OneDriveItem moved item
      */
-    OneDriveItem move(OneDriveFolderImpl destination);
+    OneDriveItem move(OneDriveFolder destination);
 
     /**
-     * Move this item to destination
+     * Move this item to the destination folder
      * 
      * @param destination SpecialFolder
      * @return OneDriveItem moved item
@@ -65,7 +65,7 @@ public interface OneDriveItem {
     OneDriveItem move(SpecialFolder destination);
 
     /**
-     * Move this folder to root of Drive
+     * Move this folder to root of drive
      * 
      * @param destination OneDrive
      * @return OneDriveItem moved item
@@ -75,7 +75,7 @@ public interface OneDriveItem {
     /**
      * Rename the item
      * 
-     * @param name String
+     * @param name String new name
      */
     void rename(String name);
 
@@ -87,14 +87,14 @@ public interface OneDriveItem {
     String getItemId();
 
     /**
-     * Get the (cached) item resource or update them item if it was changed
+     * Get the (cached) item resource or update the item if changed
      * 
      * @return Item
      */
     Item getItem();
 
     /**
-     * Get ItemAddress
+     * Get address for this item
      * 
      * @return ItemAddress
      */

@@ -24,15 +24,13 @@ import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
  * ItemIterator, allows iterating over an ItemIterable
- *
- * <pre>
- * When the top parameter is set a queryparameter on a view.search 
- * then second last page contains a nextLink URL, when loading this 
- * page this contains zero items which hogs the iterating logic, 
- * because not valid item can be returned a NoSuchElementException 
- * is thrown. Could be circumvented by checking if the page is valid
- * in hasNextCollection()
- * </pre>
+ * <p>
+ * When the top parameter is set as query parameter on a view.search action,
+ * then the second last page contains a nextLink URL. When loading this page
+ * this contains zero items which hogs the iterating logic, because not valid
+ * item can be returned and NoSuchElementException is thrown. This could be
+ * circumvented by checking if the page is valid in hasNextCollection()
+ * </p>
  * 
  * @author yucca.io
  */
@@ -47,7 +45,7 @@ public class ItemIterator implements Iterator<Item> {
     /**
      * Construct an ItemIterator
      * 
-     * @param api OneDriveAPIConnection connection to the OneDrive API, used in
+     * @param api OneDriveAPIConnection connection to the OneDrive API, used for
      *            fetching next pages
      * @param collection ItemIterable initial collection
      */
@@ -64,11 +62,23 @@ public class ItemIterator implements Iterator<Item> {
         this.innerIterator = collection.innerIterator();
     }
 
+    /**
+     * Determines if the collection has a next item or a link for the next page
+     * collection exists
+     * 
+     * @return boolean true if a next item exists
+     */
     @Override
     public boolean hasNext() {
         return innerIterator.hasNext() || page.hasNextCollection();
     }
 
+    /**
+     * Obtain the next item from the collection or fetch the next collection
+     * over the link
+     * 
+     * @return Item next item
+     */
     @Override
     public Item next() {
         if (innerIterator.hasNext()) {

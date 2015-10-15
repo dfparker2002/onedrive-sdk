@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * ItemCollection, a collection of items stored in OneDrive
+ * ItemCollection, an iterable collection of items stored in OneDrive
  *
  * @author yucca.io
  */
@@ -41,7 +41,7 @@ public class ItemCollection implements ItemIterable {
     @JsonIgnore
     protected OneDriveAPIConnection api;
 
-    @JsonDeserialize(as=LinkedList.class)
+    @JsonDeserialize(as = LinkedList.class)
     private List<Item> value;
 
     @JsonProperty("@odata.nextLink")
