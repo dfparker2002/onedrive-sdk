@@ -45,6 +45,19 @@ public final class ISO8061 {
     }
 
     /**
+     * Convert ms (epoch) to ISO 8601 String in format
+     * "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+     * 
+     * @param calendar Calendar
+     * @return String
+     */
+    public static String fromMillis(long ms) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Z"));
+        calendar.setTimeInMillis(ms);
+        return String.format("%tFT%<tT.%<tLZ", calendar, calendar, calendar);
+    }
+
+    /**
      * Get current date and time formatted as ISO 8601 String
      * 
      * @return String
