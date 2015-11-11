@@ -29,7 +29,7 @@ import io.yucca.microsoft.onedrive.resources.Item;
 public class SyncActionIT extends AbstractActionIT {
 
     @Test
-    public void testSyncChangesById() {
+    public void testSyncChangesById() throws ResyncNeededException {
         ItemAddress itemAddress = new IdAddress(apiTestFolderId);
         SyncAction action = new SyncAction(api, itemAddress, null, null);
         SyncResponse result = action.call();
@@ -41,7 +41,7 @@ public class SyncActionIT extends AbstractActionIT {
     }
 
     @Test
-    public void testSyncChangesByPath() {
+    public void testSyncChangesByPath() throws ResyncNeededException {
         ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
         SyncAction action = new SyncAction(api, itemAddress, null, null);
         SyncResponse result = action.call();
@@ -52,4 +52,10 @@ public class SyncActionIT extends AbstractActionIT {
         }
     }
 
+    @Test(expected = ResyncNeededException.class) 
+    public void testSyncOldToken() throws ResyncNeededException {
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
+        SyncAction action = new SyncAction(api, itemAddress, "aTE09NjM1ODI4NjUyMjE2NjM7SUQ9M0QyMzBCNTZBOUUzNjg2QSE1ODkxO0xSPTYzNTgyODY1MjIyODIzO0VQPTU7U089Mg", null);
+        action.call();
+    }
 }

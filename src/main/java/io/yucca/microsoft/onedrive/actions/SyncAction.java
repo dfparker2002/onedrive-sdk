@@ -90,23 +90,21 @@ public class SyncAction extends AbstractAction
      * Enumerate changed
      * 
      * @return SyncResponse matching items
+     * @throws ResyncNeededException if a new delta synchronization is needed
      */
     @Override
-    public SyncResponse call() throws OneDriveException {
+    public SyncResponse call() throws ResyncNeededException, OneDriveException {
         return sync();
     }
 
     /**
      * Enumerate the sync changes for a folder for a specific stated, which can
      * be used to synchronise a local copy of the drive.
-     * <p>
-     * TODO Handle HTTP 410 Gone error
-     * https://github.com/robses/onedrive-sdk/issues/11
-     * </p>
      * 
      * @return SyncResponse
+     * @throws ResyncNeededException if a new delta synchronization is needed
      */
-    private SyncResponse sync() {
+    private SyncResponse sync() throws ResyncNeededException {
         LOG.info("Enumerate the synchronization changes for folder: {}",
                  parentAddress);
         Response response = api.webTarget()
@@ -116,6 +114,9 @@ public class SyncAction extends AbstractAction
             .resolveTemplateFromEncoded(ITEM_ADDRESS,
                                         parentAddress.getAddress())
             .request().get();
+        if (equalsStatus(response, Status.GONE)) {
+            throw new ResyncNeededException(response);
+        }
         handleError(response, Status.OK,
                     "Failure enumerating changes for folder: " + parentAddress);
         return (SyncResponse)response.readEntity(SyncResponse.class)

@@ -15,6 +15,8 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * ErrorCodes possibly returned by OneDrive API
  * 
@@ -75,9 +77,19 @@ public enum ErrorCodes {
         return message;
     }
 
+    @JsonCreator
+    public static ErrorCodes create(String code) {
+        for (ErrorCodes e : values()) {
+            if (e.code.equals(code)) {
+                return e;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     public static String getMessage(String code) {
         for (ErrorCodes e : values()) {
-            if (e.code == code) {
+            if (e.code.equals(code)) {
                 return e.getMessage();
             }
         }
