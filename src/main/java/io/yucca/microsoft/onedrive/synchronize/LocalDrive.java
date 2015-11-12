@@ -16,20 +16,17 @@
 package io.yucca.microsoft.onedrive.synchronize;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.resources.Drive;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * LocalDrive represent the local root of an OneDrive
+ * LocalDrive acts as a local replica of an OneDrive.
  * 
  * @author yucca.io
  */
-public class LocalDrive implements LocalResource {
+public class LocalDrive extends LocalFolderImpl {
 
     private static final long serialVersionUID = 4994605863666178424L;
 
@@ -39,54 +36,33 @@ public class LocalDrive implements LocalResource {
 
     private static final String ONEDRIVE_ID_POSTFIX = "!0";
 
-    private String id;
-    
-    private transient final Path path;
+    private Drive drive;
 
     /**
-     * Construct a LocalDrive corresponding with the root of remote OneDrive
+     * Construct a LocalDrive corresponding with the root of OneDrive
      * 
-     * @param path Path base path to the
+     * @param path Path base path to the local drive
      * @param drive Drive
+     * @param repository LocalDriveRepository
      * @throws IOException
      */
-    public LocalDrive(Path path, Drive drive) throws IOException {
-        this.path = path;
-        this.id = drive.getId().toUpperCase() + ONEDRIVE_ID_POSTFIX;
-        if (!exists()) {
-            create();
-        }
-        hasExtendedAttributesCapability();
-        writeMetadata();
+    public LocalDrive(Path path, Drive drive, LocalDriveRepository repository)
+        throws IOException {
+        super(path, repository);
+        this.drive = drive;
     }
 
-    private void create() throws IOException {
-        if (!exists()) {
-            Files.createDirectory(path);
-        }
-        writeMetadata();
+    public LocalFolder getFolder(Path path) throws IOException {
+        return new LocalFolderImpl(path, repository);
     }
 
-    public boolean exists() {
-        return Files.exists(path, LinkOption.NOFOLLOW_LINKS);
-    }
-
-    private void hasExtendedAttributesCapability() {
-        try {
-            MetadataUtil.readAttribute(path, ATTRIBUTE_ONEDRIVE_ITEMID);
-        } catch (UnsupportedOperationException | IOException e) {
-            throw new OneDriveException("The extended attributes capability is disabled for the filesystem or cannot be determined."
-                                        + "This which is mandatory for the synchronization process to function, this depends on "
-                                        + "extended attributes to relate the local item with the corresponding OneDrive item by  "
-                                        + "storing the Item id as extended attribute. Enable this on Linux by remounting the partition "
-                                        + "with user_xattr flag. For more information see https://docs.oracle.com/javase/tutorial/essential/io/fileAttr.html#user",
-                                        e);
-        }
+    public void create(LocalItem resource) throws IOException {
+        repository.create(resource);
     }
 
     @Override
     public String getId() {
-        return id;
+        return drive.getId().toUpperCase() + ONEDRIVE_ID_POSTFIX;
     }
 
     @Override
@@ -111,7 +87,7 @@ public class LocalDrive implements LocalResource {
 
     @Override
     public boolean hasId() {
-        return (this.id != null);
+        return getId() != null;
     }
 
     @Override
@@ -120,19 +96,6 @@ public class LocalDrive implements LocalResource {
     }
 
     @Override
-    public void resetTimestamps() throws IOException {
-        return;
-    }
-
-    @SuppressWarnings("unused")
-    private void readMetadata() throws IOException {
-        this.id = MetadataUtil.readAttribute(path, ATTRIBUTE_ONEDRIVE_ITEMID);
-    }
-
-    private void writeMetadata() throws IOException {
-        MetadataUtil.writeAttribute(path, ATTRIBUTE_ONEDRIVE_ITEMID, id);
-    }
-
     public String toString() {
         return "LocalDrive: " + getId() + " path: " + getPath();
     }
