@@ -52,10 +52,32 @@ public class SyncActionIT extends AbstractActionIT {
         }
     }
 
-    @Test(expected = ResyncNeededException.class) 
+    @Test(expected = ResyncNeededException.class)
     public void testSyncOldToken() throws ResyncNeededException {
         ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
-        SyncAction action = new SyncAction(api, itemAddress, "aTE09NjM1ODI4NjUyMjE2NjM7SUQ9M0QyMzBCNTZBOUUzNjg2QSE1ODkxO0xSPTYzNTgyODY1MjIyODIzO0VQPTU7U089Mg", null);
+        SyncAction action = new SyncAction(api, itemAddress,
+                                           "aTE09NjM1ODI4NjUyMjE2NjM7SUQ9M0QyMzBCNTZBOUUzNjg2QSE1ODkxO0xSPTYzNTgyODY1MjIyODIzO0VQPTU7U089Mg",
+                                           null);
         action.call();
+    }
+
+    // @Test Fails:
+    // {"error":{"code":"generalException","message":"An assertion failed while
+    // processing this request."}}
+    public void testSyncResync() {
+        try {
+            ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
+            SyncAction action = new SyncAction(api, itemAddress,
+                                               "aTE09NjM1ODI4NjUyMjE2NjM7SUQ9M0QyMzBCNTZBOUUzNjg2QSE1ODkxO0xSPTYzNTgyODY1MjIyODIzO0VQPTU7U089Mg",
+                                               null);
+            action.call();
+        } catch (ResyncNeededException e) {
+            SyncResponse result = SyncAction.byURI(api, e.getNextLink());
+            assertNotNull(result);
+            assertNotNull(result.getToken());
+            for (Item item : result) {
+                assertNotNull(item);
+            }
+        }
     }
 }

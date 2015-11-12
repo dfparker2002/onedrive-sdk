@@ -15,8 +15,10 @@
  */
 package io.yucca.microsoft.onedrive.actions;
 
+import java.net.URI;
 import java.util.concurrent.Callable;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -119,6 +121,25 @@ public class SyncAction extends AbstractAction
         }
         handleError(response, Status.OK,
                     "Failure enumerating changes for folder: " + parentAddress);
+        return (SyncResponse)response.readEntity(SyncResponse.class)
+            .setApi(api);
+    }
+
+    /**
+     * Get a SyncResponse by URL, used if ResyncNeededException, indicating to
+     * start a fresh delta enumeration from scratch
+     * 
+     * @param api OneDriveAPIConnection
+     * @param uri URI to as returned in the Location header
+     * @return SyncResponse
+     */
+    public static SyncResponse byURI(OneDriveAPIConnection api, URI uri) {
+        Response response = api.webTarget(uri)
+            .request(MediaType.APPLICATION_JSON_TYPE).get();
+        if (response.getStatus() != Status.OK.getStatusCode()) {
+            throw new OneDriveException("Failure acquiring enumerating changes for URI: "
+                                        + uri, response.getStatus());
+        }
         return (SyncResponse)response.readEntity(SyncResponse.class)
             .setApi(api);
     }
