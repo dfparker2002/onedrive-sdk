@@ -52,7 +52,7 @@ public class FileSystemRepository implements LocalDriveRepository {
 
     private final Drive drive;
 
-    private final LocalDrive localDrive;
+    private final LocalDriveImpl localDrive;
 
     /**
      * FilesystemRepository
@@ -65,7 +65,7 @@ public class FileSystemRepository implements LocalDriveRepository {
         throws IOException {
         this.drivePath = drivePath;
         this.drive = drive;
-        this.localDrive = new LocalDrive(drivePath, drive, this);
+        this.localDrive = new LocalDriveImpl(drivePath, drive, this);
         initialize(localDrive);
     }
 
@@ -80,7 +80,7 @@ public class FileSystemRepository implements LocalDriveRepository {
         throws IOException {
         this.drivePath = drivePath;
         this.drive = drive;
-        this.localDrive = new LocalDrive(drivePath, drive, this);
+        this.localDrive = new LocalDriveImpl(drivePath, drive, this);
         initialize(localDrive);
     }
 
@@ -93,7 +93,7 @@ public class FileSystemRepository implements LocalDriveRepository {
      * @throws OneDriveException if extended attributes are not supported or
      *             enabled
      */
-    private void initialize(LocalDrive drive) throws IOException {
+    private void initialize(LocalDriveImpl drive) throws IOException {
         LOG.info("Initializing the root of LocalDrive: {}",
                  localDrive.getName());
         hasExtendedAttributesCapability(drive.getPath());
@@ -129,7 +129,7 @@ public class FileSystemRepository implements LocalDriveRepository {
     }
 
     @Override
-    public LocalDrive getLocalDrive() {
+    public LocalDriveImpl getLocalDrive() {
         return localDrive;
     }
 
