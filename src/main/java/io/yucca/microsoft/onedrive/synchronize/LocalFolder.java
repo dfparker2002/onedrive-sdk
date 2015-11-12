@@ -34,6 +34,15 @@ public interface LocalFolder extends LocalItem {
     boolean isLocalRoot() throws IOException;
 
     /**
+     * Get a Folder
+     * 
+     * @param path Path
+     * @return LocalFolder
+     * @throws IOException
+     */
+    LocalFolder getFolder(Path path) throws IOException;
+
+    /**
      * Create a absolute path where filename is resolved as a child of this
      * folder
      * 
