@@ -30,7 +30,7 @@ public interface LocalFile extends LocalItem {
      * Get the file contents
      * 
      * @return OneDriveFile content
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if file does not exists
      */
     OneDriveFile getContent() throws FileNotFoundException;
 
