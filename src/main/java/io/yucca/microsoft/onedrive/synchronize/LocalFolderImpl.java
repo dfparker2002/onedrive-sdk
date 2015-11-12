@@ -65,6 +65,11 @@ public class LocalFolderImpl extends LocalItemImpl implements LocalFolder {
     }
 
     @Override
+    public LocalFolder getFolder(Path path) throws IOException {
+        return new LocalFolderImpl(path, repository);
+    }
+
+    @Override
     public boolean isContentModified(Item item) throws IOException {
         return ModificationStatus.NEWER.equals(lastModificationStatus(item));
     }
