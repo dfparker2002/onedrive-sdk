@@ -15,89 +15,11 @@
  */
 package io.yucca.microsoft.onedrive.synchronize;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
-import io.yucca.microsoft.onedrive.resources.Drive;
-import io.yucca.microsoft.onedrive.resources.Item;
-
 /**
  * LocalDrive acts as a local replica of an OneDrive.
- * 
+ *
  * @author yucca.io
  */
-public class LocalDrive extends LocalFolderImpl {
-
-    private static final long serialVersionUID = 4994605863666178424L;
-
-    public static final String ONEDRIVE = "onedrive";
-
-    public static final String ONEDRIVE_ROOT_MARKER = "localroot";
-
-    private static final String ONEDRIVE_ID_POSTFIX = "!0";
-
-    private Drive drive;
-
-    /**
-     * Construct a LocalDrive corresponding with the root of OneDrive
-     * 
-     * @param path Path base path to the local drive
-     * @param drive Drive
-     * @param repository LocalDriveRepository
-     * @throws IOException
-     */
-    public LocalDrive(Path path, Drive drive, LocalDriveRepository repository)
-        throws IOException {
-        super(path, repository);
-        this.drive = drive;
-    }
-
-    public LocalFolder getFolder(Path path) throws IOException {
-        return new LocalFolderImpl(path, repository);
-    }
-
-    public void create(LocalItem resource) throws IOException {
-        repository.create(resource);
-    }
-
-    @Override
-    public String getId() {
-        return drive.getId().toUpperCase() + ONEDRIVE_ID_POSTFIX;
-    }
-
-    @Override
-    public String getParentId() throws IOException {
-        return ONEDRIVE_ROOT_MARKER;
-    }
-
-    @Override
-    public String getName() {
-        return ONEDRIVE;
-    }
-
-    @Override
-    public Path getPath() {
-        return path;
-    }
-
-    @Override
-    public ResourceType type() {
-        return ResourceType.DRIVE;
-    }
-
-    @Override
-    public boolean hasId() {
-        return getId() != null;
-    }
-
-    @Override
-    public void updateItem(Item item) {
-        return;
-    }
-
-    @Override
-    public String toString() {
-        return "LocalDrive: " + getId() + " path: " + getPath();
-    }
+public interface LocalDrive {
 
 }
