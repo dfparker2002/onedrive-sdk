@@ -329,4 +329,7 @@
    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
   </license>
  </licenses>
+ <issueManagement>
+  <url>https://github.com/robses/onedrive-sdk/issues</url>
+ </issueManagement>
 </project>
