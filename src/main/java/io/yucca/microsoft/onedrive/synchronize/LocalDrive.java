@@ -20,6 +20,6 @@ package io.yucca.microsoft.onedrive.synchronize;
  *
  * @author yucca.io
  */
-public interface LocalDrive {
+public interface LocalDrive extends LocalFolder {
 
 }
