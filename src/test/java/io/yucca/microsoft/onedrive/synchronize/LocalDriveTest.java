@@ -24,23 +24,28 @@ import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.resources.Drive;
 
 public class LocalDriveTest {
 
-    public static final String PATH_TEST_LOCALDRIVE = "src/test/resources/synchronize/localdrive";
+    public static final String ITEM_ROOTID = "1";
+
+    private LocalDriveRepository repository;
 
     private LocalDrive localDrive;
 
-    private Drive drive;
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Before
     public void setUp() throws IOException {
-        drive = new Drive();
-        drive.setId("1");
-        localDrive = new LocalDrive(Paths.get(PATH_TEST_LOCALDRIVE), drive);
+        repository = new FileSystemRepository(Paths
+            .get(testFolder.getRoot().getAbsolutePath()), getDrive());
+        localDrive = repository.getLocalDrive();
     }
 
     @Test
@@ -60,7 +65,8 @@ public class LocalDriveTest {
 
     @Test
     public void testGetPath() {
-        assertEquals(Paths.get(PATH_TEST_LOCALDRIVE), localDrive.getPath());
+        assertEquals(Paths.get(testFolder.getRoot().getAbsolutePath()),
+                     localDrive.getPath());
     }
 
     @Test
@@ -71,5 +77,11 @@ public class LocalDriveTest {
     @After
     public void tearDown() throws IOException {
         Files.deleteIfExists(localDrive.getPath());
+    }
+
+    private Drive getDrive() {
+        Drive d = new Drive();
+        d.setId(ITEM_ROOTID);
+        return d;
     }
 }
