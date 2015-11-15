@@ -35,7 +35,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 /**
- * Factory to create a Jersey Client and ObjectMapper
+ * Factory creating a Jersey Client and ObjectMapper
  * 
  * <pre>
  * based on:
@@ -104,7 +104,7 @@ public final class ClientFactory {
     /**
      * Create an ObjectMapper
      * 
-     * @param jacksonProvider JacksonJaxbJsonProvider
+     * @param jacksonProvider JacksonJsonProvider
      * @return ObjectMapper
      */
     public static ObjectMapper createMapper(JacksonJsonProvider jacksonProvider) {
