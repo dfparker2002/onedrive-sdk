@@ -41,7 +41,8 @@ import io.yucca.microsoft.onedrive.util.URLHelper;
 public class SearchAction extends AbstractAction
     implements Callable<ItemIterable> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SearchAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(SearchAction.class);
 
     public static final String ACTION = "view.search";
 
@@ -123,9 +124,11 @@ public class SearchAction extends AbstractAction
                                         parentAddress.getAddress())
             .queryParam("q", URLHelper.encodeURIComponent(query));
         if (parameters != null) {
-            // XXX when the top parameter is set, the last page of the total
-            // resultset contains no values, leading to NoSuchElementException
-            // must file a bug
+            // XXX
+            // https://github.com/OneDrive/onedrive-api-docs/issues/250
+            // when the top parameter is set, the last page of the total
+            // resultset contains no values, leading to a
+            // NoSuchElementException. Therefor top parameter is removed
             target = parameters.configure(target,
                                           new String[] { QueryParameters.EXPAND,
                                                          QueryParameters.TOP });
