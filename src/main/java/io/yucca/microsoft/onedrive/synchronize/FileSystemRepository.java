@@ -65,7 +65,7 @@ public class FileSystemRepository implements LocalDriveRepository {
         throws IOException {
         this.drivePath = drivePath;
         this.drive = drive;
-        this.localDrive = new LocalDriveImpl(drivePath, drive, this);
+        this.localDrive = new LocalDriveImpl(drive, this);
         initialize(localDrive);
     }
 
@@ -80,7 +80,7 @@ public class FileSystemRepository implements LocalDriveRepository {
         throws IOException {
         this.drivePath = drivePath;
         this.drive = drive;
-        this.localDrive = new LocalDriveImpl(drivePath, drive, this);
+        this.localDrive = new LocalDriveImpl(drive, this);
         initialize(localDrive);
     }
 
@@ -136,6 +136,11 @@ public class FileSystemRepository implements LocalDriveRepository {
     @Override
     public boolean isLocalDriveRoot(LocalItem folder) {
         return localDrive.getPath().equals(folder.getPath());
+    }
+
+    @Override
+    public Path getPath() {
+        return drivePath;
     }
 
     @Override

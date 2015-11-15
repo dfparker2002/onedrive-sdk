@@ -16,6 +16,7 @@
 package io.yucca.microsoft.onedrive.synchronize;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.resources.Drive;
@@ -67,6 +68,13 @@ public interface LocalDriveRepository {
      * @return boolean
      */
     boolean isLocalDriveRoot(LocalItem folder);
+
+    /**
+     * Get path to the repository
+     * 
+     * @return Path
+     */
+    Path getPath();
 
     /**
      * Renames the resource

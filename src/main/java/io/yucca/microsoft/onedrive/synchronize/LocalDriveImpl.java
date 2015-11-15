@@ -41,14 +41,12 @@ public class LocalDriveImpl extends LocalFolderImpl implements LocalDrive {
     /**
      * Construct a LocalDrive corresponding with the root of OneDrive
      * 
-     * @param path Path base path to the local drive
      * @param drive Drive
      * @param repository LocalDriveRepository
-     * @throws IOException
      */
-    public LocalDriveImpl(Path path, Drive drive,
-                          LocalDriveRepository repository) throws IOException {
-        super(path, repository);
+    public LocalDriveImpl(Drive drive, LocalDriveRepository repository)
+        throws IOException {
+        super(repository.getPath(), repository);
         this.drive = drive;
     }
 
@@ -69,7 +67,7 @@ public class LocalDriveImpl extends LocalFolderImpl implements LocalDrive {
 
     @Override
     public Path getPath() {
-        return path;
+        return repository.getPath();
     }
 
     @Override

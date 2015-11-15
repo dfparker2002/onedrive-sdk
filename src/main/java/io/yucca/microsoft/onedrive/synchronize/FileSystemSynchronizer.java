@@ -264,6 +264,11 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
         }
         return folder;
     }
+    
+    @Override
+    public Path getPath() {
+        return repository.getPath();
+    }
 
     @Override
     public LocalItem getLocalItem(String id) {
