@@ -61,9 +61,8 @@ public class SyncActionIT extends AbstractActionIT {
         action.call();
     }
 
-    // @Test Fails:
-    // {"error":{"code":"generalException","message":"An assertion failed while
-    // processing this request."}}
+    // Bug: https://github.com/OneDrive/onedrive-api-docs/issues/249 
+    //@Test
     public void testSyncResync() {
         try {
             ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
