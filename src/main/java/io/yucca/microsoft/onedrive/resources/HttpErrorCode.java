@@ -20,7 +20,7 @@ package io.yucca.microsoft.onedrive.resources;
  * 
  * @author yucca.io
  */
-public enum HttpErrorCodes {
+public enum HttpErrorCode {
 
     BADREQUEST(
         400,
@@ -77,7 +77,7 @@ public enum HttpErrorCodes {
 
     private String message;
 
-    private HttpErrorCodes(int code, String message) {
+    private HttpErrorCode(int code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -91,7 +91,7 @@ public enum HttpErrorCodes {
     }
 
     public static String getMessage(int code) {
-        for (HttpErrorCodes e : values()) {
+        for (HttpErrorCode e : values()) {
             if (e.code == code) {
                 return e.getMessage();
             }

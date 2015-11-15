@@ -19,7 +19,7 @@ import java.net.URI;
 
 import javax.ws.rs.core.Response;
 
-import io.yucca.microsoft.onedrive.resources.ErrorCodes;
+import io.yucca.microsoft.onedrive.resources.ErrorCode;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
@@ -33,7 +33,7 @@ public class ResyncNeededException extends Exception {
 
     private static final long serialVersionUID = 7042469321451501550L;
 
-    private ErrorCodes errorCode;
+    private ErrorCode errorCode;
 
     private URI nextLink;
 
@@ -45,7 +45,7 @@ public class ResyncNeededException extends Exception {
      */
     public ResyncNeededException(Response errorResponse) {
         OneDriveError error = errorResponse.readEntity(OneDriveError.class);
-        this.errorCode = ErrorCodes.create(error.getError().getCode());
+        this.errorCode = ErrorCode.create(error.getError().getCode());
         this.nextLink = errorResponse.getLocation();
     }
 
@@ -55,7 +55,7 @@ public class ResyncNeededException extends Exception {
      * @param code ErrorCodes
      * @param nextLink URI
      */
-    public ResyncNeededException(ErrorCodes errorCode, URI nextLink) {
+    public ResyncNeededException(ErrorCode errorCode, URI nextLink) {
         this.errorCode = errorCode;
         this.nextLink = nextLink;
     }
@@ -63,7 +63,7 @@ public class ResyncNeededException extends Exception {
     /**
      * @return Returns the errorCode.
      */
-    public ErrorCodes getErrorCode() {
+    public ErrorCode getErrorCode() {
         return errorCode;
     }
 

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * 
  * @author yucca.io
  */
-public enum ErrorCodes {
+public enum ErrorCode {
 
     ACCESDENIED(
         "accessDenied",
@@ -64,7 +64,7 @@ public enum ErrorCodes {
 
     private String message;
 
-    private ErrorCodes(String code, String message) {
+    private ErrorCode(String code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -78,8 +78,8 @@ public enum ErrorCodes {
     }
 
     @JsonCreator
-    public static ErrorCodes create(String code) {
-        for (ErrorCodes e : values()) {
+    public static ErrorCode create(String code) {
+        for (ErrorCode e : values()) {
             if (e.code.equals(code)) {
                 return e;
             }
@@ -88,7 +88,7 @@ public enum ErrorCodes {
     }
 
     public static String getMessage(String code) {
-        for (ErrorCodes e : values()) {
+        for (ErrorCode e : values()) {
             if (e.code.equals(code)) {
                 return e.getMessage();
             }

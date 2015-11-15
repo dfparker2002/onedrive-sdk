@@ -38,17 +38,17 @@ public class OneDriveErrorTest {
 
     @Test
     public void testEqualsErrorRoot() {
-        assertTrue(error.equalsError(ErrorCodes.NOT_ALLOWED));
+        assertTrue(error.equalsError(ErrorCode.NOT_ALLOWED));
     }
 
     @Test
     public void testEqualsErrorInner() {
-        assertTrue(error.equalsError(ErrorCodes.ACCESDENIED));
+        assertTrue(error.equalsError(ErrorCode.ACCESDENIED));
     }
 
     @Test
     public void testNotEqualsError() {
-        assertFalse(error.equalsError(ErrorCodes.ACTIVITY_LIMIT_REACHED));
+        assertFalse(error.equalsError(ErrorCode.ACTIVITY_LIMIT_REACHED));
     }
 
 }

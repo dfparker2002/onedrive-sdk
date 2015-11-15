@@ -28,7 +28,7 @@ import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
-import io.yucca.microsoft.onedrive.resources.HttpErrorCodes;
+import io.yucca.microsoft.onedrive.resources.HttpErrorCode;
 import io.yucca.microsoft.onedrive.resources.ItemReference;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
@@ -144,7 +144,7 @@ public abstract class AbstractAction {
     protected String formatError(int status, String message,
                                  OneDriveError cause) {
         throw new OneDriveException(message + ", reason: " + status + " "
-                                    + HttpErrorCodes.getMessage(status)
+                                    + HttpErrorCode.getMessage(status)
                                     + ", cause: " + cause);
     }
 
@@ -157,7 +157,7 @@ public abstract class AbstractAction {
      */
     protected String formatError(int status, String message) {
         throw new OneDriveException(message + ", reason: " + status + " "
-                                    + HttpErrorCodes.getMessage(status));
+                                    + HttpErrorCode.getMessage(status));
     }
 
     /**
