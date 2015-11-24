@@ -60,10 +60,9 @@ public class SyncActionIT extends AbstractActionIT {
                                            null);
         action.call();
     }
-
-    // Bug: https://github.com/OneDrive/onedrive-api-docs/issues/249 
-    //@Test
-    public void testSyncResync() {
+ 
+    @Test
+    public void testResyncByLocation() {
         try {
             ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
             SyncAction action = new SyncAction(api, itemAddress,
