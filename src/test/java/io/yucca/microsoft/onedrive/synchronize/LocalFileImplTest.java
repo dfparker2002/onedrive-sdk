@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 
@@ -67,8 +68,9 @@ public class LocalFileImplTest {
     public void setUp() throws IOException, ParseException {
         repository = new FileSystemRepository(Paths.get(PATH_TEST_LOCALDRIVE),
                                               getDrive());
+        LocalFolder folder = initializeParentFolder(testFolder);
         OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
-        file = new LocalFileImpl(Paths.get(PATH_TEST_LOCALFILE), getItem(),
+        file = new LocalFileImpl(folder.getPath().resolve(ITEM_NAME), getItem(),
                                  content, repository);
         file.create();
     }
@@ -177,6 +179,19 @@ public class LocalFileImplTest {
         ff.setHashes(hf);
         item.setFile(ff);
         return item;
+    }
+
+    private LocalFolder initializeParentFolder(TemporaryFolder testFolder)
+        throws IOException {
+        Path path = Paths.get(testFolder.getRoot().getAbsolutePath());
+        Item item = new Item();
+        item.setId(ITEM_PARENTID);
+        item.setName(path.getFileName().toString());
+        item.setLastModifiedDateTime("2099-01-02T12:00:00.10Z");
+        item.setCreatedDateTime("2099-01-01T12:00:00.10Z");
+        LocalFolder parentFolder = new LocalFolderImpl(path, item, repository);
+        parentFolder.update(item);
+        return parentFolder;
     }
 
     private Drive getDrive() {
