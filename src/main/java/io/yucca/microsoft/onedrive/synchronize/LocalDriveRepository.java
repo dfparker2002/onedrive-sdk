@@ -30,12 +30,21 @@ import io.yucca.microsoft.onedrive.resources.Drive;
 public interface LocalDriveRepository {
 
     /**
-     * Create the resource
+     * Create a folder
      * 
-     * @param resource LocalItem
+     * @param resource LocalFolder
      * @throws IOException
      */
-    void create(LocalItem resource) throws IOException;
+    void createFolder(LocalFolder resource) throws IOException;
+
+    /**
+     * Create a file
+     * 
+     * @param resource LocalFile
+     * @throws IOException
+     */
+    void createFile(LocalFile resource, OneDriveContent content)
+        throws IOException;
 
     /**
      * Delete the resource
