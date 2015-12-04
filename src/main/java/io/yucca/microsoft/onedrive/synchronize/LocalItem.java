@@ -29,10 +29,9 @@ public interface LocalItem extends LocalResource {
     /**
      * Create the item
      * 
-     * @param resource LocalItem
      * @throws IOException
      */
-    void create(LocalItem resource) throws IOException;
+    void create() throws IOException;
 
     /**
      * Deletes the item
