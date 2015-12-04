@@ -201,8 +201,15 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
     }
 
     @Override
-    public void create(LocalItem resource) throws IOException {
-        repository.create(resource);
+    public void createFolder(LocalFolder resource) throws IOException {
+        repository.createFolder(resource);
+        registerItem(resource);
+    }
+
+    @Override
+    public void createFile(LocalFile resource, OneDriveContent content)
+        throws IOException {
+        repository.createFile(resource, content);
         registerItem(resource);
     }
 
@@ -264,7 +271,7 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
         }
         return folder;
     }
-    
+
     @Override
     public Path getPath() {
         return repository.getPath();
