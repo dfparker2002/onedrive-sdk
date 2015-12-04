@@ -18,6 +18,7 @@ package io.yucca.microsoft.onedrive.synchronize;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.CopyOption;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -93,29 +94,31 @@ public class FileSystemRepository implements LocalDriveRepository {
      * @throws OneDriveException if extended attributes are not supported or
      *             enabled
      */
-    private void initialize(LocalDriveImpl drive) throws IOException {
+    private void initialize(LocalDrive drive) throws IOException {
         LOG.info("Initializing the root of LocalDrive: {}",
                  localDrive.getName());
         hasExtendedAttributesCapability(drive.getPath());
-        if (!exists(drive)) {
-            create(drive);
-        }
+        createFolder(drive);
     }
 
     @Override
-    public void create(LocalItem resource) throws IOException {
-        if (ResourceType.FOLDER.equals(resource.type())) {
-            if (!exists(resource)) {
-                Files.createDirectories(resource.getPath());
-            }
-            // must check that LocalItem is not LocalRoot, timestamp of upstream
-            // folder may not be
-            // reset
-            // if (resource.getParent() != null) {
-            // resetTimestamps(resource.getParent());
-            // }
-            writeMetadata(resource);
+    public void createFolder(LocalFolder resource) throws IOException {
+        if (!exists(resource)) {
+            Files.createDirectories(resource.getPath());
         }
+        // must check that LocalItem is not LocalRoot, timestamp of upstream
+        // folder may not be
+        // reset
+        // if (resource.getParent() != null) {
+        // resetTimestamps(resource.getParent());
+        // }
+        writeMetadata(resource);
+    }
+
+    @Override
+    public void createFile(LocalFile resource, OneDriveContent content)
+        throws IOException {
+        writeMetadataAndContent(resource, content);
     }
 
     @Override
@@ -165,7 +168,12 @@ public class FileSystemRepository implements LocalDriveRepository {
         throws IOException {
         rename(resource, resource.getName());
         writeMetadataAndContent(resource, content);
-        resetTimestamps(resource.getParent());
+        try {
+            resetTimestamps(resource.getParent());
+        } catch (FileSystemException e) {
+            LOG.warn("Failure resetting timestamps for item: {}",
+                     resource.getPath());
+        }
     }
 
     private void writeMetadataAndContent(LocalItem resource,
