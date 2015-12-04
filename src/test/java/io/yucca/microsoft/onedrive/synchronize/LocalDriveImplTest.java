@@ -28,7 +28,7 @@ import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.resources.Drive;
 
-public class LocalDriveTest {
+public class LocalDriveImplTest {
 
     public static final String ITEM_ROOTID = "1";
 

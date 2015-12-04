@@ -28,7 +28,9 @@ import java.text.ParseException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.OneDriveFile;
 import io.yucca.microsoft.onedrive.resources.Drive;
@@ -61,29 +63,35 @@ public class LocalFileTest {
 
     public static final String ITEM_PARENTNAME = "root";
 
+    private LocalDriveRepository repository;
+
     private LocalDrive drive;
 
     private LocalFolder root;
 
     private LocalFile file;
+    
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Before
     public void setUp() throws IOException, ParseException {
-        drive = new LocalDrive(Paths.get(PATH_TEST_LOCALDRIVE), getDrive());
-        root = new LocalFolder(getParentItem(), drive);
+        repository = new FileSystemRepository(Paths.get(PATH_TEST_LOCALDRIVE),
+                                              getDrive());
+        root = new LocalFolderImpl(getParentItem().getP, repository);
         OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
-        file = new LocalFile(getItem(), content, root);
+        file = new LocalFileImpl(getItem(), content, root, repository);
     }
 
     @Test
     public void testLocalFilePath() throws IOException {
-        new LocalFile(Paths.get(PATH_TEST_LOCALDRIVE));
+        new LocalFileImpl(Paths.get(PATH_TEST_LOCALDRIVE), repository);
     }
 
     @Test
     public void testLocalFileItemLocalResource()
         throws IOException, ParseException {
-        LocalFile file = new LocalFile(getItem(), root);
+        LocalFileImpl file = new LocalFileImpl(getItem(), root, repository);
         assertTrue(file.exists());
     }
 
@@ -94,16 +102,18 @@ public class LocalFileTest {
 
     @Test
     public void testUpdate() throws IOException {
-        LocalFolder folder = new LocalFolder(Paths.get(PATH_TEST_LOCALFOLDER));
+        LocalFolderImpl folder = new LocalFolderImpl(Paths.get(PATH_TEST_LOCALFOLDER),
+                                             repository);
         OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-1.txt");
-        file.update(getItem(), content, folder);
+        file.update(getItem());
         assertTrue(file.exists());
         file.rename("localfile-1.pdf");
     }
 
     @Test
     public void testRelateWith() throws IOException, ParseException {
-        LocalFile file = new LocalFile(Paths.get(PATH_TEST_LOCALFILE));
+        LocalFileImpl file = new LocalFileImpl(Paths.get(PATH_TEST_LOCALFILE),
+                                       repository);
         file.relateWith(getItem());
         assertEquals(file.getId(), ITEM_ID);
         assertEquals(file.getName(), ITEM_NAME);
@@ -112,8 +122,9 @@ public class LocalFileTest {
     @Test
     public void testRename() throws IOException, ParseException {
         OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
-        LocalFolder folder = new LocalFolder(Paths.get(PATH_TEST_LOCALFOLDER));
-        LocalFile file = new LocalFile(getItem(), content, folder);
+        LocalFolderImpl folder = new LocalFolderImpl(Paths.get(PATH_TEST_LOCALFOLDER),
+                                             repository);
+        LocalFileImpl file = new LocalFileImpl(getItem(), content, repository);
         file.rename(ITEM_NAMENEW);
         assertTrue(file.exists());
         file.rename("localfile-1.pdf");
@@ -122,8 +133,10 @@ public class LocalFileTest {
     @Test
     public void testDelete() throws IOException, ParseException {
         OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
-        LocalFolder folder = new LocalFolder(Paths.get(PATH_TEST_LOCALFOLDER));
-        LocalFile file = new LocalFile(getItem(), content, folder);
+        LocalFolderImpl folder = new LocalFolderImpl(Paths.get(PATH_TEST_LOCALFOLDER),
+                                             repository);
+        LocalFileImpl file = new LocalFileImpl(getItem(), content, folder, repository);
+        
         file.delete();
         assertFalse(file.exists());
     }
@@ -143,21 +156,6 @@ public class LocalFileTest {
     @Test
     public void testIsContentModified() throws IOException {
         assertTrue(file.isContentModified(getItem()));
-    }
-
-    @Test
-    public void testIsRenamed() {
-        assertTrue(file.isRenamed(ITEM_NAMENEW));
-    }
-
-    @Test
-    public void testReadMetadata() throws IOException {
-        file.readMetadata();
-    }
-
-    @Test
-    public void testWriteMetadata() throws IOException {
-        file.writeMetadata();
     }
 
     @Test
@@ -182,7 +180,7 @@ public class LocalFileTest {
 
     @Test
     public void testGetOneDriveContent() throws FileNotFoundException {
-        OneDriveFile content = file.getOneDriveContent();
+        OneDriveFile content = file.getContent();
         assertNotNull(content);
     }
 
