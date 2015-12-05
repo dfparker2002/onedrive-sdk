@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.Before;
@@ -26,11 +27,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import io.yucca.microsoft.onedrive.resources.Drive;
-
 public class LocalDriveImplTest {
-
-    public static final String ITEM_ROOTID = "1";
 
     private LocalDriveRepository repository;
 
@@ -41,8 +38,8 @@ public class LocalDriveImplTest {
 
     @Before
     public void setUp() throws IOException {
-        repository = new FileSystemRepository(Paths
-            .get(testFolder.getRoot().getAbsolutePath()), getDrive());
+        Path folder = Paths.get(testFolder.getRoot().getAbsolutePath());
+        repository = new FileSystemRepository(folder, new OneDriveStub());
         localDrive = repository.getLocalDrive();
     }
 
@@ -72,9 +69,4 @@ public class LocalDriveImplTest {
         assertTrue(localDrive.hasId());
     }
 
-    private Drive getDrive() {
-        Drive d = new Drive();
-        d.setId(ITEM_ROOTID);
-        return d;
-    }
 }

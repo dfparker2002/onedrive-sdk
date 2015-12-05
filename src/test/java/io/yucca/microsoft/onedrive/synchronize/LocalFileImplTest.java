@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.OneDriveFile;
-import io.yucca.microsoft.onedrive.resources.Drive;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
 import io.yucca.microsoft.onedrive.resources.facets.HashesFacet;
@@ -67,7 +66,7 @@ public class LocalFileImplTest {
     @Before
     public void setUp() throws IOException, ParseException {
         repository = new FileSystemRepository(Paths.get(PATH_TEST_LOCALDRIVE),
-                                              getDrive());
+                                              new OneDriveStub());
         LocalFolder folder = initializeParentFolder(testFolder);
         OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
         file = new LocalFileImpl(folder.getPath().resolve(ITEM_NAME), getItem(),
@@ -192,12 +191,6 @@ public class LocalFileImplTest {
         LocalFolder parentFolder = new LocalFolderImpl(path, item, repository);
         parentFolder.update(item);
         return parentFolder;
-    }
-
-    private Drive getDrive() {
-        Drive d = new Drive();
-        d.setId(ITEM_ROOTID);
-        return d;
     }
 
 }
