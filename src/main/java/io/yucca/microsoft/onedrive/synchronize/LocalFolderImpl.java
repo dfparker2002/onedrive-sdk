@@ -36,7 +36,7 @@ public class LocalFolderImpl extends LocalItemImpl implements LocalFolder {
      * Construct a LocalFolder. If the folder exists the OneDrive metadata
      * attributes are read,
      * 
-     * @param folder Path
+     * @param folder Path local path
      * @param repository LocalDriveRepository
      * @throws IOException if reading metadata fails
      */
@@ -51,10 +51,30 @@ public class LocalFolderImpl extends LocalItemImpl implements LocalFolder {
     }
 
     /**
+     * Construct a LocalFolder. If the folder exists the OneDrive metadata
+     * attributes are read,
+     * 
+     * @param folder Path local path
+     * @param item Item providing metadata
+     * @param repository LocalDriveRepository
+     * @throws IOException if reading metadata fails
+     */
+    public LocalFolderImpl(Path path, Item item,
+                           LocalDriveRepository repository) throws IOException {
+        this.name = path.getFileName().toString();
+        this.path = path;
+        this.repository = repository;
+        relateWith(item);
+        if (repository.exists(this)) {
+            repository.readMetadata(this);
+        }
+    }
+
+    /**
      * Construct a LocalFolder based on OneDriveFolder
      * 
-     * @param path Path
-     * @param folder OneDriveFolder
+     * @param path Path local path
+     * @param folder OneDriveFolder remote folder
      * @param repository LocalDriveRepository
      */
     LocalFolderImpl(Path path, OneDriveFolder folder,
@@ -62,6 +82,11 @@ public class LocalFolderImpl extends LocalItemImpl implements LocalFolder {
         this.path = path;
         this.repository = repository;
         relateWith(folder.getItem());
+    }
+
+    @Override
+    public void create() throws IOException {
+        repository.createFolder(this);
     }
 
     @Override
@@ -88,8 +113,8 @@ public class LocalFolderImpl extends LocalItemImpl implements LocalFolder {
     @Override
     public void update(Item item) throws IOException {
         relateWith(item);
-        repository.create(this);
-        super.update(item);
+        repository.createFolder(this);
+        repository.update(this, null);
     }
 
     @Override
