@@ -53,9 +53,9 @@ public final class LocalResourceFactory {
         Path path = itemPath(item, repository);
         if (item.isFile()) {
             OneDriveContent content = download(item, api);
-            return new LocalFileImpl(path, content, repository);
+            return new LocalFileImpl(path, item, content, repository);
         } else if (item.isDirectory()) {
-            return new LocalFolderImpl(path, repository);
+            return new LocalFolderImpl(path, item, repository);
         } else {
             throw new OneDriveException("Unsupported type for item: "
                                         + item.getId() + ", name: "
