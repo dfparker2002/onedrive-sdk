@@ -38,9 +38,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.yucca.microsoft.onedrive.OneDrive;
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.resources.Drive;
 
 /**
  * FileSystemSynchronizer
@@ -76,11 +76,18 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
      */
     private List<LocalItem> savedState;
 
-    private final Drive drive;
+    private final OneDrive onedrive;
 
     private final String itemId;
 
     private final LocalDriveRepository repository;
+
+    public FileSystemSynchronizer(Path localPath, OneDrive onedrive)
+        throws IOException {
+        this.onedrive = onedrive;
+        this.itemId = onedrive.getDriveId();
+        this.repository = new FileSystemRepository(localPath, onedrive);
+    }
 
     /**
      * FileSystemSynchronizer
@@ -89,8 +96,8 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
      */
     public FileSystemSynchronizer(LocalDriveRepository repository) {
         this.repository = repository;
-        this.drive = repository.getDrive();
-        this.itemId = drive.getId();
+        this.onedrive = repository.getOneDrive();
+        this.itemId = onedrive.getDriveId();
         // TODO https://github.com/robses/onedrive-sdk/issues/10
         // prevent accidental deletion of complete OneDrive if LocalDrive is not
         // present. if root folder does not exist but state is available stop,
@@ -353,8 +360,8 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
     }
 
     @Override
-    public Drive getDrive() {
-        return repository.getDrive();
+    public OneDrive getOneDrive() {
+        return repository.getOneDrive();
     }
 
 }

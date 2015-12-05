@@ -18,8 +18,8 @@ package io.yucca.microsoft.onedrive.synchronize;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import io.yucca.microsoft.onedrive.OneDrive;
 import io.yucca.microsoft.onedrive.OneDriveContent;
-import io.yucca.microsoft.onedrive.resources.Drive;
 
 /**
  * LocalDriveRepository defines a repository for storing LocalItem resources (a
@@ -131,9 +131,9 @@ public interface LocalDriveRepository {
     void writeMetadata(LocalItem resource) throws IOException;
 
     /**
-     * Get the Drive
+     * Get the OneDrive
      * 
-     * @return Drive
+     * @return OneDrive
      */
-    Drive getDrive();
+    OneDrive getOneDrive();
 }

@@ -30,10 +30,10 @@ import java.nio.file.attribute.FileTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.yucca.microsoft.onedrive.OneDrive;
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.io.InputStreamingOutput;
-import io.yucca.microsoft.onedrive.resources.Drive;
 
 /**
  * FilesystemRepository defines a repository for storing {@link LocalResource}
@@ -51,7 +51,7 @@ public class FileSystemRepository implements LocalDriveRepository {
 
     private final Path drivePath;
 
-    private final Drive drive;
+    private final OneDrive onedrive;
 
     private final LocalDriveImpl localDrive;
 
@@ -59,14 +59,14 @@ public class FileSystemRepository implements LocalDriveRepository {
      * FilesystemRepository
      * 
      * @param drivePath Path base path to LocalDrive
-     * @param drive Drive metadata
+     * @param onedrive OneDrive
      * @throws IOException if repository initialization fails
      */
-    public FileSystemRepository(Path drivePath, Drive drive)
+    public FileSystemRepository(Path drivePath, OneDrive onedrive)
         throws IOException {
         this.drivePath = drivePath;
-        this.drive = drive;
-        this.localDrive = new LocalDriveImpl(drive, this);
+        this.onedrive = onedrive;
+        this.localDrive = new LocalDriveImpl(onedrive.getDrive(), this);
         initialize(localDrive);
     }
 
@@ -74,14 +74,14 @@ public class FileSystemRepository implements LocalDriveRepository {
      * FilesystemRepository
      * 
      * @param drivePath Path base path to LocalDrive
-     * @param drive Drive metadata
+     * @param onedrive OneDrive
      * @throws IOException if repository initialization fails
      */
-    public FileSystemRepository(Path drivePath, Drive drive, String itemId)
-        throws IOException {
+    public FileSystemRepository(Path drivePath, OneDrive onedrive,
+                                String itemId) throws IOException {
         this.drivePath = drivePath;
-        this.drive = drive;
-        this.localDrive = new LocalDriveImpl(drive, this);
+        this.onedrive = onedrive;
+        this.localDrive = new LocalDriveImpl(onedrive.getDrive(), this);
         initialize(localDrive);
     }
 
@@ -230,8 +230,8 @@ public class FileSystemRepository implements LocalDriveRepository {
     }
 
     @Override
-    public Drive getDrive() {
-        return drive;
+    public OneDrive getOneDrive() {
+        return onedrive;
     }
 
     public Path getDrivePath() {
