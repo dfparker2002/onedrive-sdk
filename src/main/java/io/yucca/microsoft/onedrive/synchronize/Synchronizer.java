@@ -30,6 +30,7 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.OneDriveFolder;
+import io.yucca.microsoft.onedrive.OneDriveImpl;
 import io.yucca.microsoft.onedrive.SyncResponse;
 import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DeleteAction;
@@ -55,30 +56,29 @@ public class Synchronizer {
 
     private final LocalDrive localDrive;
 
-    private final OneDrive remoteDrive;
+    private final OneDrive oneDrive;
 
     private final OneDriveAPIConnection api;
 
     private final OneDriveConfiguration configuration;
 
-    private final FileSystemSynchronizer repository;
+    private final LocalDriveSynchronizer repository;
 
     /**
      * Constructs a Synchronizer to synchronize a complete OneDrive.
      * 
      * @param repository LocalDriveRepository local drive
-     * @param remoteDrive OneDrive remote drive
      * @param api OneDriveAPIConnection connection used for synchronization
      * @param configuration OneDriveConfiguration
      * @throws IOException
      */
-    public Synchronizer(FileSystemSynchronizer synchronizer,
-                        OneDrive remoteDrive, OneDriveAPIConnection api,
+    public Synchronizer(LocalDriveSynchronizer synchronizer,
+                        OneDriveAPIConnection api,
                         OneDriveConfiguration configuration)
                             throws IOException {
         this.repository = synchronizer;
         this.localDrive = repository.getLocalDrive();
-        this.remoteDrive = remoteDrive;
+        this.oneDrive = OneDriveImpl.defaultDrive(api);
         this.api = api;
         this.configuration = configuration;
     }
@@ -86,11 +86,11 @@ public class Synchronizer {
     /**
      * Synchronize the complete OneDrive with the LocalDrive
      * 
-     * @param deltaSynchronization String
+     * @param deltaSynchronization boolean false for a full synchronization
      * @throws IOException
      */
     public void synchronize(boolean deltaSynchronization) throws IOException {
-        synchronize(localDrive.getPath(), remoteDrive.getAddress(),
+        synchronize(localDrive.getPath(), oneDrive.getAddress(),
                     deltaSynchronization);
     }
 
@@ -112,10 +112,10 @@ public class Synchronizer {
     private LocalFolder initialiseLocalFolder(Path path,
                                               ItemAddress folderAddress)
                                                   throws IOException {
-        OneDriveFolder remoteFolder = remoteDrive.getFolder(folderAddress);
+        OneDriveFolder remoteFolder = oneDrive.getFolder(folderAddress);
         LocalFolderImpl folder = new LocalFolderImpl(path, remoteFolder,
                                                      repository);
-        folder.create(folder);
+        folder.create();
         return folder;
     }
 
@@ -249,7 +249,7 @@ public class Synchronizer {
                                             boolean deltaSynchronization) {
         try {
             LOG.info("Started a {} two-way synchronization of OneDrive: {} and LocalDrive: {}",
-                     syncMethod(deltaSynchronization), remoteDrive, localDrive);
+                     syncMethod(deltaSynchronization), oneDrive, localDrive);
             Map<String, Item> deltaMap = response.asMap();
             processLocalDeletions(deltaSynchronization, deltaMap);
             processLocalAdditions();
@@ -257,7 +257,7 @@ public class Synchronizer {
             saveSession();
             saveDeltaToken(response.getToken());
             LOG.info("Succesfully synchronized OneDrive: {} and LocalDrive: {} two-ways",
-                     remoteDrive, localDrive);
+                     oneDrive, localDrive);
             // } catch (IOException e) {
             // throw new OneDriveException("Failure synchronizing OneDrive: "
             // + remoteDrive + " with LocalDrive: "
@@ -289,7 +289,7 @@ public class Synchronizer {
 
     private void resynchronizeChangesApplyDifferences(SyncResponse response) {
         LOG.info("Resynchronizing changes and apply differences on OneDrive: {} and LocalDrive: {}",
-                 remoteDrive, localDrive);
+                 oneDrive, localDrive);
         Map<String, Item> deltaMap = response.asMap();
         processLocalDeletions(true, deltaMap); // must check if server
                                                // version exists
@@ -298,19 +298,19 @@ public class Synchronizer {
         saveSession();
         saveDeltaToken(response.getToken());
         LOG.info("Succesfully resynchronized and applied changes for OneDrive: {} and LocalDrive: {}",
-                 remoteDrive, localDrive);
+                 oneDrive, localDrive);
     }
 
     private void resynchronizeChangesUploadDifferences(SyncResponse response) {
         LOG.info("Resynchronizing changes and upload differences on OneDrive: {} and LocalDrive: {}",
-                 remoteDrive, localDrive);
+                 oneDrive, localDrive);
         Map<String, Item> deltaMap = response.asMap();
         processChanges(deltaMap); // keep both copies if you're not sure which
                                   // one is more up-to-date?
         saveSession();
         saveDeltaToken(response.getToken());
         LOG.info("Succesfully resynchronized and uploaded differences for OneDrive: {} and LocalDrive: {}",
-                 remoteDrive, localDrive);
+                 oneDrive, localDrive);
     }
 
     /**
@@ -321,7 +321,7 @@ public class Synchronizer {
      */
     private void processChanges(Map<String, Item> deltaMap) {
         LOG.info("Processing enumerated changes from OneDrive: {} with LocalDrive: {}",
-                 remoteDrive, localDrive);
+                 oneDrive, localDrive);
         Iterator<Item> it = deltaMap.values().iterator();
         while (it.hasNext()) {
             Item updated = it.next();
@@ -372,7 +372,7 @@ public class Synchronizer {
             return;
         }
         LOG.info("Processing deletions in LocalDrive: {} with OneDrive: {}",
-                 localDrive, remoteDrive);
+                 localDrive, oneDrive);
         for (LocalItem local : repository.getDeletions()) {
             try {
                 LOG.info("Item: {}, id: {}, was deleted localy, deleting item from OneDrive",
@@ -396,7 +396,7 @@ public class Synchronizer {
      */
     private void processLocalAdditions() {
         LOG.info("Processing additions in LocalDrive: {} with OneDrive: {}",
-                 localDrive, remoteDrive);
+                 localDrive, oneDrive);
         for (LocalItem local : repository.getAdditions()) {
             try {
                 Item uploaded = null;
