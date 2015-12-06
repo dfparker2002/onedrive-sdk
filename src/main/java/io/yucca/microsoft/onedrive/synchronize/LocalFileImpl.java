@@ -18,7 +18,6 @@ package io.yucca.microsoft.onedrive.synchronize;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.text.ParseException;
 
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveFile;
@@ -59,36 +58,26 @@ public class LocalFileImpl extends LocalItemImpl implements LocalFile {
      * OneDrive metadata attributes are read.
      * 
      * @param path Path to file
+     * @param item Item providing metadata
      * @param content Content file contents
      * @param repository LocalDriveRepository
      * @throws IOException if reading metadata fails
      */
-    public LocalFileImpl(Path path, OneDriveContent content,
+    public LocalFileImpl(Path path, Item item, OneDriveContent content,
                          LocalDriveRepository repository) throws IOException {
         this.name = path.getFileName().toString();
         this.path = path;
         this.content = content;
         this.repository = repository;
+        relateWith(item);
         if (repository.exists(this)) {
             repository.readMetadata(this);
         }
     }
 
-    /**
-     * Construct a LocalFile based on Item, to be created in the LocalDrive. The
-     * OneDrive item provides the metadata.
-     * 
-     * @param item Item
-     * @param parent LocalResource
-     * @param repository LocalDriveRepository
-     * @throws IOException if resolving parent fails
-     * @throws ParseException if parsing of a timestamp fails
-     */
-    protected LocalFileImpl(Item item, LocalResource parent,
-                            LocalDriveRepository repository) {
-        this.path = parent.getPath().resolve(item.getName());
-        this.repository = repository;
-        relateWith(item);
+    @Override
+    public void create() throws IOException {
+        repository.createFile(this, content);
     }
 
     @Override
