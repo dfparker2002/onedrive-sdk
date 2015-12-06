@@ -156,7 +156,7 @@ public class QueryParameters {
          * @return Builder
          */
         public Builder select(String select) {
-            String s = ("id".equals(select)) ? select : "id," + select;
+            String s = "id".equals(select) ? select : "id," + select;
             this.qp.parameters.put(SELECT, s);
             return this;
         }
