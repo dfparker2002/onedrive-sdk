@@ -52,11 +52,6 @@ public abstract class LocalItemImpl implements LocalItem {
     }
 
     @Override
-    public void create(LocalItem resource) throws IOException {
-        repository.create(resource);
-    }
-
-    @Override
     public void delete() throws IOException {
         repository.delete(this);
     }
@@ -69,12 +64,6 @@ public abstract class LocalItemImpl implements LocalItem {
     @Override
     public void rename(String name) throws IOException {
         repository.rename(this, name);
-    }
-
-    @Override
-    public void update(Item item) throws IOException {
-        relateWith(item);
-        repository.update(this, null);
     }
 
     @Override
