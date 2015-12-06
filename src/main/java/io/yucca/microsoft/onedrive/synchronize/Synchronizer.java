@@ -137,12 +137,12 @@ public class Synchronizer {
                                   boolean deltaSynchronization)
                                       throws IOException {
         String deltaToken = getDeltaToken(deltaSynchronization);
-        deltaSynchronization = initializeSession(deltaSynchronization,
+        boolean delta = initializeSession(deltaSynchronization,
                                                  deltaToken, folder);
         try {
             SyncResponse syncResponse = getChangesForFolder(folderAddress,
                                                             deltaToken);
-            synchronizeChangesBothWays(syncResponse, deltaSynchronization);
+            synchronizeChangesBothWays(syncResponse, delta);
         } catch (ResyncNeededException e) {
             LOG.info("Resynchronisation of folder: {} is needed, starting a fresh enumeration.",
                      folderAddress);
