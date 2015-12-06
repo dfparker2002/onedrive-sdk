@@ -43,7 +43,7 @@ public class SynchronizerIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private static final String ROOT_DOCUMENTS = "root/APITest";
+    private static final String ROOT_DOCUMENTS = "root/Documents";
 
     private OneDriveAPIConnection api;
 
@@ -66,23 +66,21 @@ public class SynchronizerIT {
     @Test
     public void testSynchronizeDrive() throws IOException {
         OneDrive remoteDrive = OneDriveImpl.defaultDrive(api);
-        repository = new FileSystemRepository(tmpFolderPath,
-                                              remoteDrive.getDrive());
+        repository = new FileSystemRepository(tmpFolderPath, remoteDrive);
         synchronizer = new Synchronizer(new FileSystemSynchronizer(repository),
-                                        remoteDrive, api, configuration);
+                                        api, configuration);
         synchronizer.synchronize(false);
         synchronizer.synchronize(true);
     }
 
-    //@Test
+    @Test
     public void testSynchronizeFolder() throws IOException {
         OneDrive remoteDrive = OneDriveImpl.defaultDrive(api);
-        repository = new FileSystemRepository(tmpFolderPath,
-                                              remoteDrive.getDrive());
+        repository = new FileSystemRepository(tmpFolderPath, remoteDrive);
         ItemAddress folderAddress = new SpecialAddress(SpecialFolder.DOCUMENTS);
         Path localFolder = tmpFolderPath.resolve(ROOT_DOCUMENTS);
         synchronizer = new Synchronizer(new FileSystemSynchronizer(repository),
-                                        remoteDrive, api, configuration);
+                                        api, configuration);
         synchronizer.synchronize(localFolder, folderAddress, false);
         synchronizer.synchronize(true);
     }
