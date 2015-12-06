@@ -24,7 +24,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.yucca.microsoft.onedrive.synchronize.LocalDrive;
+import io.yucca.microsoft.onedrive.synchronize.FileSystemSynchronizer;
+import io.yucca.microsoft.onedrive.synchronize.LocalDriveSynchronizer;
 import io.yucca.microsoft.onedrive.synchronize.Synchronizer;
 
 /**
@@ -64,12 +65,12 @@ public class OneDriveSynchronizerExample {
 
     public void synchronize() {
         try {
-            OneDrive drive = OneDriveImpl.defaultDrive(api);
-            Path home = Paths
+            OneDrive onedrive = OneDriveImpl.defaultDrive(api);
+            Path localPath = Paths
                 .get(System.getProperty("user.home") + "/onedrive");
-            LocalDrive localDrive = new LocalDrive(home, drive.getDrive());
-            synchronizer = new Synchronizer(localDrive, drive, api,
-                                            configuration);
+            LocalDriveSynchronizer fss = new FileSystemSynchronizer(localPath,
+                                                                    onedrive);
+            synchronizer = new Synchronizer(fss, api, configuration);
             synchronizer.synchronize(false);
         } catch (IOException | OneDriveException e) {
             LOG.error("Failure synchronizing OneDrive", e);
