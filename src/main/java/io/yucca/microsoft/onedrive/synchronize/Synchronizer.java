@@ -258,10 +258,6 @@ public class Synchronizer {
             saveDeltaToken(response.getToken());
             LOG.info("Succesfully synchronized OneDrive: {} and LocalDrive: {} two-ways",
                      oneDrive, localDrive);
-            // } catch (IOException e) {
-            // throw new OneDriveException("Failure synchronizing OneDrive: "
-            // + remoteDrive + " with LocalDrive: "
-            // + localDrive, e);
         } finally {
             repository.clearSession();
         }
