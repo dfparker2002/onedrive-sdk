@@ -126,7 +126,7 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
                                                     StandardOpenOption.CREATE,
                                                     StandardOpenOption.WRITE)) {
             ObjectOutputStream oos = new ObjectOutputStream(os);
-            oos.writeObject(items);
+            oos.writeObject(new LinkedList<>(items.values()));
         } catch (IOException e) {
             throw new OneDriveException("Failure writing state of localdrive",
                                         e);
