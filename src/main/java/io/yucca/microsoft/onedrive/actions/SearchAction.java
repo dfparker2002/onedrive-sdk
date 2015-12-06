@@ -90,7 +90,9 @@ public class SearchAction extends AbstractAction
      * @param parentAddress ItemAddress of folder in which to search
      * @param query String search query
      * @param parameters QueryParameters influences the way item results are
-     *            returned, if null the default listing is returned
+     *            returned, if null the default listing is returned. If the top
+     *            QueryParameter is passed this will be removed because this
+     *            triggers a bug in OneDrive API
      */
     public SearchAction(OneDriveAPIConnection api, ItemAddress parentAddress,
                         String query, QueryParameters parameters) {
@@ -111,7 +113,7 @@ public class SearchAction extends AbstractAction
     }
 
     /**
-     * Search for items matching a query
+     * Search for items matching a query.
      * 
      * @return ItemCollection matching items
      */

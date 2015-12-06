@@ -56,15 +56,16 @@ public class SearchActionIT extends AbstractActionIT {
 
     /**
      * Test case to determine if loading an ItemIterable.nextCollection does not
-     * give back an empty collection
+     * give back an empty collection. 
      * 
      * @throws OneDriveException
      */
-    @Test(expected = OneDriveException.class)
+    // @Test(expected = NoSuchElementException.class)
+    @Test
     public void testSearchTopEmptyCollection() {
         QueryParameters parameters = QueryParameters.Builder
             .newQueryParameters().top(1).build();
-        SearchAction action = new SearchAction(api, "e", parameters);
+        SearchAction action = new SearchAction(api, "is", parameters);
         ItemIterable result = action.call();
         assertNotNull(result);
         for (Item item : result) {
