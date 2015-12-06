@@ -79,7 +79,7 @@ public interface OneDriveFolder extends OneDriveItem {
     /**
      * Get an item inside this folder
      * 
-     * @param path String name or path of item, relative to this folder
+     * @param address ItemAddress address of item, relative to this folder
      * @return OneDriveItem
      */
     OneDriveItem getItem(ItemAddress address);

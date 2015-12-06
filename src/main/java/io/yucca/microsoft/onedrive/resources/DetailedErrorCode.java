@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 /**
  * Detailed ErrorCodes possibly returned by OneDrive API. Only the detailed
  * error codes that are handled are defined here. See
- * {@link https://dev.onedrive.com/misc/errors.htm}
+ * See <a href="https://dev.onedrive.com/misc/errors.htm">https://dev.onedrive.com/misc/errors.htm</a>
  * 
  * @author yucca.io
  */

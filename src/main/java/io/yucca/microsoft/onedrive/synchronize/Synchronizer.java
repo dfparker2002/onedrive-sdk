@@ -67,7 +67,7 @@ public class Synchronizer {
     /**
      * Constructs a Synchronizer to synchronize a complete OneDrive.
      * 
-     * @param repository LocalDriveRepository local drive
+     * @param synchronizer LocalDriveSynchronizer for the local drive
      * @param api OneDriveAPIConnection connection used for synchronization
      * @param configuration OneDriveConfiguration
      * @throws IOException
@@ -97,13 +97,14 @@ public class Synchronizer {
     /**
      * Synchronize a specific folder in OneDrive with the LocalDrive
      * 
-     * @param path Path
-     * @param folderAddress ItemAddress
-     * @param deltaSynchronization
+     * @param path Path path to LocalDrive
+     * @param folderAddress ItemAddress of remote folder
+     * @param deltaSynchronization boolean true for deltaSynchronization and
+     *            false for a full synchronization
      * @throws IOException
      */
-    public void synchronize(Path path, ItemAddress folderAddress,
-                            boolean deltaSynchronization) throws IOException {
+    void synchronize(Path path, ItemAddress folderAddress,
+                     boolean deltaSynchronization) throws IOException {
         initialiseLocalFolder(path, folderAddress);
         LocalFolder folder = new LocalFolderImpl(path, repository);
         synchronizeFolder(folder, folderAddress, deltaSynchronization);
@@ -124,6 +125,8 @@ public class Synchronizer {
      * synchronization the deltaToken is saved in the configuration for future
      * delta synchronizations.
      * 
+     * @param folder LocalFolder local folder to synchronize
+     * @param folderAddress ItemAddress of remote folder
      * @param deltaSynchronization boolean true for deltaSynchronization and
      *            false for a full synchronization
      * @throws IOException
@@ -136,9 +139,9 @@ public class Synchronizer {
         String deltaToken = getDeltaToken(deltaSynchronization);
         deltaSynchronization = initializeSession(deltaSynchronization,
                                                  deltaToken, folder);
-        SyncResponse syncResponse;
         try {
-            syncResponse = getChangesForFolder(folderAddress, deltaToken);
+            SyncResponse syncResponse = getChangesForFolder(folderAddress,
+                                                            deltaToken);
             synchronizeChangesBothWays(syncResponse, deltaSynchronization);
         } catch (ResyncNeededException e) {
             LOG.info("Resynchronisation of folder: {} is needed, starting a fresh enumeration.",
@@ -150,11 +153,11 @@ public class Synchronizer {
     /**
      * Get the changes for a folder
      * 
-     * @param folderAddress ItemAddress
+     * @param folderAddress ItemAddress of remote folder
      * @param deltaToken String previous state, {@code null} for a full
      *            enumeration
-     * @return SyncResponse
-     * @throws ResyncNeededException
+     * @return SyncResponse enumerated changed
+     * @throws ResyncNeededException if deltaToken is expired
      */
     private SyncResponse getChangesForFolder(ItemAddress folderAddress,
                                              String deltaToken)
@@ -169,7 +172,8 @@ public class Synchronizer {
      * 
      * @param deltaSynchronization boolean true for deltaSynchronization and
      *            false for a full synchronization
-     * @return String deltaToken {@code null} for a full synchronization
+     * @return String deltaToken previous state, {@code null} for a full
+     *         enumeration
      */
     private String getDeltaToken(boolean deltaSynchronization) {
         String deltaToken = null;
@@ -189,8 +193,10 @@ public class Synchronizer {
      * session is initialized and a full synchronization must be performed.
      * </p>
      * 
-     * @param deltaSynchronization boolean
-     * @param deltaToken String
+     * @param deltaSynchronization boolean true for deltaSynchronization and
+     *            false for a full synchronization
+     * @param deltaToken String previous state, {@code null} for a full
+     *            enumeration
      * @param folder LocalFolder folder to synchronize
      * @return boolean true if a delta synchronization can be performed, false
      *         if a full synchronization must be performed
@@ -220,27 +226,26 @@ public class Synchronizer {
     }
 
     /**
-     * Walk the LocalDrive and synchronize this with OneDrive. This used the
-     * understanding workflow:
+     * Synchronize the OneDrive with the LocalDrive. This uses the understanding
+     * workflow:
      * 
      * <pre>
-     * 0. Initialize the root folder if this does not exist.
-     * 1. Iterate all files and folders in the local drive.
-     * 2. On delta synchronization, compare the current state of the 
+     * 1. On delta synchronization, compare the current state of the 
      * local drive with the saved state. Items that only exist in the saved 
      * states indicate a deletion and are therefor removed from OneDrive. If 
      * the deleted item is on the change list, then remove it from this list 
      * to prevent a recreation.
-     * 3. Items registered for addition (not having an id) are created in OneDrive
+     * 2. Items registered for addition (not having an id) are created in OneDrive
      * and added to items list for an up-to-date drive state
-     * 4. Process the (delta) changes acquired from OneDrive and reflect these change
+     * 3. Process the (delta) changes acquired from OneDrive and reflect these change
      * to the local drive and vise-versa
-     * 5. Save/serialize the local drive state to disk
-     * 6. Save the token for a future enumeration (XXX should be done per drive/folder/item)
+     * 4. Save/serialize the local drive state to disk
+     * 5. Save the token for a future enumeration (XXX should be done per drive/folder/item)
      * </pre>
      * 
-     * @param deltaMap Map<String, Item> changes acquired from OneDrive
-     * @param deltaSynchronization boolean false for full synchronization
+     * @param response SyncResponse enumerated changes
+     * @param deltaSynchronization boolean true for deltaSynchronization and
+     *            false for a full synchronization
      * @throws OneDriveException if the synchronization process fails, if errors
      *             occur on processing individual files or folders then these
      *             are skipped
@@ -264,7 +269,7 @@ public class Synchronizer {
     }
 
     /**
-     * Resynchronize changes
+     * Resynchronize changes after a deltaToken was found to be expired
      * 
      * @param exception ResyncNeededException
      */
@@ -310,8 +315,8 @@ public class Synchronizer {
     }
 
     /**
-     * Process the acquired changes via OneDrive API to LocalDrive and process
-     * localy changed files or folders back to OneDrive.
+     * Process the changes acquired from the OneDrive API to the LocalDrive and
+     * process localy changed files or folders to OneDrive.
      * 
      * @param deltaMap Map<String, Item> delta changes acquired from OneDrive
      */
@@ -359,8 +364,9 @@ public class Synchronizer {
      * then we assume it is deleted localy and therefor also removed in
      * OneDrive.
      * 
-     * @param deltaSynchronization boolean
-     * @param deltaMap Map<String, Item>
+     * @param deltaSynchronization boolean true for deltaSynchronization and
+     *            false for a full synchronization
+     * @param deltaMap Map<String, Item> delta changes acquired from OneDrive
      */
     private void processLocalDeletions(boolean deltaSynchronization,
                                        Map<String, Item> deltaMap) {
@@ -424,6 +430,12 @@ public class Synchronizer {
         }
     }
 
+    /**
+     * Update/create a local item in OneDrive
+     * 
+     * @param local LocalItem in local drive
+     * @param item Item related item in OneDrive
+     */
     private void updateOneDrive(LocalItem local, Item item) {
         try {
             LOG.info("Item: {}, id: {} was modified localy, modifying item in OneDrive",
@@ -458,7 +470,6 @@ public class Synchronizer {
      */
     private void addLocaly(Item updated) {
         try {
-            // skip deleted items
             if (updated.isDeleted()) {
                 return;
             }

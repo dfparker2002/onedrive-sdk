@@ -15,6 +15,8 @@
  */
 package io.yucca.microsoft.onedrive.filter;
 
+import io.yucca.microsoft.onedrive.resources.Item;
+
 /**
  * Defines a filter criteria used in filtering a {@link Item} collection
  *
@@ -23,7 +25,7 @@ package io.yucca.microsoft.onedrive.filter;
 public interface Criteria {
 
     /**
-     * @return filter statement as a String expression
+     * @return String filter statement as a String expression
      */
     @Override
     String toString();

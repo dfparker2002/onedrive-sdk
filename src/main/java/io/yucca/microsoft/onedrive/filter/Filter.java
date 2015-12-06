@@ -16,9 +16,10 @@
 package io.yucca.microsoft.onedrive.filter;
 
 import io.yucca.microsoft.onedrive.filter.GroupCriteria.GroupBuilder;
+import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * Filter representation to filter a collection of {@link Items}
+ * Filter representation to filter a collection of {@link Item}
  * 
  * @author yucca.io
  */
@@ -96,8 +97,8 @@ public class Filter {
         /**
          * Add a grouping criteria expression by a logical 'and'
          * 
-         * @param andCriteria Criteria
-         * @return Builder
+         * @param groupCriteria Criteria
+         * @return GroupBuilder
          */
         public GroupBuilder andGroup(Criteria groupCriteria) {
             return GroupCriteria.LogicalGroupBuilder
@@ -107,8 +108,8 @@ public class Filter {
         /**
          * Add a grouping criteria expression by a logical 'or'
          * 
-         * @param andCriteria Criteria
-         * @return Builder
+         * @param groupCriteria Criteria
+         * @return GroupBuilder
          */
         public GroupBuilder orGroup(Criteria groupCriteria) {
             return GroupCriteria.LogicalGroupBuilder

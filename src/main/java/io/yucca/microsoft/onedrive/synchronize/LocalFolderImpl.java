@@ -36,7 +36,7 @@ public class LocalFolderImpl extends LocalItemImpl implements LocalFolder {
      * Construct a LocalFolder. If the folder exists the OneDrive metadata
      * attributes are read,
      * 
-     * @param folder Path local path
+     * @param path Path local path
      * @param repository LocalDriveRepository
      * @throws IOException if reading metadata fails
      */
@@ -54,7 +54,7 @@ public class LocalFolderImpl extends LocalItemImpl implements LocalFolder {
      * Construct a LocalFolder. If the folder exists the OneDrive metadata
      * attributes are read,
      * 
-     * @param folder Path local path
+     * @param path Path local path
      * @param item Item providing metadata
      * @param repository LocalDriveRepository
      * @throws IOException if reading metadata fails

@@ -42,7 +42,6 @@ public class ResyncNeededException extends Exception {
      * Constructor
      * 
      * @param errorResponse Response
-     * @param nextLink URI
      */
     public ResyncNeededException(Response errorResponse) {
         this.error = errorResponse.readEntity(OneDriveError.class);

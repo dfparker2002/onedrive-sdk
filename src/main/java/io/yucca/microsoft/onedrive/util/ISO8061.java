@@ -48,8 +48,8 @@ public final class ISO8061 {
      * Convert ms (epoch) to ISO 8601 String in format
      * "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
      * 
-     * @param calendar Calendar
-     * @return String
+     * @param ms long time since epoch
+     * @return String ISO8601
      */
     public static String fromMillis(long ms) {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Z"));

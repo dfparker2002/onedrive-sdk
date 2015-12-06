@@ -38,7 +38,7 @@ public final class URLHelper {
      * Extract query parameters from an URL
      * 
      * <pre>
-     * Based on: https://stackoverflow.com/questions/13592236/parse-the-uri-string-into-name-value-collection-in-java
+     * Based on: <a href="https://stackoverflow.com/questions/13592236/parse-the-uri-string-into-name-value-collection-in-java">https://stackoverflow.com/questions/13592236/parse-the-uri-string-into-name-value-collection-in-java</a>
      * </pre>
      * 
      * @param url URL
@@ -51,11 +51,9 @@ public final class URLHelper {
         for (String pair : pairs) {
             int idx = pair.indexOf("=");
             try {
-                queryPairs.put(
-                                URLDecoder.decode(pair.substring(0, idx),
-                                                  UTF_8),
-                                URLDecoder.decode(pair.substring(idx + 1),
-                                                  UTF_8));
+                queryPairs
+                    .put(URLDecoder.decode(pair.substring(0, idx), UTF_8),
+                         URLDecoder.decode(pair.substring(idx + 1), UTF_8));
             } catch (UnsupportedEncodingException e) {
                 assert false : "should never happen";
             }
@@ -66,8 +64,10 @@ public final class URLHelper {
     /**
      * Encode a String
      * <p>
-     * based on:
-     * {@link https://stackoverflow.com/questions/14321873/java-url-encoding-urlencoder-vs-uri}
+     * based on: See <a href=
+     * "https://stackoverflow.com/questions/14321873/java-url-encoding-urlencoder-vs-uri">
+     * https://stackoverflow.com/questions/14321873/java-url-encoding-urlencoder
+     * -vs-uri</a>
      * </p>
      * 
      * @param s String
@@ -76,10 +76,10 @@ public final class URLHelper {
     public static String encodeURIComponent(String s) {
         String result = s;
         try {
-            result = URLEncoder.encode(s, UTF_8)
-                .replaceAll("\\+", "%20").replaceAll("\\%21", "!")
-                .replaceAll("\\%27", "'").replaceAll("\\%28", "(")
-                .replaceAll("\\%29", ")").replaceAll("\\%7E", "~");
+            result = URLEncoder.encode(s, UTF_8).replaceAll("\\+", "%20")
+                .replaceAll("\\%21", "!").replaceAll("\\%27", "'")
+                .replaceAll("\\%28", "(").replaceAll("\\%29", ")")
+                .replaceAll("\\%7E", "~");
         } catch (UnsupportedEncodingException e) {
             assert false : "should never happen";
         }
