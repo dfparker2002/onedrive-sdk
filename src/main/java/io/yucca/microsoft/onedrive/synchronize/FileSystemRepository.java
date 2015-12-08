@@ -105,12 +105,6 @@ public class FileSystemRepository implements LocalDriveRepository {
         if (!exists(resource)) {
             Files.createDirectories(resource.getPath());
         }
-        // must check that LocalItem is not LocalRoot, timestamp of upstream
-        // folder may not be
-        // reset
-        // if (resource.getParent() != null) {
-        // resetTimestamps(resource.getParent());
-        // }
         writeMetadata(resource);
     }
 
