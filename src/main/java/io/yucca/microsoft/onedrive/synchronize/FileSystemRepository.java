@@ -18,7 +18,6 @@ package io.yucca.microsoft.onedrive.synchronize;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.CopyOption;
-import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -38,7 +37,7 @@ import io.yucca.microsoft.onedrive.io.InputStreamingOutput;
 /**
  * FilesystemRepository defines a repository for storing {@link LocalResource}
  * on a filesystem. Extended Attributes are used to create a relationship to an
- * OneDrive item via Item identifier and save metadata properties.
+ * OneDrive item via the Item identifier and saved metadata properties.
  * 
  * @author yucca.io
  */
@@ -137,7 +136,7 @@ public class FileSystemRepository implements LocalDriveRepository {
     }
 
     @Override
-    public boolean isLocalDriveRoot(LocalItem folder) {
+    public boolean isLocalDriveRoot(LocalResource folder) {
         return localDrive.getPath().equals(folder.getPath());
     }
 
@@ -168,11 +167,8 @@ public class FileSystemRepository implements LocalDriveRepository {
         throws IOException {
         rename(resource, resource.getName());
         writeMetadataAndContent(resource, content);
-        try {
+        if (!isLocalDriveRoot(resource) && !isLocalDriveRoot(resource.getParent())) {
             resetTimestamps(resource.getParent());
-        } catch (FileSystemException e) {
-            LOG.warn("Failure resetting timestamps for item: {}",
-                     resource.getPath());
         }
     }
 
@@ -210,7 +206,6 @@ public class FileSystemRepository implements LocalDriveRepository {
             .getFileAttributeView(resource.getPath(),
                                   BasicFileAttributeView.class);
         BasicFileAttributes basicAttrs = basicView.readAttributes();
-
         resource.setId(MetadataUtil.readAttribute(resource.getPath(),
                                                   ATTRIBUTE_ONEDRIVE_ITEMID));
         resource.setPath(resource.getPath());

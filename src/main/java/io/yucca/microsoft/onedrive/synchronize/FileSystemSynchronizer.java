@@ -52,7 +52,7 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
     private static final Logger LOG = LoggerFactory
         .getLogger(FileSystemSynchronizer.class);
 
-    public static final String FILE_LOCAL_DRIVE_STATE = ".onedrivestate_";
+    public static final String LOCAL_DRIVE_STATE = ".onedrivestate_";
 
     /**
      * Map with items that were localy added and must be created in OneDrive
@@ -120,16 +120,17 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
 
     @Override
     public void saveSession() {
-        LOG.info("Writing LocalDrive state to file: {}", localDriveStateFile());
+        Path savedStatePath = localDriveStateFile();
+        LOG.info("Writing state to file: {}", savedStatePath);
         try (
-            OutputStream os = Files.newOutputStream(localDriveStateFile(),
+            OutputStream os = Files.newOutputStream(savedStatePath,
                                                     StandardOpenOption.CREATE,
                                                     StandardOpenOption.WRITE)) {
             ObjectOutputStream oos = new ObjectOutputStream(os);
             oos.writeObject(new LinkedList<>(items.values()));
         } catch (IOException e) {
-            throw new OneDriveException("Failure writing state of localdrive",
-                                        e);
+            throw new OneDriveException("Failure writing local state to file: "
+                                        + savedStatePath, e);
         }
     }
 
@@ -141,7 +142,7 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
      */
     private void walkPath(LocalFolder folder) {
         try {
-            LOG.info("Walking the LocalDrive: {}, enumerate files and folders used for synchronization",
+            LOG.info("Walking the LocalDrive: {}, enumerate files and folders used in synchronization",
                      folder.getPath());
             LocalFileVisitor visitor = new LocalFileVisitor(this);
             Files.walkFileTree(folder.getPath(), new HashSet<FileVisitOption>(),
@@ -183,28 +184,29 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
     private List<LocalItem> deserializeState() throws FileNotFoundException {
         Path savedStatePath = localDriveStateFile();
         if (!Files.exists(savedStatePath, LinkOption.NOFOLLOW_LINKS)) {
-            throw new FileNotFoundException("No local drive state is available.");
+            throw new FileNotFoundException("Local state file " + savedStatePath
+                                            + " does not exist.");
         }
-        LOG.info("Reading LocalDrive state from file: {}", savedStatePath);
+        LOG.info("Reading Local state from file: {}", savedStatePath);
         try (InputStream fis = Files.newInputStream(savedStatePath,
                                                     StandardOpenOption.READ)) {
             ObjectInputStream ois = new ObjectInputStream(fis);
             return (LinkedList<LocalItem>)ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new OneDriveException("Failure reading saved state of localdrive",
-                                        e);
+            throw new OneDriveException("Failure reading local state file: "
+                                        + savedStatePath, e);
         }
     }
 
     /**
-     * Get path for (de)serialization of local drive state, uses the home
-     * directory of the user in combination with the drive identifier
+     * Get path for (de)serialization of local drive state, using the home
+     * directory of the user in combination with the drive or item identifier
      * 
      * @return Path
      */
     private Path localDriveStateFile() {
         return Paths.get(System.getProperty("user.home"))
-            .resolve(FILE_LOCAL_DRIVE_STATE + itemId + ".ser");
+            .resolve(LOCAL_DRIVE_STATE + itemId + ".ser");
     }
 
     @Override
@@ -243,7 +245,7 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
         if (ResourceType.FOLDER.equals(resource.type())) {
             registerFolder((LocalFolder)resource);
         }
-        // registered localy created item, otherwise it is not in
+        // register a localy created item, so it is added to
         // the saved state of the LocalDrive
         registerItem(resource);
     }
@@ -340,7 +342,7 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
     }
 
     @Override
-    public boolean isLocalDriveRoot(LocalItem folder) {
+    public boolean isLocalDriveRoot(LocalResource folder) {
         return repository.isLocalDriveRoot(folder);
     }
 
