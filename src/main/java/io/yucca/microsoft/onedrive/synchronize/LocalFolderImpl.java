@@ -106,8 +106,7 @@ public class LocalFolderImpl extends LocalItemImpl implements LocalFolder {
 
     @Override
     public boolean isLocalRoot() throws IOException {
-        return FOLDER_ROOT.equals(name);
-        // && LocalDrive.ONEDRIVE_ROOT_MARKER.equals(getParentId()));
+        return repository.isLocalDriveRoot(this);
     }
 
     @Override
