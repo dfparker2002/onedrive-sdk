@@ -169,7 +169,7 @@ public abstract class LocalItemImpl implements LocalItem {
 
     @Override
     public void relateWith(Item item) {
-        this.id = item.getId().toUpperCase();
+        this.id = item.getId();
         this.name = item.getName();
         this.createdDateTime = fromISO8601(item.getCreatedDateTime());
         this.lastModifiedDateTime = fromISO8601(item.getLastModifiedDateTime());

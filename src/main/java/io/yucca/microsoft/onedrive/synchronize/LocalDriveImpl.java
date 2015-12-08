@@ -52,7 +52,7 @@ public class LocalDriveImpl extends LocalFolderImpl implements LocalDrive {
 
     @Override
     public String getId() {
-        return drive.getId().toUpperCase() + ONEDRIVE_ID_POSTFIX;
+        return drive.getId() + ONEDRIVE_ID_POSTFIX;
     }
 
     @Override
