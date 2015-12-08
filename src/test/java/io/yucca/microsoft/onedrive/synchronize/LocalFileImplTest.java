@@ -65,8 +65,8 @@ public class LocalFileImplTest {
 
     @Before
     public void setUp() throws IOException, ParseException {
-        repository = new FileSystemRepository(Paths.get(PATH_TEST_LOCALDRIVE),
-                                              new OneDriveStub());
+        repository = new FileSystemRepository(Paths
+            .get(testFolder.getRoot().getAbsolutePath()), new OneDriveStub());
         LocalFolder folder = initializeParentFolder(testFolder);
         OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
         file = new LocalFileImpl(folder.getPath().resolve(ITEM_NAME), getItem(),
