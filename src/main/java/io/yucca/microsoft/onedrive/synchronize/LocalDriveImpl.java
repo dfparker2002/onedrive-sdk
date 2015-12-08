@@ -30,11 +30,11 @@ public class LocalDriveImpl extends LocalFolderImpl implements LocalDrive {
 
     private static final long serialVersionUID = 4994605863666178424L;
 
-    public static final String ONEDRIVE = "onedrive";
+    public static final String LOCALDRIVE = "localdrive";
 
-    public static final String ONEDRIVE_ROOT_MARKER = "localroot";
+    public static final String LOCALDRIVE_ROOT_MARKER = "localroot";
 
-    private static final String ONEDRIVE_ID_POSTFIX = "!0";
+    private static final String LOCALDRIVE_ID_POSTFIX = "!0";
 
     private Drive drive;
 
@@ -52,17 +52,17 @@ public class LocalDriveImpl extends LocalFolderImpl implements LocalDrive {
 
     @Override
     public String getId() {
-        return drive.getId() + ONEDRIVE_ID_POSTFIX;
+        return drive.getId() + LOCALDRIVE_ID_POSTFIX;
     }
 
     @Override
     public String getParentId() throws IOException {
-        return ONEDRIVE_ROOT_MARKER;
+        return LOCALDRIVE_ROOT_MARKER;
     }
 
     @Override
     public String getName() {
-        return ONEDRIVE;
+        return LOCALDRIVE;
     }
 
     @Override

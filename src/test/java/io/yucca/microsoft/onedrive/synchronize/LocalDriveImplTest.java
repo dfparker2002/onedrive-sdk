@@ -55,7 +55,7 @@ public class LocalDriveImplTest {
 
     @Test
     public void testGetName() {
-        assertEquals("onedrive", localDrive.getName());
+        assertEquals(LocalDriveImpl.LOCALDRIVE, localDrive.getName());
     }
 
     @Test
