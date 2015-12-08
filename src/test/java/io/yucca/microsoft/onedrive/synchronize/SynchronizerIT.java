@@ -38,9 +38,6 @@ import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 public class SynchronizerIT {
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
-
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
     private static final String ROOT_DOCUMENTS = "root/Documents";
@@ -54,6 +51,9 @@ public class SynchronizerIT {
     private Path tmpFolderPath;
 
     private LocalDriveRepository repository;
+    
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Before()
     public void setUp() throws FileNotFoundException, ConfigurationException {
