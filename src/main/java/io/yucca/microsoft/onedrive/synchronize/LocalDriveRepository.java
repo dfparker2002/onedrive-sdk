@@ -73,10 +73,10 @@ public interface LocalDriveRepository {
     /**
      * Determine if folder is root of local drive
      * 
-     * @param folder LocalItem
-     * @return boolean
+     * @param folder LocalResource
+     * @return boolean true if root
      */
-    boolean isLocalDriveRoot(LocalItem folder);
+    boolean isLocalDriveRoot(LocalResource folder);
 
     /**
      * Get path to the repository
