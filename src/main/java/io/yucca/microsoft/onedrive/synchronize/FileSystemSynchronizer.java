@@ -76,16 +76,12 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
      */
     private List<LocalItem> savedState;
 
-    private final OneDrive onedrive;
-
-    private final String itemId;
+    private String itemId;
 
     private final LocalDriveRepository repository;
 
     public FileSystemSynchronizer(Path localPath, OneDrive onedrive)
         throws IOException {
-        this.onedrive = onedrive;
-        this.itemId = onedrive.getDriveId();
         this.repository = new FileSystemRepository(localPath, onedrive);
     }
 
@@ -96,8 +92,6 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
      */
     public FileSystemSynchronizer(LocalDriveRepository repository) {
         this.repository = repository;
-        this.onedrive = repository.getOneDrive();
-        this.itemId = onedrive.getDriveId();
         // TODO https://github.com/robses/onedrive-sdk/issues/10
         // prevent accidental deletion of complete OneDrive if LocalDrive is not
         // present. if root folder does not exist but state is available stop,
@@ -106,6 +100,7 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
 
     @Override
     public void initializeSession(boolean useSavedState, LocalFolder folder) {
+        this.itemId = folder.getId();
         initializeState(useSavedState);
         registerFolder(folder);
         walkPath(folder);
@@ -154,10 +149,10 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
     }
 
     /**
-     * Read the state
+     * Reads the state
      * 
-     * @param useSavedState boolean true to read the saved state otherwise use a
-     *            new state
+     * @param useSavedState boolean true to read the saved state otherwise
+     *            create a clean state
      */
     private void initializeState(boolean useSavedState) {
         if (useSavedState) {
@@ -200,7 +195,7 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
 
     /**
      * Get path for (de)serialization of local drive state, using the home
-     * directory of the user in combination with the drive or item identifier
+     * directory of the user in combination with the drive or item identifier.
      * 
      * @return Path
      */
