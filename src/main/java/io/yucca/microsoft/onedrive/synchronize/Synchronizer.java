@@ -253,7 +253,7 @@ public class Synchronizer {
     private void synchronizeChangesBothWays(SyncResponse response,
                                             boolean deltaSynchronization) {
         try {
-            LOG.info("Started a {} two-way synchronization of OneDrive: {} and LocalDrive: {}",
+            LOG.info("Started a {} two-way synchronization of {} and {}",
                      syncMethod(deltaSynchronization), oneDrive, localDrive);
             Map<String, Item> deltaMap = response.asMap();
             processLocalDeletions(deltaSynchronization, deltaMap);
@@ -261,7 +261,7 @@ public class Synchronizer {
             processChanges(deltaMap);
             saveSession();
             saveDeltaToken(response.getToken());
-            LOG.info("Succesfully synchronized OneDrive: {} and LocalDrive: {} two-ways",
+            LOG.info("Succesfully synchronized {} and {} two-ways",
                      oneDrive, localDrive);
         } finally {
             repository.clearSession();
@@ -289,7 +289,7 @@ public class Synchronizer {
     }
 
     private void resynchronizeChangesApplyDifferences(SyncResponse response) {
-        LOG.info("Resynchronizing changes and apply differences on OneDrive: {} and LocalDrive: {}",
+        LOG.info("Resynchronizing changes and apply differences on {} and {}",
                  oneDrive, localDrive);
         Map<String, Item> deltaMap = response.asMap();
         processLocalDeletions(true, deltaMap); // must check if server
@@ -298,19 +298,19 @@ public class Synchronizer {
         processChanges(deltaMap);
         saveSession();
         saveDeltaToken(response.getToken());
-        LOG.info("Succesfully resynchronized and applied changes for OneDrive: {} and LocalDrive: {}",
+        LOG.info("Succesfully resynchronized and applied changes for {} and {}",
                  oneDrive, localDrive);
     }
 
     private void resynchronizeChangesUploadDifferences(SyncResponse response) {
-        LOG.info("Resynchronizing changes and upload differences on OneDrive: {} and LocalDrive: {}",
+        LOG.info("Resynchronizing changes and upload differences on {} and {}",
                  oneDrive, localDrive);
         Map<String, Item> deltaMap = response.asMap();
         processChanges(deltaMap); // keep both copies if you're not sure which
                                   // one is more up-to-date?
         saveSession();
         saveDeltaToken(response.getToken());
-        LOG.info("Succesfully resynchronized and uploaded differences for OneDrive: {} and LocalDrive: {}",
+        LOG.info("Succesfully resynchronized and uploaded differences for {} and {}",
                  oneDrive, localDrive);
     }
 
@@ -373,7 +373,7 @@ public class Synchronizer {
         if (!deltaSynchronization) {
             return;
         }
-        LOG.info("Processing deletions in LocalDrive: {} with OneDrive: {}",
+        LOG.info("Processing deletions in {} with {}",
                  localDrive, oneDrive);
         for (LocalItem local : repository.getDeletions()) {
             try {
@@ -397,7 +397,7 @@ public class Synchronizer {
      * OneDrive
      */
     private void processLocalAdditions() {
-        LOG.info("Processing additions in LocalDrive: {} with OneDrive: {}",
+        LOG.info("Processing additions in: {} with : {}",
                  localDrive, oneDrive);
         for (LocalItem local : repository.getAdditions()) {
             try {
