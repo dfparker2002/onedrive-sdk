@@ -4,7 +4,7 @@
  <groupId>io.yucca.microsoft</groupId>
  <artifactId>onedrive-sdk</artifactId>
  <version>0.1.0-SNAPSHOT</version>
- <name>OneDrive SDK</name>
+ <name>OneDrive Java SDK</name>
  <description>Java SDK for the Microsoft OneDrive API</description>
 
  <properties>
