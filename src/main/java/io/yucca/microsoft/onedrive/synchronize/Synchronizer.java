@@ -64,6 +64,10 @@ public class Synchronizer {
 
     private final LocalDriveSynchronizer repository;
 
+    private LocalFolder localFolder;
+
+    private ItemAddress remoteFolder;
+
     /**
      * Constructs a Synchronizer to synchronize a complete OneDrive.
      * 
@@ -84,33 +88,31 @@ public class Synchronizer {
     }
 
     /**
-     * Synchronize the complete OneDrive with the LocalDrive
+     * Register the complete OneDrive for synchronization
      * 
-     * @param deltaSynchronization boolean false for a full synchronization
      * @throws IOException
      */
-    public void synchronize(boolean deltaSynchronization) throws IOException {
-        synchronize(localDrive.getPath(), oneDrive.getAddress(),
-                    deltaSynchronization);
+    public void registerDriveForSynchronization() throws IOException {
+        this.localFolder = initializeLocalFolder(localDrive.getPath(),
+                                                 oneDrive.getAddress());
+        this.remoteFolder = oneDrive.getAddress();
     }
 
     /**
-     * Synchronize a specific folder in OneDrive with the LocalDrive
+     * Register a OneDrive folder for synchronization in with a folder in the
+     * LocalDrive
      * 
-     * @param path Path path to LocalDrive
+     * @param path Path to LocalFolder
      * @param folderAddress ItemAddress of remote folder
-     * @param deltaSynchronization boolean true for deltaSynchronization and
-     *            false for a full synchronization
      * @throws IOException
      */
-    void synchronize(Path path, ItemAddress folderAddress,
-                     boolean deltaSynchronization) throws IOException {
-        initialiseLocalFolder(path, folderAddress);
-        LocalFolder folder = new LocalFolderImpl(path, repository);
-        synchronizeFolder(folder, folderAddress, deltaSynchronization);
+    public void registerForSynchronization(Path path, ItemAddress folderAddress)
+        throws IOException {
+        this.localFolder = initializeLocalFolder(path, folderAddress);
+        this.remoteFolder = folderAddress;
     }
 
-    private LocalFolder initialiseLocalFolder(Path path,
+    private LocalFolder initializeLocalFolder(Path path,
                                               ItemAddress folderAddress)
                                                   throws IOException {
         OneDriveFolder remoteFolder = oneDrive.getFolder(folderAddress);
@@ -125,33 +127,27 @@ public class Synchronizer {
      * synchronization the deltaToken is saved in the configuration for future
      * delta synchronizations.
      * 
-     * @param folder LocalFolder local folder to synchronize
-     * @param folderAddress ItemAddress of remote folder
-     * @param deltaSynchronization boolean true for deltaSynchronization and
-     *            false for a full synchronization
+     * @param method SynchronizationMethod
      * @throws IOException
      * @throws ConfigurationException if deltaToken cannot be saved to
      *             configuration file
      */
-    public void synchronizeFolder(LocalFolder folder, ItemAddress folderAddress,
-                                  boolean deltaSynchronization)
-                                      throws IOException {
-        String deltaToken = getDeltaToken(deltaSynchronization);
-        boolean delta = initializeSession(deltaSynchronization,
-                                                 deltaToken, folder);
+    public void synchronize(SynchronizationMethod method) throws IOException {
+        String deltaToken = getDeltaToken(method);
+        boolean delta = initializeSession(method, deltaToken, localFolder);
         try {
-            SyncResponse syncResponse = getChangesForFolder(folderAddress,
+            SyncResponse syncResponse = getChangesForFolder(remoteFolder,
                                                             deltaToken);
             synchronizeChangesBothWays(syncResponse, delta);
         } catch (ResyncNeededException e) {
             LOG.info("Resynchronisation of folder: {} is needed, starting a fresh enumeration.",
-                     folderAddress);
+                     remoteFolder);
             resynchronizeChanges(e);
         }
     }
 
     /**
-     * Get the changes for a folder
+     * Enumerate the changes for a OneDrive folder
      * 
      * @param folderAddress ItemAddress of remote folder
      * @param deltaToken String previous state, {@code null} for a full
@@ -168,16 +164,15 @@ public class Synchronizer {
     }
 
     /**
-     * Read the delta token from configuration
+     * Read the delta token from the configuration
      * 
-     * @param deltaSynchronization boolean true for deltaSynchronization and
-     *            false for a full synchronization
+     * @param method SynchronizationMethod
      * @return String deltaToken previous state, {@code null} for a full
      *         enumeration
      */
-    private String getDeltaToken(boolean deltaSynchronization) {
+    private String getDeltaToken(SynchronizationMethod method) {
         String deltaToken = null;
-        if (deltaSynchronization) {
+        if (SynchronizationMethod.DELTA == method) {
             LOG.info("Loading delta token from configuration: {}",
                      configuration.getConfigurationFile());
             deltaToken = configuration.getDeltaToken();
@@ -188,27 +183,28 @@ public class Synchronizer {
     /**
      * Initialize the synchronization session.
      * <p>
-     * If the synchronization type is delta and a deltaToken exists, a saved
-     * session forms the basis for this synchronization. Otherwise a clean
-     * session is initialized and a full synchronization must be performed.
+     * If the synchronization type is {code {@link SynchronizationMethod#DELTA}
+     * and a deltaToken exists, a saved session forms the basis for this
+     * synchronization. Otherwise a clean session is initialized and a full
+     * synchronization is performed.
      * </p>
      * 
-     * @param deltaSynchronization boolean true for deltaSynchronization and
-     *            false for a full synchronization
+     * @param method SynchronizationMethod
      * @param deltaToken String previous state, {@code null} for a full
      *            enumeration
      * @param folder LocalFolder folder to synchronize
      * @return boolean true if a delta synchronization can be performed, false
      *         if a full synchronization must be performed
      */
-    private boolean initializeSession(boolean deltaSynchronization,
+    private boolean initializeSession(SynchronizationMethod method,
                                       String deltaToken, LocalFolder folder) {
 
-        if (deltaSynchronization && !hasDeltaToken(deltaToken)) {
+        if (SynchronizationMethod.DELTA == method
+            && !hasDeltaToken(deltaToken)) {
             LOG.warn("A delta synchronization is requested, but no deltaToken is available, performing an full synchronization instead.");
             repository.initializeSession(false, folder);
             return false;
-        } else if (deltaSynchronization) {
+        } else if (SynchronizationMethod.DELTA == method) {
             repository.initializeSession(true, folder);
             return true;
         } else {
@@ -261,8 +257,8 @@ public class Synchronizer {
             processChanges(deltaMap);
             saveSession();
             saveDeltaToken(response.getToken());
-            LOG.info("Succesfully synchronized {} and {} two-ways",
-                     oneDrive, localDrive);
+            LOG.info("Succesfully synchronized {} and {} two-ways", oneDrive,
+                     localDrive);
         } finally {
             repository.clearSession();
         }
@@ -321,7 +317,7 @@ public class Synchronizer {
      * @param deltaMap Map<String, Item> delta changes acquired from OneDrive
      */
     private void processChanges(Map<String, Item> deltaMap) {
-        LOG.info("Processing enumerated changes from OneDrive: {} with LocalDrive: {}",
+        LOG.info("Processing enumerated changes from {} with {}",
                  oneDrive, localDrive);
         Iterator<Item> it = deltaMap.values().iterator();
         while (it.hasNext()) {
@@ -373,8 +369,7 @@ public class Synchronizer {
         if (!deltaSynchronization) {
             return;
         }
-        LOG.info("Processing deletions in {} with {}",
-                 localDrive, oneDrive);
+        LOG.info("Processing deletions in {} with {}", localDrive, oneDrive);
         for (LocalItem local : repository.getDeletions()) {
             try {
                 LOG.info("Item: {}, id: {}, was deleted localy, deleting item from OneDrive",
@@ -397,8 +392,7 @@ public class Synchronizer {
      * OneDrive
      */
     private void processLocalAdditions() {
-        LOG.info("Processing additions in: {} with : {}",
-                 localDrive, oneDrive);
+        LOG.info("Processing additions in {} with {}", localDrive, oneDrive);
         for (LocalItem local : repository.getAdditions()) {
             try {
                 Item uploaded = null;

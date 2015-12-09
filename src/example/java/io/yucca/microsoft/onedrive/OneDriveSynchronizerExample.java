@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.synchronize.FileSystemSynchronizer;
 import io.yucca.microsoft.onedrive.synchronize.LocalDriveSynchronizer;
+import io.yucca.microsoft.onedrive.synchronize.SynchronizationMethod;
 import io.yucca.microsoft.onedrive.synchronize.Synchronizer;
 
 /**
@@ -71,7 +72,8 @@ public class OneDriveSynchronizerExample {
             LocalDriveSynchronizer fss = new FileSystemSynchronizer(localPath,
                                                                     onedrive);
             synchronizer = new Synchronizer(fss, api, configuration);
-            synchronizer.synchronize(false);
+            synchronizer.registerDriveForSynchronization();
+            synchronizer.synchronize(SynchronizationMethod.FULL);
         } catch (IOException | OneDriveException e) {
             LOG.error("Failure synchronizing OneDrive", e);
         }

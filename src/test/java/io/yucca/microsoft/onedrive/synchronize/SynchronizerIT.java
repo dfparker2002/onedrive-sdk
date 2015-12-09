@@ -49,9 +49,11 @@ public class SynchronizerIT {
     private Synchronizer synchronizer;
 
     private Path tmpFolderPath;
+    
+    private Path localFolder;
 
     private LocalDriveRepository repository;
-    
+
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
@@ -60,7 +62,7 @@ public class SynchronizerIT {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
         this.api = new OneDriveAPIConnectionImpl(configuration);
         this.tmpFolderPath = Paths.get(testFolder.getRoot().getAbsolutePath());
-
+        this.localFolder = tmpFolderPath.resolve(ROOT_DOCUMENTS);
     }
 
     @Test
@@ -69,20 +71,21 @@ public class SynchronizerIT {
         repository = new FileSystemRepository(tmpFolderPath, remoteDrive);
         synchronizer = new Synchronizer(new FileSystemSynchronizer(repository),
                                         api, configuration);
-        synchronizer.synchronize(false);
-        synchronizer.synchronize(true);
+        synchronizer.registerDriveForSynchronization();
+        synchronizer.synchronize(SynchronizationMethod.FULL);
+        synchronizer.synchronize(SynchronizationMethod.DELTA);
     }
 
     @Test
     public void testSynchronizeFolder() throws IOException {
         OneDrive remoteDrive = OneDriveImpl.defaultDrive(api);
         repository = new FileSystemRepository(tmpFolderPath, remoteDrive);
-        ItemAddress folderAddress = new SpecialAddress(SpecialFolder.DOCUMENTS);
-        Path localFolder = tmpFolderPath.resolve(ROOT_DOCUMENTS);
         synchronizer = new Synchronizer(new FileSystemSynchronizer(repository),
                                         api, configuration);
-        synchronizer.synchronize(localFolder, folderAddress, false);
-        synchronizer.synchronize(true);
+        ItemAddress folderAddress = new SpecialAddress(SpecialFolder.DOCUMENTS);
+        synchronizer.registerForSynchronization(localFolder, folderAddress);
+        synchronizer.synchronize(SynchronizationMethod.FULL);
+        synchronizer.synchronize(SynchronizationMethod.DELTA);
     }
 
 }
