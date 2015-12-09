@@ -27,8 +27,8 @@ import io.yucca.microsoft.onedrive.OneDriveException;
 public interface LocalDriveSynchronizer extends LocalDriveRepository {
 
     /**
-     * Initialize a synchronization session for a folder. This session can
-     * possibly be based on the state of a existing session state.
+     * Initialize a synchronization session for a folder. This session could be
+     * based on the state of a existing session state.
      * 
      * @param useSavedState boolean false start with a empty session state (used
      *            for full synchronizations), if false try to deserialize the
