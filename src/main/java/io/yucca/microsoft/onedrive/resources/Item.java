@@ -385,7 +385,7 @@ public class Item {
      */
     @JsonIgnore
     public boolean isFile() {
-        return (file != null);
+        return file != null;
     }
 
     /**
@@ -395,7 +395,7 @@ public class Item {
      */
     @JsonIgnore
     public boolean isDirectory() {
-        return (folder != null);
+        return folder != null;
     }
 
     /**
@@ -405,7 +405,7 @@ public class Item {
      */
     @JsonIgnore
     public boolean isDeleted() {
-        return (deleted != null);
+        return deleted != null;
     }
 
     /**

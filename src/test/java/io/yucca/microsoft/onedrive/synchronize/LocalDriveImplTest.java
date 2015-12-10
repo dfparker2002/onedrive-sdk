@@ -19,28 +19,28 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-import io.yucca.microsoft.onedrive.resources.Drive;
+public class LocalDriveImplTest {
 
-public class LocalDriveTest {
-
-    public static final String PATH_TEST_LOCALDRIVE = "src/test/resources/synchronize/localdrive";
+    private LocalDriveRepository repository;
 
     private LocalDrive localDrive;
 
-    private Drive drive;
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Before
     public void setUp() throws IOException {
-        drive = new Drive();
-        drive.setId("1");
-        localDrive = new LocalDrive(Paths.get(PATH_TEST_LOCALDRIVE), drive);
+        Path folder = Paths.get(testFolder.getRoot().getAbsolutePath());
+        repository = new FileSystemRepository(folder, new OneDriveStub());
+        localDrive = repository.getLocalDrive();
     }
 
     @Test
@@ -55,12 +55,13 @@ public class LocalDriveTest {
 
     @Test
     public void testGetName() {
-        assertEquals("onedrive", localDrive.getName());
+        assertEquals(LocalDriveImpl.LOCALDRIVE, localDrive.getName());
     }
 
     @Test
     public void testGetPath() {
-        assertEquals(Paths.get(PATH_TEST_LOCALDRIVE), localDrive.getPath());
+        assertEquals(Paths.get(testFolder.getRoot().getAbsolutePath()),
+                     localDrive.getPath());
     }
 
     @Test
@@ -68,8 +69,4 @@ public class LocalDriveTest {
         assertTrue(localDrive.hasId());
     }
 
-    @After
-    public void tearDown() throws IOException {
-        Files.deleteIfExists(localDrive.getPath());
-    }
 }

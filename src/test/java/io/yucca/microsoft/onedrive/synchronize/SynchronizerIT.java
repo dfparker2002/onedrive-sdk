@@ -28,21 +28,19 @@ import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.ConfigurationUtil;
 import io.yucca.microsoft.onedrive.OneDrive;
-import io.yucca.microsoft.onedrive.OneDriveImpl;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnectionImpl;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
-import io.yucca.microsoft.onedrive.OneDriveFolderImpl;
+import io.yucca.microsoft.onedrive.OneDriveImpl;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
+import io.yucca.microsoft.onedrive.addressing.SpecialAddress;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 public class SynchronizerIT {
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
-
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private static final String ROOT_DOCUMENTS = "root/APITest";
+    private static final String ROOT_DOCUMENTS = "root/Documents";
 
     private OneDriveAPIConnection api;
 
@@ -51,45 +49,43 @@ public class SynchronizerIT {
     private Synchronizer synchronizer;
 
     private Path tmpFolderPath;
+    
+    private Path localFolder;
+
+    private LocalDriveRepository repository;
+
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Before()
     public void setUp() throws FileNotFoundException, ConfigurationException {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
         this.api = new OneDriveAPIConnectionImpl(configuration);
         this.tmpFolderPath = Paths.get(testFolder.getRoot().getAbsolutePath());
+        this.localFolder = tmpFolderPath.resolve(ROOT_DOCUMENTS);
     }
 
-    // @Test
+    @Test
     public void testSynchronizeDrive() throws IOException {
         OneDrive remoteDrive = OneDriveImpl.defaultDrive(api);
-        LocalDrive localDrive = new LocalDrive(tmpFolderPath,
-                                               remoteDrive.getDrive());
-        synchronizer = new Synchronizer(localDrive, remoteDrive, api,
-                                        configuration);
-        synchronizer.synchronize(false);
-        synchronizer.synchronize(true);
+        repository = new FileSystemRepository(tmpFolderPath, remoteDrive);
+        synchronizer = new Synchronizer(new FileSystemSynchronizer(repository),
+                                        api, configuration);
+        synchronizer.registerDriveForSynchronization();
+        synchronizer.synchronize(SynchronizationMethod.FULL);
+        synchronizer.synchronize(SynchronizationMethod.DELTA);
     }
 
-    /**
-     * Folder hierarchy must already exist otherwise id's are not available or
-     * the hierarchy should be created
-     * 
-     * @throws IOException
-     * @throws ConfigurationException
-     */
-    // @Test
+    @Test
     public void testSynchronizeFolder() throws IOException {
         OneDrive remoteDrive = OneDriveImpl.defaultDrive(api);
-        OneDriveFolderImpl remoteFolder = remoteDrive
-            .getSpecialFolder(SpecialFolder.DOCUMENTS, null);
-        LocalDrive localDrive = new LocalDrive(tmpFolderPath,
-                                               remoteDrive.getDrive());
-        LocalFolder localFolder = new LocalFolder(tmpFolderPath
-            .resolve(ROOT_DOCUMENTS));
-        synchronizer = new Synchronizer(localDrive, localFolder, remoteDrive,
-                                        remoteFolder, api, configuration);
-        synchronizer.synchronize(false);
-        synchronizer.synchronize(true);
+        repository = new FileSystemRepository(tmpFolderPath, remoteDrive);
+        synchronizer = new Synchronizer(new FileSystemSynchronizer(repository),
+                                        api, configuration);
+        ItemAddress folderAddress = new SpecialAddress(SpecialFolder.DOCUMENTS);
+        synchronizer.registerForSynchronization(localFolder, folderAddress);
+        synchronizer.synchronize(SynchronizationMethod.FULL);
+        synchronizer.synchronize(SynchronizationMethod.DELTA);
     }
 
 }

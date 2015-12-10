@@ -110,7 +110,7 @@ public class OneDriveError implements Serializable {
          * @param expectedErrorCode ErrorCodes
          * @return true
          */
-        public boolean equalsError(ErrorCodes expectedErrorCode) {
+        public boolean equalsError(ErrorCode expectedErrorCode) {
             if (code == null) {
                 return false;
             }
@@ -129,7 +129,7 @@ public class OneDriveError implements Serializable {
      * @param expectedErrorCode ErrorCodes
      * @return true
      */
-    public boolean equalsError(ErrorCodes expectedErrorCode) {
+    public boolean equalsError(ErrorCode expectedErrorCode) {
         return error.equalsError(expectedErrorCode);
     }
 

@@ -16,7 +16,7 @@
 package io.yucca.microsoft.onedrive;
 
 /**
- * NotModifiedException indicating the results are unmodified
+ * NotModifiedException indicates that a result is unmodified
  * <p>
  * This is used by eTag header matching of the upstream content. This explicitly
  * extends RuntimeException and should only thrown and catched if a OneDrive API

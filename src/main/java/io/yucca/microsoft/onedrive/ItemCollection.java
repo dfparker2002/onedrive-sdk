@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources;
+package io.yucca.microsoft.onedrive;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -22,12 +22,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import io.yucca.microsoft.onedrive.ItemIterable;
-import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
+import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * ItemCollection, a collection of items stored in OneDrive
+ * ItemCollection, an iterable collection of items stored in OneDrive
  *
  * @author yucca.io
  */
@@ -41,7 +41,8 @@ public class ItemCollection implements ItemIterable {
     @JsonIgnore
     protected OneDriveAPIConnection api;
 
-    private LinkedList<Item> value;
+    @JsonDeserialize(as = LinkedList.class)
+    private List<Item> value;
 
     @JsonProperty("@odata.nextLink")
     private URL nextLink;
@@ -50,7 +51,7 @@ public class ItemCollection implements ItemIterable {
         return value;
     }
 
-    public void setValue(LinkedList<Item> value) {
+    public void setValue(List<Item> value) {
         this.value = value;
     }
 

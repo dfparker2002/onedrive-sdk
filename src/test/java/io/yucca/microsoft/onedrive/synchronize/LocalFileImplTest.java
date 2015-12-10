@@ -22,26 +22,21 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.OneDriveFile;
-import io.yucca.microsoft.onedrive.resources.Drive;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
 import io.yucca.microsoft.onedrive.resources.facets.HashesFacet;
 
-/**
- * TODO use @Rule TemporaryFolder
- * 
- * @author yucca.io
- */
-public class LocalFileTest {
+public class LocalFileImplTest {
 
     public static final String PATH_TEST_LOCALDRIVE = "src/test/resources/synchronize/localdrive";
 
@@ -55,36 +50,28 @@ public class LocalFileTest {
 
     public static final String ITEM_PARENTID = "1D230B56A9E3686P";
 
-    public static final String ITEM_NAME = "onedrivefile-1.pdf";
+    public static final String ITEM_NAME = "localfile-1.pdf";
 
     public static final String ITEM_NAMENEW = "onedrivefile-3.pdf";
 
     public static final String ITEM_PARENTNAME = "root";
 
-    private LocalDrive drive;
-
-    private LocalFolder root;
+    private LocalDriveRepository repository;
 
     private LocalFile file;
 
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
+
     @Before
     public void setUp() throws IOException, ParseException {
-        drive = new LocalDrive(Paths.get(PATH_TEST_LOCALDRIVE), getDrive());
-        root = new LocalFolder(getParentItem(), drive);
+        repository = new FileSystemRepository(Paths
+            .get(testFolder.getRoot().getAbsolutePath()), new OneDriveStub());
+        LocalFolder folder = initializeParentFolder(testFolder);
         OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
-        file = new LocalFile(getItem(), content, root);
-    }
-
-    @Test
-    public void testLocalFilePath() throws IOException {
-        new LocalFile(Paths.get(PATH_TEST_LOCALDRIVE));
-    }
-
-    @Test
-    public void testLocalFileItemLocalResource()
-        throws IOException, ParseException {
-        LocalFile file = new LocalFile(getItem(), root);
-        assertTrue(file.exists());
+        file = new LocalFileImpl(folder.getPath().resolve(ITEM_NAME), getItem(),
+                                 content, repository);
+        file.create();
     }
 
     @Test
@@ -94,16 +81,12 @@ public class LocalFileTest {
 
     @Test
     public void testUpdate() throws IOException {
-        LocalFolder folder = new LocalFolder(Paths.get(PATH_TEST_LOCALFOLDER));
-        OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-1.txt");
-        file.update(getItem(), content, folder);
+        file.update(getItem());
         assertTrue(file.exists());
-        file.rename("localfile-1.pdf");
     }
 
     @Test
     public void testRelateWith() throws IOException, ParseException {
-        LocalFile file = new LocalFile(Paths.get(PATH_TEST_LOCALFILE));
         file.relateWith(getItem());
         assertEquals(file.getId(), ITEM_ID);
         assertEquals(file.getName(), ITEM_NAME);
@@ -111,21 +94,19 @@ public class LocalFileTest {
 
     @Test
     public void testRename() throws IOException, ParseException {
-        OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
-        LocalFolder folder = new LocalFolder(Paths.get(PATH_TEST_LOCALFOLDER));
-        LocalFile file = new LocalFile(getItem(), content, folder);
         file.rename(ITEM_NAMENEW);
         assertTrue(file.exists());
-        file.rename("localfile-1.pdf");
     }
 
     @Test
     public void testDelete() throws IOException, ParseException {
-        OneDriveFile content = new OneDriveFile("src/test/resources/files/test-upload-3.pdf");
-        LocalFolder folder = new LocalFolder(Paths.get(PATH_TEST_LOCALFOLDER));
-        LocalFile file = new LocalFile(getItem(), content, folder);
         file.delete();
         assertFalse(file.exists());
+    }
+
+    @Test
+    public void testGetContent() throws FileNotFoundException {
+        assertNotNull(file.getContent());
     }
 
     @Test
@@ -143,21 +124,6 @@ public class LocalFileTest {
     @Test
     public void testIsContentModified() throws IOException {
         assertTrue(file.isContentModified(getItem()));
-    }
-
-    @Test
-    public void testIsRenamed() {
-        assertTrue(file.isRenamed(ITEM_NAMENEW));
-    }
-
-    @Test
-    public void testReadMetadata() throws IOException {
-        file.readMetadata();
-    }
-
-    @Test
-    public void testWriteMetadata() throws IOException {
-        file.writeMetadata();
     }
 
     @Test
@@ -182,17 +148,8 @@ public class LocalFileTest {
 
     @Test
     public void testGetOneDriveContent() throws FileNotFoundException {
-        OneDriveFile content = file.getOneDriveContent();
+        OneDriveFile content = file.getContent();
         assertNotNull(content);
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        Files.deleteIfExists(Paths.get(PATH_TEST_LOCALFILE));
-        Files
-            .deleteIfExists(Paths.get(PATH_TEST_LOCALFOLDER + "/" + ITEM_NAME));
-        Files.deleteIfExists(Paths.get(PATH_TEST_LOCALFOLDER));
-        Files.deleteIfExists(Paths.get(PATH_TEST_LOCALDRIVE));
     }
 
     private Item getItem() {
@@ -223,19 +180,17 @@ public class LocalFileTest {
         return item;
     }
 
-    private Item getParentItem() {
+    private LocalFolder initializeParentFolder(TemporaryFolder testFolder)
+        throws IOException {
+        Path path = Paths.get(testFolder.getRoot().getAbsolutePath());
         Item item = new Item();
         item.setId(ITEM_PARENTID);
-        item.setName(ITEM_PARENTNAME);
-        item.setLastModifiedDateTime("2015-01-02T12:00:00.10Z");
-        item.setCreatedDateTime("2015-01-01T12:00:00.10Z");
-        return item;
-    }
-
-    private Drive getDrive() {
-        Drive d = new Drive();
-        d.setId(ITEM_ROOTID);
-        return d;
+        item.setName(path.getFileName().toString());
+        item.setLastModifiedDateTime("2099-01-02T12:00:00.10Z");
+        item.setCreatedDateTime("2099-01-01T12:00:00.10Z");
+        LocalFolder parentFolder = new LocalFolderImpl(path, item, repository);
+        parentFolder.update(item);
+        return parentFolder;
     }
 
 }

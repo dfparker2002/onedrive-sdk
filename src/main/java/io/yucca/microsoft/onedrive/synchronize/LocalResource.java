@@ -22,13 +22,12 @@ import java.nio.file.Path;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * Represent a LocalResource like a file, folder or drive
+ * LocalResource represents a local replica of an OneDrive resource (file,
+ * folder or drive)
  * 
  * @author yucca.io
  */
 public interface LocalResource extends Serializable {
-
-    String ATTRIBUTE_ONEDRIVE_ITEMID = "onedrive.id";
 
     /**
      * Get resource id
@@ -38,11 +37,25 @@ public interface LocalResource extends Serializable {
     String getId();
 
     /**
+     * Set the resource id
+     * 
+     * @param id String
+     */
+    void setId(String id);
+
+    /**
      * Get parent resource id
      * 
      * @return String
      */
     String getParentId() throws IOException;
+
+    /**
+     * Get parent resource
+     * 
+     * @return LocalResource
+     */
+    LocalResource getParent() throws IOException;
 
     /**
      * Get resource name
@@ -52,11 +65,25 @@ public interface LocalResource extends Serializable {
     String getName();
 
     /**
+     * Set the name
+     * 
+     * @param name String
+     */
+    void setName(String name);
+
+    /**
      * Get resource path
      * 
      * @return Path
      */
     Path getPath();
+
+    /**
+     * Set the resource path
+     * 
+     * @param path Path
+     */
+    void setPath(Path path);
 
     /**
      * Get the type of the resource
@@ -66,6 +93,34 @@ public interface LocalResource extends Serializable {
     ResourceType type();
 
     /**
+     * Set the CreatedDateTime
+     * 
+     * @param millis long
+     */
+    void setCreatedDateTime(long millis);
+
+    /**
+     * Get the CreatedDateTime
+     * 
+     * @return long
+     */
+    long getCreatedDateTime();
+
+    /**
+     * Set the LastModifiedDateTime
+     * 
+     * @param millis long
+     */
+    void setLastModifiedDateTime(long millis);
+
+    /**
+     * Get the LastModifiedDateTime
+     * 
+     * @return long
+     */
+    long getLastModifiedDateTime();
+
+    /**
      * Determine if id is set
      * 
      * @return boolean
@@ -73,16 +128,10 @@ public interface LocalResource extends Serializable {
     boolean hasId();
 
     /**
-     * Update the {@link Item} properties based on this LocalResource
+     * Update the {@link Item} properties based on the LocalResource
      * 
      * @param item Item
      */
     void updateItem(Item item);
 
-    /**
-     * Reset the timestamps of a resource based on field values. When a file is
-     * created in a folder the underlying filesystem will update the timestamp
-     * by which they are not in sync anymore with the OneDrive timestamp.
-     */
-    void resetTimestamps() throws IOException;
 }

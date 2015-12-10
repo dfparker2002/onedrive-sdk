@@ -16,22 +16,8 @@
 package io.yucca.microsoft.onedrive.synchronize;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.nio.file.FileVisitOption;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -39,112 +25,101 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.ConfigurationUtil;
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDrive;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
-import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.OneDriveFolderImpl;
-import io.yucca.microsoft.onedrive.OneDriveItem;
+import io.yucca.microsoft.onedrive.OneDriveFolder;
+import io.yucca.microsoft.onedrive.OneDriveImpl;
+import io.yucca.microsoft.onedrive.SyncResponse;
 import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DeleteAction;
-import io.yucca.microsoft.onedrive.actions.DownloadAction;
+import io.yucca.microsoft.onedrive.actions.ResyncNeededException;
 import io.yucca.microsoft.onedrive.actions.SyncAction;
 import io.yucca.microsoft.onedrive.actions.UpdateAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.SyncResponse;
 
 /**
- * OneDriveFolderSynchronizer, synchronizes the complete OneDrive with the
- * LocalDrive or a specific folder with the local folder and vise versa.
+ * Synchronizes a complete OneDrive with a LocalDrive or a specific folder with
+ * the local folder and vise versa.
  * 
  * @author yucca.io
  */
 public class Synchronizer {
 
-    public static final String FILE_LOCAL_DRIVE_STATE = ".onedrivestate_";
-
-    private static final Logger LOG = LoggerFactory.getLogger(Synchronizer.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(Synchronizer.class);
 
     private final LocalDrive localDrive;
 
-    private final OneDrive remoteDrive;
-
-    private final OneDriveItem remoteFolder;
-
-    private final LocalFolder localFolder;
+    private final OneDrive oneDrive;
 
     private final OneDriveAPIConnection api;
 
     private final OneDriveConfiguration configuration;
 
-    /**
-     * Map with items that were localy added and must be created in OneDrive
-     */
-    private final List<LocalItem> additions = new LinkedList<>();
+    private final LocalDriveSynchronizer repository;
+
+    private LocalFolder localFolder;
+
+    private ItemAddress remoteFolder;
 
     /**
-     * Map with synchronized items in the LocalDrive which are possibly changed
-     */
-    private final Map<String, LocalItem> items = new LinkedHashMap<>();
-
-    /**
-     * Map with local synchronized folders, used in the processing of items to
-     * acquire the parent folder
-     */
-    private final Map<String, LocalResource> folders = new HashMap<>();
-
-    /**
-     * Map holding the previous state of the LocalDrive, used to determine
-     * localy deleted items
-     */
-    private List<LocalItem> savedState;
-
-    /**
-     * Constructs a Synchronizer to sychronize a complete OneDrive.
+     * Constructs a Synchronizer to synchronize a complete OneDrive.
      * 
-     * @param localDrive LocalDrive local drive
-     * @param remoteDrive OneDrive remote drive
+     * @param synchronizer LocalDriveSynchronizer for the local drive
      * @param api OneDriveAPIConnection connection used for synchronization
      * @param configuration OneDriveConfiguration
      * @throws IOException
      */
-    public Synchronizer(LocalDrive localDrive, OneDrive remoteDrive,
+    public Synchronizer(LocalDriveSynchronizer synchronizer,
                         OneDriveAPIConnection api,
                         OneDriveConfiguration configuration)
                             throws IOException {
-        this.localDrive = localDrive;
-        this.localFolder = new LocalFolder(localDrive.getPath());
-        this.remoteDrive = remoteDrive;
-        this.remoteFolder = remoteDrive.getRootFolder();
+        this.repository = synchronizer;
+        this.localDrive = repository.getLocalDrive();
+        this.oneDrive = OneDriveImpl.defaultDrive(api);
         this.api = api;
         this.configuration = configuration;
     }
 
     /**
-     * Constructs a Synchronizer to sychronize a specific folder within a
-     * OneDrive.
+     * Register the complete OneDrive for synchronization
      * 
-     * @param localDrive local drive
-     * @param localFolder local folder to synchronize
-     * @param remoteDrive remote drive
-     * @param remoteFolder remote folder to synchronize
-     * @param api connection used for synchronization
+     * @throws IOException
      */
-    public Synchronizer(LocalDrive localDrive, LocalFolder localFolder,
-                        OneDrive remoteDrive, OneDriveFolderImpl remoteFolder,
-                        OneDriveAPIConnection api,
-                        OneDriveConfiguration configuration) {
-        this.localDrive = localDrive;
-        this.localFolder = localFolder;
-        this.remoteDrive = remoteDrive;
-        this.remoteFolder = remoteFolder;
-        this.api = api;
-        this.configuration = configuration;
+    public void registerDriveForSynchronization() throws IOException {
+        this.localFolder = initializeLocalFolder(localDrive.getPath(),
+                                                 oneDrive.getAddress());
+        this.remoteFolder = oneDrive.getAddress();
+    }
+
+    /**
+     * Register a OneDrive folder for synchronization in with a folder in the
+     * LocalDrive
+     * 
+     * @param path Path to LocalFolder
+     * @param folderAddress ItemAddress of remote folder
+     * @throws IOException
+     */
+    public void registerForSynchronization(Path path, ItemAddress folderAddress)
+        throws IOException {
+        this.localFolder = initializeLocalFolder(path, folderAddress);
+        this.remoteFolder = folderAddress;
+    }
+
+    private LocalFolder initializeLocalFolder(Path path,
+                                              ItemAddress folderAddress)
+                                                  throws IOException {
+        OneDriveFolder remoteFolder = oneDrive.getFolder(folderAddress);
+        LocalFolderImpl folder = new LocalFolderImpl(path, remoteFolder,
+                                                     repository);
+        folder.create();
+        return folder;
     }
 
     /**
@@ -152,32 +127,52 @@ public class Synchronizer {
      * synchronization the deltaToken is saved in the configuration for future
      * delta synchronizations.
      * 
-     * @param deltaSynchronization boolean true for deltaSynchronization and
-     *            false for a full synchronization
+     * @param method SynchronizationMethod
+     * @throws IOException
      * @throws ConfigurationException if deltaToken cannot be saved to
      *             configuration file
      */
-    public void synchronize(boolean deltaSynchronization) {
-        String deltaToken = getDeltaToken(deltaSynchronization);
-        readLocalDriveState(deltaSynchronization, deltaToken);
-        ItemAddress address = new IdAddress(remoteFolder.getItemId());
-        SyncAction action = new SyncAction(api, address, deltaToken, null);
-        SyncResponse syncResponse = action.call();
-        walkTree(syncResponse.asMap(), (deltaToken != null));
-        deltaToken = syncResponse.getToken();
-        saveDeltaToken(deltaToken);
+    public void synchronize(SynchronizationMethod method) throws IOException {
+        String deltaToken = getDeltaToken(method);
+        boolean delta = initializeSession(method, deltaToken, localFolder);
+        try {
+            SyncResponse syncResponse = getChangesForFolder(remoteFolder,
+                                                            deltaToken);
+            synchronizeChangesBothWays(syncResponse, delta);
+        } catch (ResyncNeededException e) {
+            LOG.info("Resynchronisation of folder: {} is needed, starting a fresh enumeration.",
+                     remoteFolder);
+            resynchronizeChanges(e);
+        }
     }
 
     /**
-     * On deltaSynchronization read the delta token from configuration
+     * Enumerate the changes for a OneDrive folder
      * 
-     * @param deltaSynchronization boolean true for deltaSynchronization and
-     *            false for a full synchronization
-     * @return String deltaToken {@code null} for a full synchronization
+     * @param folderAddress ItemAddress of remote folder
+     * @param deltaToken String previous state, {@code null} for a full
+     *            enumeration
+     * @return SyncResponse enumerated changed
+     * @throws ResyncNeededException if deltaToken is expired
      */
-    private String getDeltaToken(boolean deltaSynchronization) {
+    private SyncResponse getChangesForFolder(ItemAddress folderAddress,
+                                             String deltaToken)
+                                                 throws ResyncNeededException {
+        SyncAction action = new SyncAction(api, folderAddress, deltaToken,
+                                           null);
+        return action.call();
+    }
+
+    /**
+     * Read the delta token from the configuration
+     * 
+     * @param method SynchronizationMethod
+     * @return String deltaToken previous state, {@code null} for a full
+     *         enumeration
+     */
+    private String getDeltaToken(SynchronizationMethod method) {
         String deltaToken = null;
-        if (deltaSynchronization) {
+        if (SynchronizationMethod.DELTA == method) {
             LOG.info("Loading delta token from configuration: {}",
                      configuration.getConfigurationFile());
             deltaToken = configuration.getDeltaToken();
@@ -185,93 +180,151 @@ public class Synchronizer {
         return deltaToken;
     }
 
+    /**
+     * Initialize the synchronization session.
+     * <p>
+     * If the synchronization type is {code {@link SynchronizationMethod#DELTA}
+     * and a deltaToken exists, a saved session forms the basis for this
+     * synchronization. Otherwise a clean session is initialized and a full
+     * synchronization is performed.
+     * </p>
+     * 
+     * @param method SynchronizationMethod
+     * @param deltaToken String previous state, {@code null} for a full
+     *            enumeration
+     * @param folder LocalFolder folder to synchronize
+     * @return boolean true if a delta synchronization can be performed, false
+     *         if a full synchronization must be performed
+     */
+    private boolean initializeSession(SynchronizationMethod method,
+                                      String deltaToken, LocalFolder folder) {
+        boolean delta;
+        if (SynchronizationMethod.DELTA == method
+            && !hasDeltaToken(deltaToken)) {
+            LOG.warn("A delta synchronization is requested, but no deltaToken is available, performing an full synchronization instead.");
+            repository.initializeSession(false, folder);
+            delta = false;
+        } else if (SynchronizationMethod.DELTA == method) {
+            repository.initializeSession(true, folder);
+            delta = true;
+        } else {
+            repository.initializeSession(false, folder);
+            delta = false;
+        }
+        return delta;
+    }
+
     private boolean hasDeltaToken(String deltaToken) {
         return !(deltaToken == null || "".equals(deltaToken));
     }
 
+    private void saveSession() {
+        repository.saveSession();
+    }
+
     /**
-     * Walk the LocalDrive and synchronize this with OneDrive. This used the
-     * understanding workflow:
+     * Synchronize the OneDrive with the LocalDrive. This uses the understanding
+     * workflow:
      * 
      * <pre>
-     * 0. Initialize the root folder if this does not exist.
-     * 1. Iterate all files and folders in the local drive.
-     * 2. On delta synchronization, compare the current state of the 
+     * 1. On delta synchronization, compare the current state of the 
      * local drive with the saved state. Items that only exist in the saved 
      * states indicate a deletion and are therefor removed from OneDrive. If 
      * the deleted item is on the change list, then remove it from this list 
      * to prevent a recreation.
-     * 3. Items registered for addition (not having an id) are created in OneDrive
+     * 2. Items registered for addition (not having an id) are created in OneDrive
      * and added to items list for an up-to-date drive state
-     * 4. Process the (delta) changes acquired from OneDrive and reflect these change
+     * 3. Process the (delta) changes acquired from OneDrive and reflect these change
      * to the local drive and vise-versa
-     * 5. Save/serialize the local drive state to disk
+     * 4. Save/serialize the local drive state to disk
+     * 5. Save the token for a future enumeration (XXX should be done per drive/folder/item)
      * </pre>
      * 
-     * @param deltaMap Map<String, Item> changes acquired from OneDrive
-     * @param deltaSynchronization boolean false for full synchronization
+     * @param response SyncResponse enumerated changes
+     * @param deltaSynchronization boolean true for deltaSynchronization and
+     *            false for a full synchronization
      * @throws OneDriveException if the synchronization process fails, if errors
      *             occur on processing individual files or folders then these
      *             are skipped
      */
-    private void walkTree(Map<String, Item> deltaMap,
-                          boolean deltaSynchronization) {
+    private void synchronizeChangesBothWays(SyncResponse response,
+                                            boolean deltaSynchronization) {
         try {
-            LOG.info("Started a {} synchronization of OneDrive: {} with LocalDrive: {}",
-                     syncMethod(deltaSynchronization));
-            initializeRootFolder();
-            LOG.info("Walking the LocalDrive: {}, enumerate files and folders used for synchronization",
-                     localFolder.getPath());
-            LocalFileVisitor visitor = new LocalFileVisitor(this);
-            Files.walkFileTree(localFolder.getPath(),
-                               new HashSet<FileVisitOption>(),
-                               Integer.MAX_VALUE, visitor);
+            LOG.info("Started a {} two-way synchronization of {} and {}",
+                     syncMethod(deltaSynchronization), oneDrive, localDrive);
+            Map<String, Item> deltaMap = response.asMap();
             processLocalDeletions(deltaSynchronization, deltaMap);
             processLocalAdditions();
             processChanges(deltaMap);
-            writeLocalDriveState();
-            LOG.info("Succesfully synchronized OneDrive: {} with LocalDrive: {} and vise-versa",
-                     remoteDrive, localDrive);
-        } catch (IOException e) {
-            throw new OneDriveException("Failure synchronizing OneDrive: "
-                                        + remoteDrive + " with LocalDrive: "
-                                        + localDrive, e);
+            saveSession();
+            saveDeltaToken(response.getToken());
+            LOG.info("Succesfully synchronized {} and {} two-ways", oneDrive,
+                     localDrive);
         } finally {
-            clearMaps();
+            repository.clearSession();
         }
     }
 
-    private void clearMaps() {
-        additions.clear();
-        items.clear();
-        folders.clear();
+    /**
+     * Resynchronize changes after a deltaToken was found to be expired
+     * 
+     * @param exception ResyncNeededException
+     */
+    private void resynchronizeChanges(ResyncNeededException exception) {
+        SyncResponse syncResponse = SyncAction.byURI(api,
+                                                     exception.getNextLink());
+        switch (exception.getDetailedErrorCode()) {
+        case RSYNCHAPPLYDIFFERENCES:
+            resynchronizeChangesApplyDifferences(syncResponse);
+            break;
+        case RSYNCHUPLOADDIFFERENCES:
+            resynchronizeChangesUploadDifferences(syncResponse);
+            break;
+        default:
+            throw new OneDriveException("Unknown resynchronization error.");
+        }
     }
 
-    private void initializeRootFolder() throws IOException {
-        LOG.info("Initializing the root of LocalDrive: {}",
-                 localDrive.getName());
-        registerFolder(localDrive);
-        // TODO https://github.com/robses/onedrive-sdk/issues/10
-        // prevent accidental deletion of complete OneDrive if LocalDrive is not
-        // present. if root folder does not exist but state is available stop,
-        // probably localdrive is deleted
+    private void resynchronizeChangesApplyDifferences(SyncResponse response) {
+        LOG.info("Resynchronizing changes and apply differences on {} and {}",
+                 oneDrive, localDrive);
+        Map<String, Item> deltaMap = response.asMap();
+        processLocalDeletions(true, deltaMap); // must check if server
+                                               // version exists
+        processLocalAdditions(); // must check if server version exists
+        processChanges(deltaMap);
+        saveSession();
+        saveDeltaToken(response.getToken());
+        LOG.info("Succesfully resynchronized and applied changes for {} and {}",
+                 oneDrive, localDrive);
+    }
+
+    private void resynchronizeChangesUploadDifferences(SyncResponse response) {
+        LOG.info("Resynchronizing changes and upload differences on {} and {}",
+                 oneDrive, localDrive);
+        Map<String, Item> deltaMap = response.asMap();
+        processChanges(deltaMap); // keep both copies if you're not sure which
+                                  // one is more up-to-date?
+        saveSession();
+        saveDeltaToken(response.getToken());
+        LOG.info("Succesfully resynchronized and uploaded differences for {} and {}",
+                 oneDrive, localDrive);
     }
 
     /**
-     * Process modification for local files or folders if these are on the delta
-     * list acquired from OneDrive API and further process localy files or
-     * folder to OneDrive.
+     * Process the changes acquired from the OneDrive API to the LocalDrive and
+     * process localy changed files or folders to OneDrive.
      * 
      * @param deltaMap Map<String, Item> delta changes acquired from OneDrive
      */
     private void processChanges(Map<String, Item> deltaMap) {
-        LOG.info("Processing enumerated changes from OneDrive: {} with LocalDrive: {}",
-                 remoteDrive, localDrive);
+        LOG.info("Processing enumerated changes from {} with {}", oneDrive,
+                 localDrive);
         Iterator<Item> it = deltaMap.values().iterator();
         while (it.hasNext()) {
             Item updated = it.next();
             try {
-                LocalItem local = items.get(updated.getId());
+                LocalItem local = repository.getLocalItem(updated.getId());
                 if (local != null) {
                     LOG.info("Item: {}, id: {} is on the delta list will be synchronized",
                              local.getPath(), local.getId());
@@ -308,30 +361,30 @@ public class Synchronizer {
      * then we assume it is deleted localy and therefor also removed in
      * OneDrive.
      * 
-     * @param deltaSynchronization
+     * @param deltaSynchronization boolean true for deltaSynchronization and
+     *            false for a full synchronization
+     * @param deltaMap Map<String, Item> delta changes acquired from OneDrive
      */
     private void processLocalDeletions(boolean deltaSynchronization,
                                        Map<String, Item> deltaMap) {
-        if (!deltaSynchronization) {
-            return;
-        }
-        LOG.info("Processing deletions in LocalDrive: {} with OneDrive: {}",
-                 localDrive, remoteDrive);
-        for (LocalItem local : savedState) {
-            try {
-                if (!items.containsKey(local.getId())) {
+        if (deltaSynchronization) {
+            LOG.info("Processing deletions in {} with {}", localDrive,
+                     oneDrive);
+            for (LocalItem local : repository.getDeletions()) {
+                try {
                     LOG.info("Item: {}, id: {}, was deleted localy, deleting item from OneDrive",
                              local.getPath(), local.getId());
                     new DeleteAction(api, new IdAddress(local.getId())).call();
-                    // remove deleted item from delta list to prevent a possible
-                    // re-creation of the item
+                    // remove the deleted item from delta list to prevent a
+                    // possible
+                    // recreation of the item
                     deltaMap.remove(local.getId());
                     LOG.info("Deleted item: {}, id: {} from OneDrive",
                              local.getPath(), local.getId());
+                } catch (OneDriveException e) {
+                    LOG.error("Failure deleting OneDrive item triggered by local deletion of item: {}, path: {}, skipped!",
+                              local.getId(), local.getPath(), e);
                 }
-            } catch (OneDriveException e) {
-                LOG.error("Failure deleting OneDrive item triggered by local deletion of item: {}, path: {}, skipped!",
-                          local.getId(), local.getPath(), e);
             }
         }
     }
@@ -341,30 +394,29 @@ public class Synchronizer {
      * OneDrive
      */
     private void processLocalAdditions() {
-        LOG.info("Processing additions in LocalDrive: {} with OneDrive: {}",
-                 localDrive, remoteDrive);
-        for (LocalItem local : additions) {
+        LOG.info("Processing additions in {} with {}", localDrive, oneDrive);
+        for (LocalItem local : repository.getAdditions()) {
             try {
-                Item uploaded = null;
-                LocalResource parent = getParentResource(local.getParentId());
+                Item addition = null;
+                LocalResource parent = repository
+                    .getLocalFolder(local.getParentId());
                 LOG.info("Item: {} was added localy, adding item to OneDrive",
                          local.getPath());
                 if (ResourceType.FILE.equals(local.type())) {
                     ItemAddress parentAddress = new IdAddress(parent.getId());
                     UploadAction action = new UploadAction(api,
                                                            ((LocalFile)local)
-                                                               .getOneDriveContent(),
+                                                               .getContent(),
                                                            parentAddress,
                                                            ConflictBehavior.FAIL);
-                    uploaded = action.call();
+                    addition = action.call();
                 } else {
                     ItemAddress parentAddress = new IdAddress(parent.getId());
                     CreateAction action = new CreateAction(api, local
                         .getName(), parentAddress, ConflictBehavior.FAIL);
-                    uploaded = action.call();
+                    addition = action.call();
                 }
-                local.update(uploaded, null, parent);
-                registerItem(local);
+                local.update(addition);
                 LOG.info("Added item: {} to OneDrive under id: {}",
                          local.getPath(), local.getId());
             } catch (IOException | OneDriveException e) {
@@ -374,6 +426,12 @@ public class Synchronizer {
         }
     }
 
+    /**
+     * Update a localy modified item in OneDrive
+     * 
+     * @param local LocalItem in local drive
+     * @param item Item related item in OneDrive
+     */
     private void updateOneDrive(LocalItem local, Item item) {
         try {
             LOG.info("Item: {}, id: {} was modified localy, modifying item in OneDrive",
@@ -381,18 +439,14 @@ public class Synchronizer {
             if (ResourceType.FILE.equals(local.type())
                 && local.isContentModified(item)) {
                 ItemAddress parentAddress = new IdAddress(local.getParentId());
-                UploadAction action = new UploadAction(api,
-                                                       ((LocalFile)local)
-                                                           .getOneDriveContent(),
-                                                       parentAddress,
-                                                       ConflictBehavior.REPLACE);
+                UploadAction action = new UploadAction(api, ((LocalFile)local)
+                    .getContent(), parentAddress, ConflictBehavior.REPLACE);
                 action.call();
-            } else if (isLocalRoot(local)) {
+            } else if (!repository.isLocalDriveRoot(local)) {
                 // updating of OneDrive root folder is prohibited by the API
-                return;
+                local.updateItem(item);
+                new UpdateAction(api, item).call();
             }
-            local.updateItem(item);
-            new UpdateAction(api, item).call();
             LOG.info("Updated item: {}, id: {} in OneDrive", local.getPath(),
                      local.getId());
         } catch (IOException | OneDriveException e) {
@@ -407,92 +461,59 @@ public class Synchronizer {
      * If an item does not exist localy, is on the delta list and is not deleted
      * add it localy
      * 
-     * @param updated Item
+     * @param addition Item
      */
-    private void addLocaly(Item updated) {
+    private void addLocaly(Item addition) {
         try {
-            // prevent creating of deleted items
-            if (updated.isDeleted()) {
-                return;
+            if (!addition.isDeleted()) {
+                LOG.info("Item: {}, id: {} was added in OneDrive, adding item to LocalDrive",
+                         addition.getName(), addition.getId());
+                LocalItem local = LocalResourceFactory
+                    .newInstance(addition, api, repository);
+                local.update(addition);
+                LOG.info("Added item: {}, id: {} to LocalDrive",
+                         local.getPath(), local.getId());
             }
-            LOG.info("Item: {}, id: {} was added in OneDrive, adding item to LocalDrive",
-                     updated.getName(), updated.getId());
-            OneDriveContent content = null;
-            if (updated.isFile()) {
-                ItemAddress address = new IdAddress(updated.getId());
-                content = new DownloadAction(api, address).call();
-            }
-            LocalResource parent = getParentResource(updated
-                .getParentReference().getId());
-            LocalItem local = LocalResourceFactory.build(updated, content,
-                                                         parent);
-            if (ResourceType.FOLDER.equals(local.type())) {
-                registerFolder(local);
-            }
-            // registered localy created item, otherwise it is not in
-            // the saved state of the LocalDrive
-            registerItem(local);
-            LOG.info("Added item: {}, id: {} to LocalDrive", local.getPath(),
-                     local.getId());
         } catch (IOException | OneDriveException e) {
             LOG.error("Failure adding local item trigger by OneDrive addition of item: {}, id: {}, skipped!",
-                      updated.getName(), updated.getId(), e);
+                      addition.getName(), addition.getId(), e);
         }
     }
 
-    private void updateLocaly(LocalItem local, Item updated) {
+    private void updateLocaly(LocalItem local, Item modified) {
         try {
             LOG.info("Item: {}, id: {} was modified in OneDrive, modifying item in LocalDrive",
-                     updated.getName(), updated.getId());
-            OneDriveContent content = null;
+                     modified.getName(), modified.getId());
             if (ResourceType.FILE.equals(local.type())
-                && local.isContentModified(updated)) {
-                ItemAddress address = new IdAddress(updated.getId());
-                content = new DownloadAction(api, address).call();
+                && local.isContentModified(modified)) {
+                local = LocalResourceFactory.newInstance(modified, api,
+                                                         repository);
             }
-            LocalResource parent = getParentResource(local.getParentId());
-            local.update(updated, content, parent);
+            local.update(modified);
             LOG.info("Updated item: {}, id: {} to LocalDrive", local.getPath(),
                      local.getId());
         } catch (IOException | OneDriveException e) {
             LOG.error("Failure updating local item: {} from OneDrive modification of item: {}, id: {}, skipped!",
-                      new Object[] { local.getPath(), updated.getName(),
-                                     updated.getId() },
+                      new Object[] { local.getPath(), modified.getName(),
+                                     modified.getId() },
                       e);
         }
     }
 
-    private void deleteLocaly(LocalItem local, Item updated)
+    private void deleteLocaly(LocalItem local, Item deleted)
         throws IOException {
         try {
             LOG.info("Item: {}, id: {} was deleted in OneDrive, deleting item in LocalDrive",
-                     updated.getName(), updated.getId());
+                     deleted.getName(), deleted.getId());
             local.delete();
-            deregisterItem(local);
             LOG.info("Deleted item: {}, id: {} in LocalDrive", local.getPath(),
                      local.getId());
         } catch (IOException e) {
             LOG.error("Failure deleting local item: {} triggered by OneDrive deletion of item: {}, id: {}, skipped!",
-                      new Object[] { local.getPath(), updated.getName(),
-                                     updated.getId(), },
+                      new Object[] { local.getPath(), deleted.getName(),
+                                     deleted.getId(), },
                       e);
         }
-    }
-
-    /**
-     * Get Parent resource identified by Id
-     * 
-     * @param id String
-     * @return LocalResource
-     * @throws OneDriveException if parent is not registered as folder
-     */
-    public LocalResource getParentResource(String id) {
-        LocalResource parent = folders.get(id);
-        if (parent == null) {
-            throw new OneDriveException("Parent folder with id: " + id
-                                        + " does not exist in LocalDrive.");
-        }
-        return parent;
     }
 
     private void saveDeltaToken(String deltaToken) {
@@ -507,146 +528,13 @@ public class Synchronizer {
     }
 
     /**
-     * Deserialize the local drive state on delta synchronization, or
-     * instantiate a new state Map if no deltaToken or no local drive state is
-     * available
-     *
-     * @param boolean deltaSynchronization
-     * @param String deltaToken
-     * @throws OneDriveException of state cannot be deserialized
-     */
-    @SuppressWarnings("unchecked")
-    private boolean readLocalDriveState(boolean deltaSynchronization,
-                                        String deltaToken) {
-        if ((deltaSynchronization && hasDeltaToken(deltaToken)) == false) {
-            LOG.warn("A delta synchronization is requested, but no deltaToken is available, performing an full synchronization instead.");
-            savedState = new LinkedList<>();
-            return false;
-        }
-        Path savedStatePath = localDriveStateFile();
-        if (Files.exists(savedStatePath, LinkOption.NOFOLLOW_LINKS) == false) {
-            LOG.warn("A delta synchronization is requested, but no local drive state is available, performing an full synchronization instead.");
-            savedState = new LinkedList<>();
-            return false;
-        }
-        LOG.info("Reading LocalDrive state from file: {}", savedStatePath);
-        try (InputStream fis = Files.newInputStream(savedStatePath,
-                                                    StandardOpenOption.READ)) {
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            savedState = (LinkedList<LocalItem>)ois.readObject();
-            return true;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new OneDriveException("Failure reading saved state of localdrive",
-                                        e);
-        }
-    }
-
-    /**
-     * Serialize the local drive state to the home directory of the user
-     * 
-     * @throws OneDriveException of state cannot be serialized
-     */
-    private void writeLocalDriveState() {
-        LOG.info("Writing LocalDrive state to file: {}", localDriveStateFile());
-        savedState.clear();
-        savedState.addAll(items.values());
-        try (
-            OutputStream os = Files.newOutputStream(localDriveStateFile(),
-                                                    StandardOpenOption.CREATE,
-                                                    StandardOpenOption.WRITE)) {
-            ObjectOutputStream oos = new ObjectOutputStream(os);
-            oos.writeObject(savedState);
-        } catch (IOException e) {
-            throw new OneDriveException("Failure writing state of localdrive",
-                                        e);
-        }
-    }
-
-    /**
-     * Get path for (de)serialization of local drive state, uses the home
-     * directory of the user in combination with the drive identifier
-     * 
-     * @return Path
-     */
-    private Path localDriveStateFile() {
-        return Paths.get(System.getProperty("user.home"))
-            .resolve(FILE_LOCAL_DRIVE_STATE + remoteDrive.getDriveId()
-                     + ".ser");
-    }
-
-    /**
-     * Determine if local item corresponds with root of the OneDrive
-     * 
-     * @param local LocalItem
-     * @return boolean
-     * @throws IOException
-     */
-    private boolean isLocalRoot(LocalItem local) throws IOException {
-        return (ResourceType.FOLDER.equals(local.type())
-                && ((LocalFolder)local).isLocalRoot());
-    }
-
-    /**
-     * Register a LocalItem for addition to OneDrive.
-     * 
-     * @param item LocalItem
-     */
-    void registerAddition(LocalItem item) {
-        additions.add(item);
-    }
-
-    /**
-     * Register a LocalItem for presence in the LocalDrive
-     * 
-     * @param item LocalItem
-     */
-    void registerItem(LocalItem item) {
-        items.put(item.getId(), item);
-    }
-
-    /**
-     * Deregister a LocalItem from the LocalDrive
-     * 
-     * @param item LocalItem
-     */
-    void deregisterItem(LocalItem item) {
-        items.remove(item.getId());
-    }
-
-    /**
-     * Register a LocalItem for deletion on OneDrive.
-     * 
-     * @param item LocalFile
-     */
-    void registerDeletion(LocalItem item) {
-        savedState.add(item);
-    }
-
-    /**
-     * Register a folder or drive for lookup
-     * 
-     * @param folder LocalResource
-     */
-    void registerFolder(LocalResource folder) {
-        folders.put(folder.getId(), folder);
-    }
-
-    /**
      * Get synchronization method
      * 
      * @param deltaSynchronization boolean
      * @return String
      */
     private String syncMethod(boolean deltaSynchronization) {
-        return (deltaSynchronization == true) ? "delta" : "full";
+        return deltaSynchronization ? "delta" : "full";
     }
 
-    /**
-     * Get root path of local drive
-     * 
-     * @return Path
-     */
-    Path getLocalDriveRoot() {
-        return localDrive.getPath();
-    }
 }

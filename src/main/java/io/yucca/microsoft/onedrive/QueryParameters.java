@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 
 import javax.ws.rs.client.WebTarget;
 
+import io.yucca.microsoft.onedrive.filter.Filter;
 import io.yucca.microsoft.onedrive.resources.Order;
 import io.yucca.microsoft.onedrive.resources.Relationship;
 import io.yucca.microsoft.onedrive.util.URLHelper;
@@ -33,7 +34,10 @@ import io.yucca.microsoft.onedrive.util.URLHelper;
  * The parameters are configured invoking {@code Builder#newQueryParameters()},
  * building a QueryParameters instance using {@code Builder#build()} and the
  * applied to a WebTarget using {@code QueryParameters#configure(WebTarget)}
- * 
+ * <p>
+ * TODO: move configure() to AbstractAction cuts dependency on WebTarget and
+ * move this class to io.yucca.microsoft.onedrive.resources package
+ * <p>
  * @author yucca.io
  */
 public class QueryParameters {
@@ -43,6 +47,7 @@ public class QueryParameters {
     public static final String ORDERBY = "orderby";
     public static final String TOP = "top";
     public static final String TOKEN = "token";
+    public static final String FILTER = "filter";
     public static final String CONFLICT_BEHAVIOR = "@name.conflictBehavior";
 
     private static final String[] MANDATORY_FIELDS = new String[] { "id",
@@ -55,24 +60,6 @@ public class QueryParameters {
 
     private QueryParameters() {
         this.parameters = new HashMap<>();
-    }
-
-    /**
-     * Create a new WebTarget instance by configuring the query parameters on
-     * the URI of the current target instance.
-     * 
-     * @param target WebTarget instance
-     * @return WebTarget a new target instance.
-     * @throws OneDriveException if encoding of a parameter fails
-     */
-    public WebTarget configure(WebTarget target) {
-        WebTarget expanded = target;
-        for (Entry<String, String> parameter : parameters.entrySet()) {
-            expanded = expanded
-                .queryParam(parameter.getKey(),
-                            URLHelper.encodeURIComponent(parameter.getValue()));
-        }
-        return expanded;
     }
 
     /**
@@ -169,7 +156,7 @@ public class QueryParameters {
          * @return Builder
          */
         public Builder select(String select) {
-            String s = ("id".equals(select)) ? select : "id," + select;
+            String s = "id".equals(select) ? select : "id," + select;
             this.qp.parameters.put(SELECT, s);
             return this;
         }
@@ -254,6 +241,11 @@ public class QueryParameters {
         public Builder orderby(String[] orderby, Order order) {
             this.qp.parameters
                 .put(ORDERBY, commaSeperated(orderby) + " " + order.getOrder());
+            return this;
+        }
+
+        public Builder filter(Filter filter) {
+            this.qp.parameters.put(FILTER, filter.toString());
             return this;
         }
 

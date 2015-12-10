@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * FileVisitor implementation used in traversing the LocalDrive thereby
+ * FileVisitor implementation used to traverse the LocalDrive thereby
  * registering items for synchronization.
  *
  * @author yucca.io
@@ -35,15 +35,15 @@ public class LocalFileVisitor implements FileVisitor<Path> {
     private static final Logger LOG = LoggerFactory
         .getLogger(LocalFileVisitor.class);
 
-    private final Synchronizer sychronizer;
+    private final LocalDriveSynchronizer synchronizer;
 
     /**
      * Constructor
      * 
-     * @param sychronizer FolderSynchronizer
+     * @param synchronizer LocalDriveSynchronizer
      */
-    public LocalFileVisitor(Synchronizer sychronizer) {
-        this.sychronizer = sychronizer;
+    public LocalFileVisitor(LocalDriveSynchronizer synchronizer) {
+        this.synchronizer = synchronizer;
     }
 
     /**
@@ -63,15 +63,15 @@ public class LocalFileVisitor implements FileVisitor<Path> {
     public FileVisitResult preVisitDirectory(Path dir,
                                              BasicFileAttributes attrs)
                                                  throws IOException {
-        LocalFolder folder = new LocalFolder(dir);
-        if (sychronizer.getLocalDriveRoot().equals(dir)) {
-            sychronizer.registerFolder(folder);
+        LocalFolder folder = new LocalFolderImpl(dir, synchronizer);
+        if (synchronizer.isLocalDriveRoot(folder)) {
+            synchronizer.registerFolder(folder);
             return FileVisitResult.CONTINUE;
         }
         if (folder.hasId()) {
-            sychronizer.registerFolder(folder);
+            synchronizer.registerFolder(folder);
         } else {
-            sychronizer.registerAddition(folder);
+            synchronizer.registerAddition(folder);
         }
         return FileVisitResult.CONTINUE;
     }
@@ -79,11 +79,11 @@ public class LocalFileVisitor implements FileVisitor<Path> {
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
         throws IOException {
-        LocalFile localFile = new LocalFile(file);
+        LocalFile localFile = new LocalFileImpl(file, synchronizer);
         if (localFile.hasId()) {
-            sychronizer.registerItem(localFile);
+            synchronizer.registerItem(localFile);
         } else {
-            sychronizer.registerAddition(localFile);
+            synchronizer.registerAddition(localFile);
         }
         return FileVisitResult.CONTINUE;
     }
@@ -99,12 +99,12 @@ public class LocalFileVisitor implements FileVisitor<Path> {
     @Override
     public FileVisitResult postVisitDirectory(Path dir, IOException exc)
         throws IOException {
-        if (sychronizer.getLocalDriveRoot().equals(dir)) {
+        LocalFolder folder = new LocalFolderImpl(dir, synchronizer);
+        if (synchronizer.isLocalDriveRoot(folder)) {
             return FileVisitResult.CONTINUE;
         }
-        LocalFolder folder = new LocalFolder(dir);
         if (folder.hasId()) {
-            sychronizer.registerItem(folder);
+            synchronizer.registerItem(folder);
         }
         return FileVisitResult.CONTINUE;
     }

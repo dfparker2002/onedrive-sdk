@@ -15,12 +15,14 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * ErrorCodes possibly returned by OneDrive API
  * 
  * @author yucca.io
  */
-public enum ErrorCodes {
+public enum ErrorCode {
 
     ACCESDENIED(
         "accessDenied",
@@ -62,7 +64,7 @@ public enum ErrorCodes {
 
     private String message;
 
-    private ErrorCodes(String code, String message) {
+    private ErrorCode(String code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -75,9 +77,19 @@ public enum ErrorCodes {
         return message;
     }
 
+    @JsonCreator
+    public static ErrorCode create(String code) {
+        for (ErrorCode e : values()) {
+            if (e.code.equals(code)) {
+                return e;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     public static String getMessage(String code) {
-        for (ErrorCodes e : values()) {
-            if (e.code == code) {
+        for (ErrorCode e : values()) {
+            if (e.code.equals(code)) {
                 return e.getMessage();
             }
         }

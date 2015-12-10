@@ -3,9 +3,9 @@
  <modelVersion>4.0.0</modelVersion>
  <groupId>io.yucca.microsoft</groupId>
  <artifactId>onedrive-sdk</artifactId>
- <version>0.0.1</version>
- <name>OneDrive SDK</name>
- <description>SDK for the Microsoft OneDrive API</description>
+ <version>0.1.0</version>
+ <name>OneDrive Java SDK</name>
+ <description>Java SDK for the Microsoft OneDrive API</description>
 
  <properties>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -245,12 +245,6 @@
   </dependency>
 
   <dependency>
-   <groupId>org.glassfish.jersey.media</groupId>
-   <artifactId>jersey-media-json-jackson</artifactId>
-   <version>${jersey.version}</version>
-  </dependency>
-
-  <dependency>
    <groupId>org.glassfish.jersey.connectors</groupId>
    <artifactId>jersey-apache-connector</artifactId>
    <version>${jersey.version}</version>
@@ -335,4 +329,7 @@
    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
   </license>
  </licenses>
+ <issueManagement>
+  <url>https://github.com/robses/onedrive-sdk/issues</url>
+ </issueManagement>
 </project>

@@ -23,13 +23,14 @@ import io.yucca.microsoft.onedrive.actions.MoveAction;
 import io.yucca.microsoft.onedrive.actions.PollAction;
 import io.yucca.microsoft.onedrive.actions.UpdateAction;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.addressing.SpecialAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 /**
- * Represent an item stored on OneDrive
+ * Represent an item stored in OneDrive
  * 
  * @author yucca.io
  */
@@ -42,32 +43,30 @@ public class OneDriveItemImpl implements OneDriveItem {
     protected Item item;
 
     /**
-     * Constructor
+     * Construct an OneDriveItemImpl instance based on item identifier
      * 
-     * @param api OneDriveAPIConnection connection used by the folder
-     * @param itemId String identifier of the folder
+     * @param api OneDriveAPIConnection connection used by the item
+     * @param itemId String identifier of the item
      */
     public OneDriveItemImpl(OneDriveAPIConnection api, String itemId) {
         this.api = api;
         this.itemId = itemId;
     }
 
+    /**
+     * Construct an OneDriveItemImpl based on an item
+     * 
+     * @param api OneDriveAPIConnection connection used by the item
+     * @param item Item
+     */
     OneDriveItemImpl(OneDriveAPIConnection api, Item item) {
         this.api = api;
         this.item = item;
         this.itemId = item.getId();
     }
 
-    /**
-     * Copy this item recursively to the destination folder
-     * 
-     * @param destination OneDriveFolder
-     * @param name String name of the new item, if {@code null} same name is
-     *            used
-     * @return OneDriveItem copied item
-     */
     @Override
-    public OneDriveItem copy(OneDriveFolderImpl destination, String name) {
+    public OneDriveItem copy(OneDriveFolder destination, String name) {
         CopyAction action = new CopyAction(api, getAddress(), name,
                                            destination.getAddress());
         PollAction pollAction = new PollAction(api, action.call(), getAddress(),
@@ -75,9 +74,6 @@ public class OneDriveItemImpl implements OneDriveItem {
         return new OneDriveItemImpl(api, pollAction.call());
     }
 
-    /**
-     * Delete this item
-     */
     @Override
     public void delete() {
         new DeleteAction(api, getAddress(), getEtag()).call();
@@ -96,25 +92,13 @@ public class OneDriveItemImpl implements OneDriveItem {
         return new DownloadAction(api, getAddress()).call();
     }
 
-    /**
-     * Move this item to destination
-     * 
-     * @param destination OneDriveFolder
-     * @return OneDriveItem moved item
-     */
     @Override
-    public OneDriveItem move(OneDriveFolderImpl destination) {
+    public OneDriveItem move(OneDriveFolder destination) {
         MoveAction action = new MoveAction(api, getAddress(), null,
                                            destination.getAddress());
         return new OneDriveItemImpl(api, action.call());
     }
 
-    /**
-     * Move this folder to root of Drive
-     * 
-     * @param destination OneDrive
-     * @return OneDriveItem moved item
-     */
     @Override
     public OneDriveItem move(OneDrive destination) {
         MoveAction action = new MoveAction(api, getAddress(), null,
@@ -122,12 +106,6 @@ public class OneDriveItemImpl implements OneDriveItem {
         return new OneDriveItemImpl(api, action.call());
     }
 
-    /**
-     * Move this folder to special folder
-     * 
-     * @param destination SpecialFolder
-     * @return OneDriveItem moved item
-     */
     @Override
     public OneDriveItem move(SpecialFolder destination) {
         MoveAction action = new MoveAction(api, getAddress(), null,
@@ -135,16 +113,14 @@ public class OneDriveItemImpl implements OneDriveItem {
         return new OneDriveItemImpl(api, action.call());
     }
 
-    /**
-     * Rename the item
-     * 
-     * @param name String
-     */
     @Override
     public void rename(String name) {
-        Item changed = (item == null) ? changed = new Item(itemId) : item;
+        Item changed = item;
+        if (item == null) {
+            changed = new Item(itemId);
+        }
         changed.setName(name);
-        this.item = new UpdateAction(api, item).call();
+        this.item = new UpdateAction(api, changed).call();
     }
 
     @Override
@@ -152,11 +128,6 @@ public class OneDriveItemImpl implements OneDriveItem {
         return itemId;
     }
 
-    /**
-     * Get the (cached) item resource or update them item if it was changed
-     * 
-     * @return Item
-     */
     @Override
     public Item getItem() {
         try {
@@ -169,11 +140,6 @@ public class OneDriveItemImpl implements OneDriveItem {
         return item;
     }
 
-    /**
-     * Get ItemAddress
-     * 
-     * @return ItemAddress
-     */
     @Override
     public ItemAddress getAddress() {
         return new IdAddress(itemId);

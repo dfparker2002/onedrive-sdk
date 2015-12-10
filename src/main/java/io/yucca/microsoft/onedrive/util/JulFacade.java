@@ -24,25 +24,25 @@ import org.slf4j.Logger;
  */
 public class JulFacade extends java.util.logging.Logger {
 
-    private final Logger LOG;
+    private final Logger log;
 
     private boolean debug = true;
 
-    public JulFacade(Logger LOG) {
-        super(LOG.getName(), null);
-        this.LOG = LOG;
+    public JulFacade(Logger log) {
+        super(log.getName(), null);
+        this.log = log;
     }
 
     public JulFacade(Logger LOG, boolean debug) {
         super(LOG.getName(), null);
         this.debug = debug;
-        this.LOG = LOG;
+        this.log = LOG;
     }
 
     @Override
     public void info(String msg) {
         if (debug) {
-            LOG.info(msg);
+            log.info(msg);
         }
     }
 }

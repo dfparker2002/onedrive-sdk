@@ -105,7 +105,11 @@ public class Range {
                 // initial range
                 // if size is smaller than length use size, otherwise use length
                 // meaning all contents fits in one range
-                upper = (size < length) ? upper = size - 1 : length - 1;
+                if (size < length) {
+                    upper = size - 1;
+                } else {
+                    upper = length - 1;
+                }
             } else if ((upper + size) < length) {
                 // inner ranges
                 lower += size;

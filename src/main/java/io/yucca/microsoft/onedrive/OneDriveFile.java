@@ -38,9 +38,9 @@ public class OneDriveFile implements OneDriveContent {
     private final String name;
 
     /**
-     * Constructor
+     * Construct an OneDriveFile based on filename
      * 
-     * @param name String
+     * @param name String filename
      * @throws FileNotFoundException if the file does not exist
      */
     public OneDriveFile(String name) throws FileNotFoundException {
@@ -50,9 +50,9 @@ public class OneDriveFile implements OneDriveContent {
     }
 
     /**
-     * Constructor
+     * Construct an OneDriveFile based on path
      * 
-     * @param file Path
+     * @param file Path path to the file
      * @throws FileNotFoundException if the file does not exist
      */
     public OneDriveFile(Path file) throws FileNotFoundException {
@@ -62,10 +62,10 @@ public class OneDriveFile implements OneDriveContent {
     }
 
     /**
-     * Constructor
+     * Construct an OneDriveFile based on path and filename
      * 
-     * @param file Path
-     * @param name String
+     * @param file Path path to the file
+     * @param name String filename used in OneDrive
      * @throws FileNotFoundException if the file does not exist
      */
     public OneDriveFile(Path file, String name) throws FileNotFoundException {

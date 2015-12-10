@@ -29,6 +29,9 @@ import java.util.TimeZone;
  */
 public final class ISO8061 {
 
+    private ISO8061() {
+    }
+
     /**
      * Convert Calendar to ISO 8601 String in format
      * "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
@@ -38,6 +41,19 @@ public final class ISO8061 {
      */
     public static String fromCalendar(final Calendar calendar) {
         calendar.setTimeZone(TimeZone.getTimeZone("Z"));
+        return String.format("%tFT%<tT.%<tLZ", calendar, calendar, calendar);
+    }
+
+    /**
+     * Convert ms (epoch) to ISO 8601 String in format
+     * "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+     * 
+     * @param ms long time since epoch
+     * @return String ISO8601
+     */
+    public static String fromMillis(long ms) {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Z"));
+        calendar.setTimeInMillis(ms);
         return String.format("%tFT%<tT.%<tLZ", calendar, calendar, calendar);
     }
 

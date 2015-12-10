@@ -29,6 +29,8 @@ import java.util.Map;
  */
 public final class URLHelper {
 
+    private static final String UTF_8 = "UTF-8";
+
     private URLHelper() {
     }
 
@@ -36,34 +38,36 @@ public final class URLHelper {
      * Extract query parameters from an URL
      * 
      * <pre>
-     * Based on: https://stackoverflow.com/questions/13592236/parse-the-uri-string-into-name-value-collection-in-java
+     * Based on: <a href="https://stackoverflow.com/questions/13592236/parse-the-uri-string-into-name-value-collection-in-java">https://stackoverflow.com/questions/13592236/parse-the-uri-string-into-name-value-collection-in-java</a>
      * </pre>
      * 
      * @param url URL
      * @return Map<String, String> query parameter map
      */
     public static Map<String, String> splitQuery(URL url) {
-        Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+        Map<String, String> queryPairs = new LinkedHashMap<String, String>();
         String query = url.getQuery();
         String[] pairs = query.split("&");
         for (String pair : pairs) {
             int idx = pair.indexOf("=");
             try {
-                query_pairs
-                    .put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
-                         URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+                queryPairs
+                    .put(URLDecoder.decode(pair.substring(0, idx), UTF_8),
+                         URLDecoder.decode(pair.substring(idx + 1), UTF_8));
             } catch (UnsupportedEncodingException e) {
                 assert false : "should never happen";
             }
         }
-        return query_pairs;
+        return queryPairs;
     }
 
     /**
      * Encode a String
      * <p>
-     * based on:
-     * {@link https://stackoverflow.com/questions/14321873/java-url-encoding-urlencoder-vs-uri}
+     * based on: See <a href=
+     * "https://stackoverflow.com/questions/14321873/java-url-encoding-urlencoder-vs-uri">
+     * https://stackoverflow.com/questions/14321873/java-url-encoding-urlencoder
+     * -vs-uri</a>
      * </p>
      * 
      * @param s String
@@ -72,7 +76,7 @@ public final class URLHelper {
     public static String encodeURIComponent(String s) {
         String result = s;
         try {
-            result = URLEncoder.encode(s, "UTF-8").replaceAll("\\+", "%20")
+            result = URLEncoder.encode(s, UTF_8).replaceAll("\\+", "%20")
                 .replaceAll("\\%21", "!").replaceAll("\\%27", "'")
                 .replaceAll("\\%28", "(").replaceAll("\\%29", ")")
                 .replaceAll("\\%7E", "~");

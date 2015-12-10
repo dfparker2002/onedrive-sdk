@@ -21,6 +21,7 @@ import java.nio.file.Paths;
 import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DeleteAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;

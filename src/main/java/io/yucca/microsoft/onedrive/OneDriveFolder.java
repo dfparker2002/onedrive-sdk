@@ -18,6 +18,7 @@ package io.yucca.microsoft.onedrive;
 import java.util.Collection;
 import java.util.List;
 
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
@@ -38,16 +39,14 @@ public interface OneDriveFolder extends OneDriveItem {
      * @return OneDriveFolder copied folder
      */
     @Override
-    OneDriveFolder copy(OneDriveFolderImpl destination, String name);
+    OneDriveFolder copy(OneDriveFolder destination, String name);
 
     /**
      * Create a new folder inside this folder
      * 
-     * @param name String name of the folder @param behaviour ConflictBehavior
-     *            behaviour if a naming conflict occurs, if {@code null} then
-     *            defaults to {@link ConflictBehavior#FAIL}
-     * @param behavior ConflictBehavior behaviour if a naming conflict occurs,
-     *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
+     * @param name String name of the folder
+     * @param behavior ConflictBehavior behavior if a naming conflict occurs, if
+     *            {@code null} then default to {@link ConflictBehavior#FAIL}
      * @return OneDriveFolder created folder
      */
     OneDriveFolder createFolder(String name, ConflictBehavior behavior);
@@ -64,10 +63,26 @@ public interface OneDriveFolder extends OneDriveItem {
     /**
      * Get a folder located inside this folder
      * 
+     * @param address ItemAddress address of item, relative to this folder
+     * @return OneDriveFolder
+     */
+    OneDriveFolder getFolder(ItemAddress address);
+
+    /**
+     * Get a folder located inside this folder
+     * 
      * @param path String name or path of folder, relative to this folder
      * @return OneDriveFolder
      */
     OneDriveFolder getFolder(String path);
+
+    /**
+     * Get an item inside this folder
+     * 
+     * @param address ItemAddress address of item, relative to this folder
+     * @return OneDriveItem
+     */
+    OneDriveItem getItem(ItemAddress address);
 
     /**
      * Get an item inside this folder
@@ -84,7 +99,7 @@ public interface OneDriveFolder extends OneDriveItem {
      *            the result is returned
      * @return Collection<OneDriveItem>
      */
-    Collection<OneDriveItemImpl> listChildren(QueryParameters parameters);
+    Collection<OneDriveItem> listChildren(QueryParameters parameters);
 
     /**
      * Delete this folder and (recursively) all the children contents
@@ -93,7 +108,7 @@ public interface OneDriveFolder extends OneDriveItem {
     void delete();
 
     /**
-     * Download of a folder is unsupported
+     * Downloading a folder is unsupported for now
      * 
      * @throws UnsupportedOperationException
      */
@@ -101,28 +116,28 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveContent download();
 
     /**
-     * Move this folder to destination
+     * Move this folder to the destination folder
      * 
      * @param destination OneDriveFolder
-     * @return OneDriveFolder moved item
+     * @return OneDriveFolder moved folder
      */
     @Override
-    OneDriveFolder move(OneDriveFolderImpl destination);
+    OneDriveFolder move(OneDriveFolder destination);
 
     /**
      * Move this folder to special folder
      * 
      * @param destination SpecialFolder
-     * @return OneDriveFolder moved item
+     * @return OneDriveFolder moved folder
      */
     @Override
     OneDriveFolder move(SpecialFolder destination);
 
     /**
-     * Move this folder to root of Drive
+     * Move this folder to root of the drive
      * 
      * @param destination OneDrive
-     * @return OneDriveFolder moved item
+     * @return OneDriveFolder moved folder
      */
     @Override
     OneDriveFolder move(OneDrive destination);
@@ -143,20 +158,20 @@ public interface OneDriveFolder extends OneDriveItem {
      *            the result is returned
      * @return Collection<OneDriveItem> results
      */
-    List<OneDriveItemImpl> search(String query, QueryParameters parameters);
+    List<OneDriveItem> search(String query, QueryParameters parameters);
 
     /**
      * Upload the content into this folder
      * 
      * @param content OneDriveContent
-     * @param behavior ConflictBehavior behaviour if a naming conflict occurs,
-     *            if {@code null} then defaults to {@link ConflictBehavior#FAIL}
+     * @param behavior ConflictBehavior behavior if a naming conflict occurs, if
+     *            {@code null} then default to {@link ConflictBehavior#FAIL}
      * @return OneDriveItem uploaded item
      */
     OneDriveItem upload(OneDriveContent content, ConflictBehavior behavior);
 
     /**
-     * Upload the content into this folder, if the file already exist uploading
+     * Upload the content into this folder, if the file already exists uploading
      * fails
      * 
      * @param content OneDriveContent

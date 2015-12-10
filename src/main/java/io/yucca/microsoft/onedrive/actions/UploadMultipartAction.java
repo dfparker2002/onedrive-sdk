@@ -30,11 +30,11 @@ import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.OneDriveFile;
 import io.yucca.microsoft.onedrive.QueryParameters;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.facets.FileFacet;

@@ -22,7 +22,6 @@ import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -50,8 +49,7 @@ public class OneDriveContentMessageBodyReader
                                     MediaType mediaType,
                                     MultivaluedMap<String, String> httpHeaders,
                                     InputStream entityStream)
-                                        throws IOException,
-                                        WebApplicationException {
+                                        throws IOException {
         return new OneDriveInputStream(entityStream, getFilename(httpHeaders),
                                        getLength(httpHeaders));
     }

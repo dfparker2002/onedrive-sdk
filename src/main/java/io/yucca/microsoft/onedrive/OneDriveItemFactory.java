@@ -18,8 +18,9 @@ package io.yucca.microsoft.onedrive;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * OneDriveItemFactory
- *
+ * OneDriveItemFactory, factory to build an OneDriveItem type:
+ * {@link OneDriveItem} or {@link OneDriveFolder}
+ * 
  * @author yucca.io
  */
 public final class OneDriveItemFactory {
@@ -28,14 +29,15 @@ public final class OneDriveItemFactory {
     }
 
     /**
-     * Factory method to build an OneDriveItem type (file or folder)
+     * Construct a new OneDriveItem instance based on item type (determined by
+     * available facets)
      * 
      * @param api OneDriveAPIConnection connection to the OneDrive API
      * @param item Item
      * @return OneDriveItem
      */
-    public static final OneDriveItemImpl build(OneDriveAPIConnection api,
-                                               Item item) {
+    public static final OneDriveItem newInstance(OneDriveAPIConnection api,
+                                           Item item) {
         if (item.isFile()) {
             return new OneDriveItemImpl(api, item);
         } else if (item.isDirectory()) {

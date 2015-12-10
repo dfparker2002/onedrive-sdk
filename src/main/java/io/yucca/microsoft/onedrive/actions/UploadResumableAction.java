@@ -30,21 +30,20 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.OneDriveFile;
-import io.yucca.microsoft.onedrive.OneDriveResumableUploadException;
 import io.yucca.microsoft.onedrive.QueryParameters;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.io.FileFragmentStreamingOutput;
 import io.yucca.microsoft.onedrive.io.Range;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 import io.yucca.microsoft.onedrive.resources.UploadSession;
-import io.yucca.microsoft.onedrive.util.ExponentionalBackOffWaitStrategy;
+import io.yucca.microsoft.onedrive.util.SimpleBackOffWaitStrategy;
 
 /**
  * Action to upload item content larger than 100MB. Content is uploaded in
@@ -231,12 +230,12 @@ public class UploadResumableAction extends AbstractAction
         throws OneDriveResumableUploadException, IOException {
 
         int unknownFailureCount = 0;
-        ExponentionalBackOffWaitStrategy waitStrategy = new ExponentionalBackOffWaitStrategy();
+        SimpleBackOffWaitStrategy waitStrategy = new SimpleBackOffWaitStrategy();
         Set<Range> ranges = Range.getRanges(maxFragmentSize,
                                             content.getLength());
 
         // loop over ranges until all fragments are uploaded
-        while (ranges.size() > 0) {
+        while (!ranges.isEmpty()) {
             Range range = ranges.iterator().next();
             Response response = streamFragment(content, range, session);
             if (equalsStatus(response, Status.ACCEPTED)) {

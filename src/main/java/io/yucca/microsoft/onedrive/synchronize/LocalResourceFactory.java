@@ -16,45 +16,79 @@
 package io.yucca.microsoft.onedrive.synchronize;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.nio.file.Path;
 
+import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.OneDriveException;
+import io.yucca.microsoft.onedrive.actions.DownloadAction;
+import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
+import io.yucca.microsoft.onedrive.resources.ItemReference;
 
 /**
  * LocalResourceFactory
  * 
  * @author yucca.io
  */
-public class LocalResourceFactory {
+public final class LocalResourceFactory {
+
+    private LocalResourceFactory() {
+    }
 
     /**
      * Factory method to build an LocalItem (file or folder) based on Item
      * 
-     * @param item Item
-     * @param content OneDriveContent file contents, {@code null} for folders
-     * @param parent LocalResource parent folder or drive
-     * @return LocalItem
-     * @throws OneDriveException on unknown type of Item has invalid timestamps
+     * @param item Item from OneDrive
+     * @param api OneDriveAPIConnection connection to OneDrive API
+     * @param repository LocalDriveRepository to local repository
+     * @return LocalItem instantiated item
+     * @throws OneDriveException on unknown type
      */
-    public final static LocalItem build(Item item, OneDriveContent content,
-                                        LocalResource parent)
-                                            throws IOException {
-        try {
-            if (item.isFile()) {
-                return new LocalFile(item, content, parent);
-            } else if (item.isDirectory()) {
-                return new LocalFolder(item, parent);
-            } else {
-                throw new OneDriveException("Unsupported type for item: "
-                                            + item.getId() + ", name: "
-                                            + item.getName());
-            }
-        } catch (ParseException e) {
-            throw new OneDriveException("Invalid modification timestamp for item: "
+    public static final LocalItem newInstance(Item item,
+                                              OneDriveAPIConnection api,
+                                              LocalDriveSynchronizer repository)
+                                                  throws IOException {
+        Path path = itemPath(item, repository);
+        if (item.isFile()) {
+            OneDriveContent content = download(item, api);
+            return new LocalFileImpl(path, item, content, repository);
+        } else if (item.isDirectory()) {
+            return new LocalFolderImpl(path, item, repository);
+        } else {
+            throw new OneDriveException("Unsupported type for item: "
                                         + item.getId() + ", name: "
                                         + item.getName());
         }
     }
+
+    /**
+     * Get the local path for an Item.
+     * <p>
+     * The local parent folder is acquired over a lookup with the Id field of
+     * {@link Item#getParentReference()}. For the lookup to succeed the folder
+     * must be registered under Id, either as a manual call to
+     * {@link #registerFolder(LocalFolder)} or via {@link #walkPath()}
+     * </p>
+     * 
+     * @param item Item
+     * @return Path
+     */
+    private static Path itemPath(Item item, LocalDriveSynchronizer repository) {
+        ItemReference parentRef = item.getParentReference();
+        if (parentRef == null) {
+            throw new OneDriveException("Item: " + item
+                                        + " has no ParentReference, cannot lookup parent.");
+        }
+        LocalFolder parent = repository.getLocalFolder(parentRef.getId());
+        return parent.resolve(item.getName());
+    }
+
+    private static OneDriveContent download(Item item,
+                                            OneDriveAPIConnection api) {
+        ItemAddress address = new IdAddress(item.getId());
+        return new DownloadAction(api, address).call();
+    }
+
 }

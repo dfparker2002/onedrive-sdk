@@ -49,6 +49,13 @@ public class ISO8061Test {
     }
 
     @Test
+    public void testFromMillis() {
+        String iso8601 = ISO8061.fromMillis(ISO8601_DATETIME_MS);
+        assertEquals(ISO8601_DATETIME_EXP, iso8601);
+
+    }
+    
+    @Test
     public void testToCalendar() throws ParseException {
         Calendar c = ISO8061.toCalendar(ISO8601_DATETIME);
         assertEquals(cal, c);

@@ -27,7 +27,10 @@ import java.nio.file.attribute.UserDefinedFileAttributeView;
  * 
  * @author yucca.io
  */
-public class MetadataUtil {
+public final class MetadataUtil {
+
+    private MetadataUtil() {
+    }
 
     /**
      * Read a user defined metadata attribute

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive;
+package io.yucca.microsoft.onedrive.addressing;
 
 /**
  * ItemAdress, defines an Item address and method of adressing like id, path,

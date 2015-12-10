@@ -17,15 +17,28 @@ package io.yucca.microsoft.onedrive.synchronize;
 
 import java.io.IOException;
 
-import io.yucca.microsoft.onedrive.OneDriveContent;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * Represent a LocalItem like a file or folder
+ * LocalItem acts a local replica of an item stored in OneDrive (file or folder)
  * 
  * @author yucca.io
  */
 public interface LocalItem extends LocalResource {
+
+    /**
+     * Create the item
+     * 
+     * @throws IOException
+     */
+    void create() throws IOException;
+
+    /**
+     * Deletes the item
+     * 
+     * @throws IOException if deletion fails
+     */
+    void delete() throws IOException;
 
     /**
      * Determine if item exists
@@ -35,28 +48,13 @@ public interface LocalItem extends LocalResource {
     boolean exists();
 
     /**
-     * Update the content and metadata of this local item
+     * Determine if the item has been modified with regards to the Item, this is
+     * done by comparing the sha1 hashes of the file and the item
      * 
-     * @param content OneDriveContent updated content
-     * @throws IOException if writing fails
+     * @param item Item
+     * @return booelan true is modified
      */
-    void update(Item item, OneDriveContent content, LocalResource parent)
-        throws IOException;
-
-    /**
-     * Deletes this local item
-     * 
-     * @throws IOException if deletion fails
-     */
-    void delete() throws IOException;
-
-    /**
-     * Rename this local item
-     * 
-     * @param name String new name
-     * @throws IOException if rename fails
-     */
-    void rename(String name) throws IOException;
+    boolean isContentModified(Item item) throws IOException;
 
     /**
      * Determine modification status in regard to {@link Item}
@@ -68,13 +66,33 @@ public interface LocalItem extends LocalResource {
     ModificationStatus lastModificationStatus(Item item);
 
     /**
-     * Determine if this local item content has been modified with regared to
-     * {@link Item}
+     * Rename this local item
+     * 
+     * @param name String new name
+     * @throws IOException if rename fails
+     */
+    void rename(String name) throws IOException;
+
+    /**
+     * Only updates folder metadata attributes based on Item
      * 
      * @param item Item
-     * @return true if content differs
-     * @throws IOException if file cannot be read
+     * @throws IOException if writing metadata fails
      */
-    boolean isContentModified(Item item) throws IOException;
+    void update(Item item) throws IOException;
 
+    /**
+     * Relate this folder with the OneDrive item, setting the metadata
+     * properties.
+     * 
+     * @param item Item
+     */
+    void relateWith(Item item);
+
+    /**
+     * Update the properties of Item based on folder
+     * 
+     * @param item Item
+     */
+    void updateItem(Item item);
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources;
+package io.yucca.microsoft.onedrive;
 
 import java.net.URL;
 import java.util.LinkedHashMap;
@@ -21,9 +21,11 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.yucca.microsoft.onedrive.resources.Item;
+
 /**
- * SyncResponse, the resource includes a collection of items that have changes
- * and information about how to retrieve the next set of changes.
+ * SyncResponse includes a collection of items that have changes and information
+ * about how to retrieve the next set of changes.
  *
  * @author yucca.io
  */
@@ -53,7 +55,7 @@ public class SyncResponse extends ItemCollection {
 
     /**
      * Convert the syncResponse to a LinkedHashMap where items are identified by
-     * Id
+     * id
      * 
      * @return LinkedHashMap<String, Item>
      */

@@ -34,7 +34,7 @@ public class OneDriveIT {
 
     private static final String CONFIGURATIONFILE = "src/test/resources/onedrive-integrationtest.properties";
 
-    private OneDriveAPIConnectionImpl api;
+    private OneDriveAPIConnection api;
 
     private OneDriveConfiguration configuration;
 
@@ -124,7 +124,7 @@ public class OneDriveIT {
     public void testListChildren() {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
         assertNotNull(drive);
-        Collection<OneDriveItemImpl> children = drive
+        Collection<OneDriveItem> children = drive
             .listChildren(TestMother.listChildrenQueryParameters());
         assertNotNull(children);
         assertTrue(children.size() > 0);
@@ -134,7 +134,7 @@ public class OneDriveIT {
     public void testSearch() {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
         assertNotNull(drive);
-        Collection<OneDriveItemImpl> children = drive
+        Collection<OneDriveItem> children = drive
             .search("e", TestMother.searchQueryParameters());
         assertNotNull(children);
         assertTrue(children.size() > 0);

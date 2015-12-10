@@ -19,10 +19,12 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
 import io.yucca.microsoft.onedrive.ItemIterable;
+import io.yucca.microsoft.onedrive.OneDriveException;
+import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.TestMother;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
 
@@ -52,4 +54,22 @@ public class SearchActionIT extends AbstractActionIT {
         }
     }
 
+    /**
+     * Test case to determine if loading an ItemIterable.nextCollection does not
+     * give back an empty collection. 
+     * 
+     * @throws OneDriveException
+     */
+    // @Test(expected = NoSuchElementException.class)
+    @Test
+    public void testSearchTopEmptyCollection() {
+        QueryParameters parameters = QueryParameters.Builder
+            .newQueryParameters().top(1).build();
+        SearchAction action = new SearchAction(api, "is", parameters);
+        ItemIterable result = action.call();
+        assertNotNull(result);
+        for (Item item : result) {
+            assertNotNull(item);
+        }
+    }
 }

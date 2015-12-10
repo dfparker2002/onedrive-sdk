@@ -32,10 +32,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 /**
- * Factory to create a Jersey Client and ObjectMapper
+ * Factory creating a Jersey Client and ObjectMapper
  * 
  * <pre>
  * based on:
@@ -104,10 +104,10 @@ public final class ClientFactory {
     /**
      * Create an ObjectMapper
      * 
-     * @param jacksonProvider JacksonJaxbJsonProvider
+     * @param jacksonProvider JacksonJsonProvider
      * @return ObjectMapper
      */
-    public static ObjectMapper createMapper(JacksonJaxbJsonProvider jacksonProvider) {
+    public static ObjectMapper createMapper(JacksonJsonProvider jacksonProvider) {
         ObjectMapper mapper = new ObjectMapper();
         // prevents inclusion of null values on serialization
         mapper.setSerializationInclusion(Include.NON_NULL);

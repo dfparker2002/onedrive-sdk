@@ -116,10 +116,10 @@ public class OneDriveSession {
     private long lastRefresh;
 
     /**
-     * OneDriveOAuthHelper
+     * Construct an OneDriveSession
      * 
      * @param configuration OneDriveConfiguration
-     * @param client Client client in working with the OneDriveAPI
+     * @param client Client used to connect to the OneDrive API
      */
     public OneDriveSession(OneDriveConfiguration configuration, Client client) {
         LOG.info("Initializing OneDrive session");
@@ -133,20 +133,15 @@ public class OneDriveSession {
         this.initialize();
     }
 
-    /**
-     * Initialize the OAuth2.0 flow
-     */
     private void initialize() {
-        initFlow(client);
+        initFlow();
         initTokenResult(configuration.getRefreshToken());
     }
 
     /**
      * Initialize the OAuth2 flow
-     * 
-     * @param client
      */
-    private void initFlow(Client client) {
+    private void initFlow() {
         LOG.info("Initializing authorization flow by url: {}",
                  ONEDRIVE_OAUTH20_AUTH_URI);
         if (flow == null) {
@@ -253,7 +248,7 @@ public class OneDriveSession {
     /**
      * Determine if a accessToken is available
      * 
-     * @return boolean
+     * @return boolean true if available
      */
     boolean hasAccessToken() {
         return accessToken != null && accessToken.getAccessToken() != null;
@@ -262,7 +257,7 @@ public class OneDriveSession {
     /**
      * Determine if a refreshToken is available
      * 
-     * @return boolean
+     * @return boolean true if available
      */
     boolean hasRefreshToken() {
         return accessToken != null && accessToken.getRefreshToken() != null;

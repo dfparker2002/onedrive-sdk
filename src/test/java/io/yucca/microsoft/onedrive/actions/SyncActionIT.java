@@ -19,17 +19,17 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import io.yucca.microsoft.onedrive.ItemAddress;
+import io.yucca.microsoft.onedrive.SyncResponse;
 import io.yucca.microsoft.onedrive.TestMother;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.SyncResponse;
 
 public class SyncActionIT extends AbstractActionIT {
 
     @Test
-    public void testSyncChangesById() {
+    public void testSyncChangesById() throws ResyncNeededException {
         ItemAddress itemAddress = new IdAddress(apiTestFolderId);
         SyncAction action = new SyncAction(api, itemAddress, null, null);
         SyncResponse result = action.call();
@@ -41,7 +41,7 @@ public class SyncActionIT extends AbstractActionIT {
     }
 
     @Test
-    public void testSyncChangesByPath() {
+    public void testSyncChangesByPath() throws ResyncNeededException {
         ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
         SyncAction action = new SyncAction(api, itemAddress, null, null);
         SyncResponse result = action.call();
@@ -52,4 +52,30 @@ public class SyncActionIT extends AbstractActionIT {
         }
     }
 
+    @Test(expected = ResyncNeededException.class)
+    public void testSyncOldToken() throws ResyncNeededException {
+        ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
+        SyncAction action = new SyncAction(api, itemAddress,
+                                           "aTE09NjM1ODI4NjUyMjE2NjM7SUQ9M0QyMzBCNTZBOUUzNjg2QSE1ODkxO0xSPTYzNTgyODY1MjIyODIzO0VQPTU7U089Mg",
+                                           null);
+        action.call();
+    }
+ 
+    @Test
+    public void testResyncByLocation() {
+        try {
+            ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST);
+            SyncAction action = new SyncAction(api, itemAddress,
+                                               "aTE09NjM1ODI4NjUyMjE2NjM7SUQ9M0QyMzBCNTZBOUUzNjg2QSE1ODkxO0xSPTYzNTgyODY1MjIyODIzO0VQPTU7U089Mg",
+                                               null);
+            action.call();
+        } catch (ResyncNeededException e) {
+            SyncResponse result = SyncAction.byURI(api, e.getNextLink());
+            assertNotNull(result);
+            assertNotNull(result.getToken());
+            for (Item item : result) {
+                assertNotNull(item);
+            }
+        }
+    }
 }
