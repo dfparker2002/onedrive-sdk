@@ -63,10 +63,10 @@ public class ItemIterator implements Iterator<Item> {
     }
 
     /**
-     * Determines if the collection has a next item or a link for the next page
-     * collection exists
+     * Determine if the collection has a next item or has a next page
+     * collection.
      * 
-     * @return boolean true if a next item exists
+     * @return boolean true if item or page collection exists
      */
     @Override
     public boolean hasNext() {

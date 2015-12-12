@@ -57,7 +57,7 @@ public class OneDriveAPIConnectionImpl
 
     /**
      * Constructs the connection to the OneDrive API, the authorization is
-     * delayed until the first API request
+     * delayed until the first API request.
      * 
      * @param configuration OneDriveConfiguration
      * @throws ConfigurationException if configuration is invalid
@@ -72,7 +72,7 @@ public class OneDriveAPIConnectionImpl
     }
 
     /**
-     * Initialize Jersey Client
+     * Initialize Jersey Client.
      */
     private void initialiseClient() {
         LOG.info("Initializing Jersey client");

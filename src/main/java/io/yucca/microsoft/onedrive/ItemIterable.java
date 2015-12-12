@@ -59,7 +59,7 @@ public interface ItemIterable extends Iterable<Item> {
     ItemIterable setApi(OneDriveAPIConnection api);
 
     /**
-     * See if collection has a next page
+     * Determine if collection has a next page
      * 
      * @return boolean true
      */

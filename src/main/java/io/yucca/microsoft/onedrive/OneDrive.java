@@ -26,14 +26,14 @@ import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 import io.yucca.microsoft.onedrive.resources.facets.QuotaFacet;
 
 /**
- * OneDrive represents a Drive in an OneDrive Personal or Business
+ * OneDrive represents a Drive in an OneDrive Personal or Business.
  *
  * @author yucca.io
  */
 public interface OneDrive {
 
     /**
-     * Create a new folder inside this drive
+     * Create a new folder inside this drive.
      * 
      * @param name String name of the folder
      * @param behaviour ConflictBehavior behaviour if a naming conflict occurs,
@@ -44,7 +44,7 @@ public interface OneDrive {
 
     /**
      * Create a new folder inside this drive, if the folder already exists the
-     * creation fails
+     * creation fails.
      * 
      * @param name String name of the folder
      * @return OneDriveFolder created folder
@@ -52,14 +52,14 @@ public interface OneDrive {
     OneDriveFolder createFolder(String name);
 
     /**
-     * Get the root folder of this drive
+     * Get the root folder of this drive.
      * 
      * @return OneDriveFolder
      */
     OneDriveFolder getRootFolder();
 
     /**
-     * Get a special folder in this drive
+     * Get a special folder in this drive.
      * 
      * @param folder SpecialFolder
      * @param parameters QueryParameters optional parameter to influence the way
@@ -70,7 +70,7 @@ public interface OneDrive {
                                     QueryParameters parameters);
 
     /**
-     * Get a folder by address
+     * Get a folder by address.
      * 
      * @param address ItemAddress address of item
      * @return OneDriveFolder
@@ -78,7 +78,7 @@ public interface OneDrive {
     OneDriveFolder getFolder(ItemAddress address);
 
     /**
-     * Get a folder by path
+     * Get a folder by path.
      * 
      * @param path String path to a folder relative to the drive root i.e.
      *            "Documents"
@@ -87,7 +87,7 @@ public interface OneDrive {
     OneDriveFolder getFolder(String path);
 
     /**
-     * Get an item by address
+     * Get an item by address.
      * 
      * @param address ItemAddress address of item
      * @return OneDriveItem
@@ -95,7 +95,7 @@ public interface OneDrive {
     OneDriveItem getItem(ItemAddress address);
 
     /**
-     * Get an item by path
+     * Get an item by path.
      * 
      * @param path String path to item relative to the drive root
      * @return OneDriveItem
@@ -103,7 +103,7 @@ public interface OneDrive {
     OneDriveItem getItem(String path);
 
     /**
-     * Get all children in this drive
+     * Get all children in this drive.
      * 
      * @param parameters QueryParameters optional parameter to influence the way
      *            the result is returned
@@ -112,14 +112,14 @@ public interface OneDrive {
     Collection<OneDriveItem> listChildren(QueryParameters parameters);
 
     /**
-     * Get all children in this drive
+     * Get all children in this drive.
      * 
      * @return Collection<OneDriveItem>
      */
     Collection<OneDriveItem> listChildren();
 
     /**
-     * Search for items in this drive matching the query
+     * Search for items in this drive matching the query.
      * 
      * @param query String search query
      * @param parameters QueryParameters optional parameter to influence the way
@@ -129,7 +129,7 @@ public interface OneDrive {
     List<OneDriveItem> search(String query, QueryParameters parameters);
 
     /**
-     * Upload the content into the drive root
+     * Upload the content into the drive root.
      * 
      * @param content OneDriveContent
      * @param behavior ConflictBehavior behaviour if a naming conflict occurs,
@@ -140,7 +140,7 @@ public interface OneDrive {
 
     /**
      * Upload the content into the drive root, if the file already exists
-     * uploading fails
+     * uploading fails.
      * 
      * @param content OneDriveContent
      * @return OneDriveItem uploaded item
@@ -148,7 +148,7 @@ public interface OneDrive {
     OneDriveItem upload(OneDriveContent content);
 
     /**
-     * Get the address for the drive
+     * Get the address for the drive.
      * 
      * @return ItemAddress
      */
@@ -156,28 +156,28 @@ public interface OneDrive {
 
     /**
      * Get drive resource and cache it. This will become stale over time,
-     * because no eTag value if available to detect modifications of the entity
+     * because no eTag value if available to detect modifications of the entity.
      * 
      * @return Drive
      */
     Drive getDrive();
 
     /**
-     * Get user information
+     * Get user information.
      * 
      * @return Identity
      */
     Identity getUser();
 
     /**
-     * Get quota information
+     * Get quota information.
      * 
      * @return QuotaFacet
      */
     QuotaFacet getQuota();
 
     /**
-     * Get drive identifier
+     * Get drive identifier.
      * 
      * @return String
      */

@@ -15,6 +15,7 @@
  */
 package io.yucca.microsoft.onedrive;
 
+import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +26,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import javax.ws.rs.core.Response;
+
 /**
  * OneDriveFile represents a file that can be uploaded or downloaded from
- * OneDrive
+ * OneDrive. This explicitly extends {@link Closeable} to prevent auto closing
+ * of the @{link {@link InputStream} by {@link Response#readEntity(Class)}
  *
  * @author yucca.io
  */
@@ -74,6 +78,11 @@ public class OneDriveFile implements OneDriveContent {
         checkFileExistance(name);
     }
 
+    /**
+     * Get the path to the file
+     * 
+     * @return Path
+     */
     public Path getFile() {
         return file;
     }
@@ -110,6 +119,11 @@ public class OneDriveFile implements OneDriveContent {
         }
     }
 
+    /**
+     * Determine if file exists
+     * 
+     * @return boolean true if exists
+     */
     public boolean exists() {
         return Files.exists(file, LinkOption.NOFOLLOW_LINKS);
     }

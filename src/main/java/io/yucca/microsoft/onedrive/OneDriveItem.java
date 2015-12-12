@@ -20,7 +20,7 @@ import io.yucca.microsoft.onedrive.resources.Item;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 /**
- * Represent an item stored on OneDrive
+ * Represent an item stored in OneDrive
  *
  * @author yucca.io
  */

@@ -29,15 +29,15 @@ public final class OneDriveItemFactory {
     }
 
     /**
-     * Construct a new OneDriveItem instance based on item type (determined by
-     * available facets)
+     * Construct a new OneDriveItem instance based on item type, which is
+     * determined by the available facets.
      * 
      * @param api OneDriveAPIConnection connection to the OneDrive API
      * @param item Item
      * @return OneDriveItem
      */
     public static final OneDriveItem newInstance(OneDriveAPIConnection api,
-                                           Item item) {
+                                                 Item item) {
         if (item.isFile()) {
             return new OneDriveItemImpl(api, item);
         } else if (item.isDirectory()) {

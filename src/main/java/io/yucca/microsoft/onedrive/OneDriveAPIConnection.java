@@ -37,7 +37,7 @@ public interface OneDriveAPIConnection {
     Client getClient();
 
     /**
-     * Determine if client is authorized
+     * Determine if client is authorized.
      * 
      * @return true if authorized
      */
@@ -59,17 +59,17 @@ public interface OneDriveAPIConnection {
     WebTarget webTarget(URI uri);
 
     /**
-     * Closes the client with all webTargets
+     * Closes the client with all webTargets.
      */
     void close();
 
     /**
-     * Logout from OneDrive API
+     * Logout from OneDrive API.
      */
     void logOut();
 
     /**
-     * Get ObjectMapper
+     * Get ObjectMapper.
      * 
      * @return ObjectMapper
      */

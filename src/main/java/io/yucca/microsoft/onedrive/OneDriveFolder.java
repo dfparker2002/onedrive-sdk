@@ -31,7 +31,7 @@ import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 public interface OneDriveFolder extends OneDriveItem {
 
     /**
-     * Copy this folder recursively to the destination folder
+     * Copy this folder recursively to the destination folder.
      * 
      * @param destination OneDriveFolder
      * @param name String name of the new folder, if {@code null} the same name
@@ -42,7 +42,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveFolder copy(OneDriveFolder destination, String name);
 
     /**
-     * Create a new folder inside this folder
+     * Create a new folder inside this folder.
      * 
      * @param name String name of the folder
      * @param behavior ConflictBehavior behavior if a naming conflict occurs, if
@@ -53,7 +53,7 @@ public interface OneDriveFolder extends OneDriveItem {
 
     /**
      * Create a new folder inside this folder, if the folder already exists
-     * creation fails
+     * creation should fail.
      * 
      * @param name String name of the folder
      * @return OneDriveFolder created folder
@@ -61,7 +61,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveFolder createFolder(String name);
 
     /**
-     * Get a folder located inside this folder
+     * Get a folder located inside this folder.
      * 
      * @param address ItemAddress address of item, relative to this folder
      * @return OneDriveFolder
@@ -69,7 +69,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveFolder getFolder(ItemAddress address);
 
     /**
-     * Get a folder located inside this folder
+     * Get a folder located inside this folder.
      * 
      * @param path String name or path of folder, relative to this folder
      * @return OneDriveFolder
@@ -77,7 +77,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveFolder getFolder(String path);
 
     /**
-     * Get an item inside this folder
+     * Get an item inside this folder.
      * 
      * @param address ItemAddress address of item, relative to this folder
      * @return OneDriveItem
@@ -85,7 +85,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveItem getItem(ItemAddress address);
 
     /**
-     * Get an item inside this folder
+     * Get an item inside this folder.
      * 
      * @param path String name or path of item, relative to this folder
      * @return OneDriveItem
@@ -93,7 +93,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveItem getItem(String path);
 
     /**
-     * Get all children in this folder
+     * Get all children in this folder.
      * 
      * @param parameters QueryParameters optional parameter to influence the way
      *            the result is returned
@@ -102,13 +102,13 @@ public interface OneDriveFolder extends OneDriveItem {
     Collection<OneDriveItem> listChildren(QueryParameters parameters);
 
     /**
-     * Delete this folder and (recursively) all the children contents
+     * Delete this folder and (recursively) all the children contents.
      */
     @Override
     void delete();
 
     /**
-     * Downloading a folder is unsupported for now
+     * Downloading a folder is unsupported.
      * 
      * @throws UnsupportedOperationException
      */
@@ -116,7 +116,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveContent download();
 
     /**
-     * Move this folder to the destination folder
+     * Move this folder to the destination folder.
      * 
      * @param destination OneDriveFolder
      * @return OneDriveFolder moved folder
@@ -125,7 +125,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveFolder move(OneDriveFolder destination);
 
     /**
-     * Move this folder to special folder
+     * Move this folder to special folder.
      * 
      * @param destination SpecialFolder
      * @return OneDriveFolder moved folder
@@ -134,7 +134,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveFolder move(SpecialFolder destination);
 
     /**
-     * Move this folder to root of the drive
+     * Move this folder to root of the drive.
      * 
      * @param destination OneDrive
      * @return OneDriveFolder moved folder
@@ -143,7 +143,7 @@ public interface OneDriveFolder extends OneDriveItem {
     OneDriveFolder move(OneDrive destination);
 
     /**
-     * Rename the folder
+     * Rename the folder.
      * 
      * @param name String new name
      */
@@ -151,7 +151,7 @@ public interface OneDriveFolder extends OneDriveItem {
     void rename(String name);
 
     /**
-     * Search for items in this folder matching the query
+     * Search for items in this folder matching the query.
      * 
      * @param query String search query
      * @param parameters QueryParameters optional parameter to influence the way
@@ -161,7 +161,7 @@ public interface OneDriveFolder extends OneDriveItem {
     List<OneDriveItem> search(String query, QueryParameters parameters);
 
     /**
-     * Upload the content into this folder
+     * Upload the content into this folder.
      * 
      * @param content OneDriveContent
      * @param behavior ConflictBehavior behavior if a naming conflict occurs, if
@@ -172,7 +172,7 @@ public interface OneDriveFolder extends OneDriveItem {
 
     /**
      * Upload the content into this folder, if the file already exists uploading
-     * fails
+     * fails.
      * 
      * @param content OneDriveContent
      * @return OneDriveItem uploaded item

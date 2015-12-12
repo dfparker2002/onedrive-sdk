@@ -55,7 +55,7 @@ public class SyncResponse extends ItemCollection {
 
     /**
      * Convert the syncResponse to a LinkedHashMap where items are identified by
-     * id
+     * Id.
      * 
      * @return LinkedHashMap<String, Item>
      */

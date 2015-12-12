@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * OneDriveContent represents content that can be uploaded or downloaded from
- * OneDrive. This explicitly extends {@link Closeable} to prevent auto closing
+ * OneDrive. An implementation must implement Closeable to prevent auto closing
  * of the @{link {@link InputStream} by {@link Response#readEntity(Class)}
  * 
  * @author yucca.io
