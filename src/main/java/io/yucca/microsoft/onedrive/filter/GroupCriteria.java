@@ -18,7 +18,7 @@ package io.yucca.microsoft.onedrive.filter;
 import io.yucca.microsoft.onedrive.filter.Filter.Builder;
 
 /**
- * GroupCriteria, represent a grouping filter expression
+ * GroupCriteria, represents a grouping filter expression
  *
  * @author yucca.io
  */

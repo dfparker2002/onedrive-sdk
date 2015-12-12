@@ -16,7 +16,7 @@
 package io.yucca.microsoft.onedrive.filter;
 
 /**
- * LogicalCriteria, presents a logical (and/or) filter expression
+ * LogicalCriteria, represents a logical (and/or) filter expression
  *
  * @author yucca.io
  */
@@ -43,21 +43,21 @@ public class LogicalCriteria implements Criteria {
     }
 
     /**
-     * @return Returns the criteria.
+     * @return Criteria the criteria.
      */
     public Criteria getCriteria() {
         return criteria;
     }
 
     /**
-     * @return Returns the otherCriteria.
+     * @return Criteria the otherCriteria.
      */
     public Criteria getOtherCriteria() {
         return otherCriteria;
     }
 
     /**
-     * @return Returns the operator.
+     * @return Criteria the operator.
      */
     public LogicalOperator getOperator() {
         return operator;

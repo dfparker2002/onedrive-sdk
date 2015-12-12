@@ -18,7 +18,7 @@ package io.yucca.microsoft.onedrive.filter;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * Defines a filter criteria used in filtering a {@link Item} collection
+ * Defines a filter criteria used for filtering a {@link Item} collection
  *
  * @author yucca.io
  */

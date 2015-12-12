@@ -16,7 +16,7 @@ package io.yucca.microsoft.onedrive.filter;
  */
 
 /**
- * Operators used for logical filter expression
+ * Operators used in logical filter expressions
  *
  * @author yucca.io
  */
@@ -31,7 +31,7 @@ public enum LogicalOperator {
     }
 
     /**
-     * @return Returns the operator.
+     * @return String the operator.
      */
     public String getOperator() {
         return operator;

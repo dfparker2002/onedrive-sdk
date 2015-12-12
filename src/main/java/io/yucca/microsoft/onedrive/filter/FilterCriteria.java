@@ -16,7 +16,7 @@
 package io.yucca.microsoft.onedrive.filter;
 
 /**
- * FilterCriteria represent a single filter expression
+ * FilterCriteria represents a single filter expression
  * 
  * @author yucca.io
  */

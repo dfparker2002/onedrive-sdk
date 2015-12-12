@@ -19,7 +19,7 @@ import io.yucca.microsoft.onedrive.filter.GroupCriteria.GroupBuilder;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
- * Filter representation to filter a collection of {@link Item}
+ * Filter representation to filter a {@link Item} collection
  * 
  * @author yucca.io
  */
@@ -32,7 +32,7 @@ public class Filter {
     }
 
     /**
-     * @return Returnst the filter criteria as a String expression
+     * @return Returns the filter criteria as a String expression
      */
     @Override
     public String toString() {

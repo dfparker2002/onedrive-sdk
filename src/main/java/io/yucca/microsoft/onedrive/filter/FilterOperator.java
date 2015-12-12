@@ -16,7 +16,7 @@ package io.yucca.microsoft.onedrive.filter;
  */
 
 /**
- * Operators used for filtering
+ * Operators used in filtering
  *
  * @author yucca.io
  */
@@ -36,7 +36,7 @@ public enum FilterOperator {
     }
 
     /**
-     * @return Returns the operator.
+     * @return String the operator.
      */
     public String getOperator() {
         return operator;
