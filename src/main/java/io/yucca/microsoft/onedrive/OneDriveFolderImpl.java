@@ -144,7 +144,6 @@ public class OneDriveFolderImpl extends OneDriveItemImpl
 
     @Override
     public OneDriveFolder move(OneDrive destination) {
-        // TODO should use DriveAddress for specification of drive
         MoveAction action = new MoveAction(api, getAddress(), null,
                                            new RootAddress());
         return new OneDriveFolderImpl(api, action.call());
