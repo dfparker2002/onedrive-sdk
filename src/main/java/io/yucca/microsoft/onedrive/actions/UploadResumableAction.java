@@ -66,9 +66,9 @@ public class UploadResumableAction extends AbstractAction
 
     public static final String ACTION = "upload.createSession";
 
-    public static final long OPTIMAL_FRAGMENTSIZE_ALIGNMENT = 1024 * 320;
+    public static final long OPTIMAL_FRAGMENTSIZE_ALIGNMENT = 1024L * 320;
 
-    public static final long FRAGMENTSIZE_100MB = 1024 * 1024 * 100;
+    public static final long FRAGMENTSIZE_100MB = 1024L * 1024L * 100;
 
     public static final long FRAGMENTSIZE_4MB = OPTIMAL_FRAGMENTSIZE_ALIGNMENT
                                                 * 12;
