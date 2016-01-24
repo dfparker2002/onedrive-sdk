@@ -28,7 +28,7 @@ import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.LinkType;
-import io.yucca.microsoft.onedrive.resources.facets.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.PermissionFacet;
 
 public class PermissionActionIT extends AbstractActionIT {
 

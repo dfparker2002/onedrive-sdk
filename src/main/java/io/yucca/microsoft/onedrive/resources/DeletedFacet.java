@@ -13,32 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources.facets;
+package io.yucca.microsoft.onedrive.resources;
 
 /**
- * HashesType
+ * DeletedFacet
  *
  * @author yucca.io
  */
-public class HashesFacet {
+public class DeletedFacet {
 
-    private String sha1Hash;
-    private String crc32Hash;
-
-    public String getSha1Hash() {
-        return sha1Hash;
+    Boolean isDeleted() {
+        return true;
     }
-
-    public void setSha1Hash(String sha1Hash) {
-        this.sha1Hash = sha1Hash;
-    }
-
-    public String getCrc32Hash() {
-        return crc32Hash;
-    }
-
-    public void setCrc32Hash(String crc32Hash) {
-        this.crc32Hash = crc32Hash;
-    }
-
 }

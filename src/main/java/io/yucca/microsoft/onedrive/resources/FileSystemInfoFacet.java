@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources.facets;
+package io.yucca.microsoft.onedrive.resources;
 
 /**
- * ImageFacet
+ * FileSystemInfoFacet
  *
  * @author yucca.io
  */
-public class ImageFacet {
+public class FileSystemInfoFacet {
 
-    private Integer width;
-    private Integer height;
+    private String createdDateTime;
+    private String lastModifiedDateTime;
 
-    public Integer getWidth() {
-        return width;
+    public String getCreatedDateTime() {
+        return createdDateTime;
     }
 
-    public void setWidth(Integer width) {
-        this.width = width;
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 
-    public Integer getHeight() {
-        return height;
+    public String getLastModifiedDateTime() {
+        return lastModifiedDateTime;
     }
 
-    public void setHeight(Integer height) {
-        this.height = height;
+    public void setLastModifiedDateTime(String lastModifiedDateTime) {
+        this.lastModifiedDateTime = lastModifiedDateTime;
     }
 
 }

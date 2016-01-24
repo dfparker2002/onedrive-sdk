@@ -13,41 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources.facets;
+package io.yucca.microsoft.onedrive.resources;
 
 /**
- * LocationFacet
+ * FolderFacet
  *
  * @author yucca.io
  */
-public class LocationFacet {
+public class FolderFacet {
 
-    private Float altitude;
-    private Float latitude;
-    private Float longitude;
+    private Long childCount;
 
-    public Float getAltitude() {
-        return altitude;
+    public Long getChildCount() {
+        return childCount;
     }
 
-    public void setAltitude(Float altitude) {
-        this.altitude = altitude;
-    }
-
-    public Float getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Float latitude) {
-        this.latitude = latitude;
-    }
-
-    public Float getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Float longitude) {
-        this.longitude = longitude;
+    public void setChildCount(Long childCount) {
+        this.childCount = childCount;
     }
 
 }

@@ -31,8 +31,8 @@ import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
+import io.yucca.microsoft.onedrive.resources.FolderFacet;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.facets.FolderFacet;
 
 /**
  * Action to create a folder

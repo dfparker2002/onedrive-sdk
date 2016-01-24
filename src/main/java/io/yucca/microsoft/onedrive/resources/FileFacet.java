@@ -13,16 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources.facets;
+package io.yucca.microsoft.onedrive.resources;
 
 /**
- * DeletedFacet
+ * FileFacet
  *
  * @author yucca.io
  */
-public class DeletedFacet {
+public class FileFacet {
 
-    Boolean isDeleted() {
-        return true;
+    private String mimeType;
+    private HashesFacet hashes;
+
+    public String getMimeType() {
+        return mimeType;
     }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public HashesFacet getHashes() {
+        return hashes;
+    }
+
+    public void setHashes(HashesFacet hashes) {
+        this.hashes = hashes;
+    }
+
 }

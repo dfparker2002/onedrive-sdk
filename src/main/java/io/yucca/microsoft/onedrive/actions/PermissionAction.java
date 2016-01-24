@@ -32,7 +32,7 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
-import io.yucca.microsoft.onedrive.resources.facets.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.PermissionFacet;
 
 /**
  * Action to get an Item permission

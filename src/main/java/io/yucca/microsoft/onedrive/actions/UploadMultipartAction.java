@@ -36,8 +36,8 @@ import io.yucca.microsoft.onedrive.OneDriveFile;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
+import io.yucca.microsoft.onedrive.resources.FileFacet;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
 
 /**
  * Action to upload an Item as multipart. Only files below 100MB can be uploaded

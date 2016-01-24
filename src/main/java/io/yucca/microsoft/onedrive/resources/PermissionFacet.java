@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources.facets;
-
-import io.yucca.microsoft.onedrive.resources.IdentitySet;
-import io.yucca.microsoft.onedrive.resources.ItemReference;
-import io.yucca.microsoft.onedrive.resources.Role;
+package io.yucca.microsoft.onedrive.resources;
 
 /**
  * PermissionFacet

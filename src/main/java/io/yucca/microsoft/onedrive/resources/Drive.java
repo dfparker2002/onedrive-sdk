@@ -15,8 +15,6 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
-import io.yucca.microsoft.onedrive.resources.facets.QuotaFacet;
-
 /**
  * The Drive resource represents a drive in OneDrive.
  *

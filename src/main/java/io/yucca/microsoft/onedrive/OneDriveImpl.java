@@ -33,8 +33,8 @@ import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
 import io.yucca.microsoft.onedrive.resources.Drive;
 import io.yucca.microsoft.onedrive.resources.Identity;
 import io.yucca.microsoft.onedrive.resources.Item;
+import io.yucca.microsoft.onedrive.resources.QuotaFacet;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
-import io.yucca.microsoft.onedrive.resources.facets.QuotaFacet;
 
 /**
  * OneDrive represents a drive in OneDrive

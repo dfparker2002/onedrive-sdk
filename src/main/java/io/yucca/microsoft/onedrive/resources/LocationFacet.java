@@ -13,25 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.resources.facets;
-
-import io.yucca.microsoft.onedrive.resources.SpecialFolder;
+package io.yucca.microsoft.onedrive.resources;
 
 /**
- * SpecialFolderFacet
- * 
+ * LocationFacet
+ *
  * @author yucca.io
  */
-public class SpecialFolderFacet {
+public class LocationFacet {
 
-    private SpecialFolder name;
+    private Float altitude;
+    private Float latitude;
+    private Float longitude;
 
-    public SpecialFolder getName() {
-        return name;
+    public Float getAltitude() {
+        return altitude;
     }
 
-    public void setName(SpecialFolder name) {
-        this.name = name;
+    public void setAltitude(Float altitude) {
+        this.altitude = altitude;
+    }
+
+    public Float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Float latitude) {
+        this.latitude = latitude;
+    }
+
+    public Float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Float longitude) {
+        this.longitude = longitude;
     }
 
 }

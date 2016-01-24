@@ -19,9 +19,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import io.yucca.microsoft.onedrive.resources.FileFacet;
+import io.yucca.microsoft.onedrive.resources.FolderFacet;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
-import io.yucca.microsoft.onedrive.resources.facets.FolderFacet;
 
 public class OneDriveItemFactoryTest {
 

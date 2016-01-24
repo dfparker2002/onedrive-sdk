@@ -32,9 +32,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import io.yucca.microsoft.onedrive.OneDriveFile;
+import io.yucca.microsoft.onedrive.resources.FileFacet;
+import io.yucca.microsoft.onedrive.resources.HashesFacet;
 import io.yucca.microsoft.onedrive.resources.Item;
-import io.yucca.microsoft.onedrive.resources.facets.FileFacet;
-import io.yucca.microsoft.onedrive.resources.facets.HashesFacet;
 
 public class LocalFileImplTest {
 
