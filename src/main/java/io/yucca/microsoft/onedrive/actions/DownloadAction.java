@@ -39,7 +39,8 @@ import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 public class DownloadAction extends AbstractAction
     implements Callable<OneDriveContent> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DownloadAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(DownloadAction.class);
 
     public static final String ACTION = "content";
 
@@ -83,24 +84,10 @@ public class DownloadAction extends AbstractAction
      *             the Item has not changed
      */
     @Override
-    public OneDriveContent call() throws OneDriveException {
+    public OneDriveContent call() {
         return download();
     }
 
-    /**
-     * Download Item content
-     * <p>
-     * TODO: allow for range header
-     * </p>
-     * 
-     * @param itemId String
-     * @param eTag String an optional etag value of the cached item, if set and
-     *            the tag matches the upstream item an NotModifiedException is
-     *            thrown. If @{code null} than no etag validation is done
-     * @return OneDriveContent
-     * @throws NotModifiedException if an eTag was provided and matched, meaning
-     *             the Item has not changed
-     */
     private OneDriveContent download() {
         LOG.info("Downloading item: {}", itemAddress);
         Response response = api.webTarget()

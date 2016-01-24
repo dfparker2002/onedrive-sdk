@@ -43,7 +43,8 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class UploadAction extends AbstractAction implements Callable<Item> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UploadAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(UploadAction.class);
 
     public static final String ACTION = "content";
 
@@ -71,35 +72,27 @@ public class UploadAction extends AbstractAction implements Callable<Item> {
     }
 
     /**
-     * Upload Item content
+     * Upload an Item with content size below 100MB, larger files should be
+     * uploaded with {@link UploadResumableAction}
      * 
-     * @return OneDriveContent
+     * @return Item
      * @throws NotModifiedException if an eTag was provided and matched, meaning
      *             the Item has not changed
      */
     @Override
-    public Item call() throws OneDriveException {
+    public Item call() {
         return upload();
     }
 
-    /**
-     * Upload an Item with content size below 100MB, larger files should be
-     * uploaded with {@link UploadResumableAction}
-     * 
-     * <pre>
-     * on uploading of a new file the statuscode 201 CREATED is returned 
-     * on uploading of an existing file with ConflictBehavior.REPLACE
-     *  the statuscode 200 OK is returned
-     * </pre>
-     * 
-     * @return Item representing uploaded content
-     */
     private Item upload() {
         String conflictBehavior = (behavior == null)
             ? null : behavior.getName();
         LOG.info("Uploading file: {} into folder: {}", content.getName(),
                  parentAddress);
         String path = parentAddress.getPathWithAddressAndFilename(ACTION);
+        // on uploading of a new file the statuscode 201 CREATED is returned,
+        // on uploading of an existing file with ConflictBehavior.REPLACE the
+        // statuscode 200 OK is returned
         Status[] successCodes = { Status.CREATED, Status.OK };
         Response response = api.webTarget().path(path)
             .resolveTemplateFromEncoded(ITEM_ADDRESS,

@@ -89,23 +89,17 @@ public class SyncAction extends AbstractAction
     }
 
     /**
-     * Enumerate changed
+     * Enumerate the sync changes for a folder for a specific stated, which can
+     * be used to synchronise a local copy of the drive.
      * 
      * @return SyncResponse matching items
      * @throws ResyncNeededException if a new delta synchronization is needed
      */
     @Override
-    public SyncResponse call() throws ResyncNeededException, OneDriveException {
+    public SyncResponse call() throws ResyncNeededException {
         return sync();
     }
 
-    /**
-     * Enumerate the sync changes for a folder for a specific stated, which can
-     * be used to synchronise a local copy of the drive.
-     * 
-     * @return SyncResponse
-     * @throws ResyncNeededException if a new delta synchronization is needed
-     */
     private SyncResponse sync() throws ResyncNeededException {
         LOG.info("Enumerate the synchronization changes for folder: {}",
                  parentAddress);

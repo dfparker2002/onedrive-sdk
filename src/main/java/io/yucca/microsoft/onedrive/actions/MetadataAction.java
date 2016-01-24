@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
@@ -98,11 +97,6 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
         this.parameters = parameters;
     }
 
-    @Override
-    public Item call() throws OneDriveException {
-        return metadata();
-    }
-
     /**
      * Get metadata for an Item
      * 
@@ -111,6 +105,11 @@ public class MetadataAction extends AbstractAction implements Callable<Item> {
      *             the Item has not changed, should only be catched if eTag was
      *             provided
      */
+    @Override
+    public Item call() {
+        return metadata();
+    }
+
     private Item metadata() throws NotModifiedException {
         LOG.info("Get metadata for item: {}", itemAddress);
         WebTarget target = api.webTarget()

@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.SpecialAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
@@ -80,16 +79,11 @@ public class SpecialFolderAction extends AbstractAction
      * @return Item
      */
     @Override
-    public Item call() throws OneDriveException {
+    public Item call() {
         return specialFolder();
     }
 
-    /**
-     * Get a special folder
-     * 
-     * @return Item
-     */
-    public Item specialFolder() {
+    private Item specialFolder() {
         String path = new SpecialAddress(folder).getPath();
         LOG.info("Getting metadata for special folder: {}", path);
         WebTarget target = api.webTarget().path(path);

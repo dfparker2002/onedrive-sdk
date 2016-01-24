@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.resources.Drive;
 
 /**
@@ -36,7 +35,8 @@ import io.yucca.microsoft.onedrive.resources.Drive;
  */
 public class DriveAction extends AbstractAction implements Callable<Drive> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DriveAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(DriveAction.class);
 
     private final String driveId;
 
@@ -67,16 +67,11 @@ public class DriveAction extends AbstractAction implements Callable<Drive> {
      * @return Drive
      */
     @Override
-    public Drive call() throws OneDriveException {
+    public Drive call() {
         return drive();
     }
 
-    /**
-     * Get default Drive properties
-     * 
-     * @return Drive
-     */
-    public Drive drive() {
+    private Drive drive() {
         String path = (driveId == null) ? "/drive" : "/drives/{drive-id}";
         String name = (driveId == null) ? "default" : driveId;
         LOG.info("Getting information for drive: {}", path);

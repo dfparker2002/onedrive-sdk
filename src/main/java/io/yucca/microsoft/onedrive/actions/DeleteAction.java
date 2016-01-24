@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 
 /**
@@ -36,7 +35,8 @@ import io.yucca.microsoft.onedrive.addressing.ItemAddress;
  */
 public class DeleteAction extends AbstractAction implements Callable<Void> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DeleteAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(DeleteAction.class);
 
     private final ItemAddress itemAddress;
 
@@ -72,11 +72,9 @@ public class DeleteAction extends AbstractAction implements Callable<Void> {
 
     /**
      * Delete Item
-     * 
-     * @throws OneDriveException
      */
     @Override
-    public Void call() throws OneDriveException {
+    public Void call() {
         return delete();
     }
 
@@ -85,8 +83,7 @@ public class DeleteAction extends AbstractAction implements Callable<Void> {
         EntityTag tag = createEtag(eTag);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress())
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
             .request(MediaType.APPLICATION_JSON_TYPE)
             .header(HEADER_IF_MATCH, tag).delete();
         handleError(response, Status.NO_CONTENT,

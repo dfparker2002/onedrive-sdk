@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.ThumbnailSet;
 
@@ -37,7 +36,8 @@ import io.yucca.microsoft.onedrive.resources.ThumbnailSet;
 public class ThumbnailsAction extends AbstractAction
     implements Callable<ThumbnailSet> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ThumbnailsAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(ThumbnailsAction.class);
 
     public static final String ACTION = "thumbnails";
 
@@ -61,21 +61,15 @@ public class ThumbnailsAction extends AbstractAction
      * @return ThumbnailSet
      */
     @Override
-    public ThumbnailSet call() throws OneDriveException {
+    public ThumbnailSet call() {
         return thumbnails();
     }
 
-    /**
-     * Get Thumbnails
-     * 
-     * @return ThumbnailSet
-     */
     private ThumbnailSet thumbnails() {
         LOG.info("Getting thumbsnails for item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress())
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
             .request().get();
         handleError(response, Status.OK,
                     "Failure acquiring thumbnails for item: " + itemAddress);

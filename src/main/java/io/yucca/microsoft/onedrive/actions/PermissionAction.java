@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.PermissionFacet;
@@ -106,10 +105,10 @@ public class PermissionAction extends AbstractAction
     /**
      * Get Item permissions
      * 
-     * @throws OneDriveException
+     * @return List<PermissionFacet>
      */
     @Override
-    public List<PermissionFacet> call() throws OneDriveException {
+    public List<PermissionFacet> call() {
         return get();
     }
 

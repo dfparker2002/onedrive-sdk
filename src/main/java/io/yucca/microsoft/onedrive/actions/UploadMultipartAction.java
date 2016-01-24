@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.OneDriveFile;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
@@ -87,15 +86,10 @@ public class UploadMultipartAction extends AbstractAction
      * @return OneDriveContent
      */
     @Override
-    public Item call() throws OneDriveException {
+    public Item call() {
         return upload();
     }
 
-    /**
-     * Upload an Item as multipart
-     * 
-     * @return Item uploaded content
-     */
     private Item upload() {
         LOG.info("Uploading file: {} using multipart method into folder: {}",
                  content.getName(), parentAddress);

@@ -72,7 +72,7 @@ public class PollAction extends AbstractAction implements Callable<Item> {
      * @return Item result of asynchronous action
      */
     @Override
-    public Item call() throws OneDriveException {
+    public Item call() {
         return pollForCompletion(location, itemAddress, action,
                                  POLLING_INTERVAL, TimeUnit.SECONDS);
     }

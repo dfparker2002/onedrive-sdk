@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import io.yucca.microsoft.onedrive.ItemCollection;
 import io.yucca.microsoft.onedrive.ItemIterable;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
@@ -53,7 +52,7 @@ public class SearchAction extends AbstractAction
     private final QueryParameters parameters;
 
     /**
-     * Search in the root drive for items matching a query
+     * Constructor,
      * 
      * @param api OneDriveAPIConnection
      * @param query String search query
@@ -69,7 +68,7 @@ public class SearchAction extends AbstractAction
     }
 
     /**
-     * Search
+     * Constructor
      * 
      * @param api OneDriveAPIConnection
      * @param parentAddress ItemAddress of folder in which to search
@@ -105,18 +104,13 @@ public class SearchAction extends AbstractAction
     /**
      * Search for items matching a query
      * 
-     * @return ItemCollection matching items
+     * @return ItemIterable matching items
      */
     @Override
-    public ItemIterable call() throws OneDriveException {
+    public ItemIterable call() {
         return search();
     }
 
-    /**
-     * Search for items matching a query.
-     * 
-     * @return ItemCollection matching items
-     */
     private ItemIterable search() {
         LOG.info("Searching for items in folder: {} matching query: {}, with query parameter: {}",
                  parentAddress, query, parameters);

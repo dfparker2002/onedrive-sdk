@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.PermissionFacet;
 
@@ -94,15 +93,10 @@ public class UpdatePermissionAction extends AbstractAction
      * @return PermissionFacet updated permission
      */
     @Override
-    public PermissionFacet call() throws OneDriveException {
+    public PermissionFacet call() {
         return update();
     }
 
-    /**
-     * Update an permission of an Item
-     * 
-     * @return PermissionFacet updated permission
-     */
     private PermissionFacet update() {
         LOG.info("Updating permission: {} on item: {}", itemAddress);
         Response response = api.webTarget()
@@ -124,7 +118,7 @@ public class UpdatePermissionAction extends AbstractAction
      * @param permission PermissionFacet
      * @return Map<String, Object>
      */
-    protected Map<String, Object> newRolesBody(PermissionFacet permission) {
+    private Map<String, Object> newRolesBody(PermissionFacet permission) {
         Map<String, Object> map = new HashMap<>();
         map.put("roles", permission.getRoles());
         return map;

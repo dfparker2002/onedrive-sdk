@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.LinkType;
 import io.yucca.microsoft.onedrive.resources.PermissionFacet;
@@ -68,23 +67,17 @@ public class CreateLink extends AbstractAction
      * @return PermissionFacet facet with the link information
      */
     @Override
-    public PermissionFacet call() throws OneDriveException {
+    public PermissionFacet call() {
         return createLink();
     }
 
-    /**
-     * Create a link to an Item
-     * 
-     * @return PermissionFacet facet with the link information
-     */
     private PermissionFacet createLink() {
         LinkType linkType = (type == null) ? LinkType.VIEW : type;
         LOG.info("Creating link to item: {} of type: {}", itemAddress,
                  linkType.name());
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress())
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
             .request(MediaType.APPLICATION_JSON_TYPE)
             .post(Entity.json(linkType));
         Status[] successCodes = { Status.CREATED, Status.OK };

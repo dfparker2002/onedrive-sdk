@@ -137,7 +137,7 @@ public class UploadResumableAction extends AbstractAction
      *             the Item has not changed
      */
     @Override
-    public Item call() throws OneDriveException {
+    public Item call() {
         return upload();
     }
 
@@ -150,13 +150,12 @@ public class UploadResumableAction extends AbstractAction
      * 3. on 404, restart upload entirely: done
      * 4. ranges should be rounded by 320K: done
      * 
-     * TODO
-     * Handle commit errors
+     * 5. TODO Handle commit errors
      * </pre>
      * 
      * @return Item uploaded content
      */
-    public Item upload() {
+    private Item upload() {
         LOG.info("Uploading file: {} using resumable method into folder: {}",
                  content.getName(), parentAddress);
         createSession();

@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 
@@ -90,23 +89,17 @@ public class CopyAction extends AbstractAction implements Callable<URI> {
      * @return URI location to get of asynchronous job status, used in polling
      */
     @Override
-    public URI call() throws OneDriveException {
+    public URI call() {
         return copy();
     }
 
-    /**
-     * Copy Item to a folder
-     * 
-     * @return URI location to get of asynchronous job status, used in polling
-     */
     private URI copy() {
         LOG.info("Copying item: {} to folder: {}", itemAddress, parentAddress);
         Map<String, Object> map = newParentRefBody(name,
                                                    getItemReference(parentAddress));
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress())
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
             .request().header(HEADER_PREFER, RESPOND_ASYNC)
             .post(Entity.json(map));
         handleError(response,
@@ -115,6 +108,5 @@ public class CopyAction extends AbstractAction implements Callable<URI> {
                                      + parentAddress.getPathWithAddress());
         return response.getLocation();
     }
-
 
 }

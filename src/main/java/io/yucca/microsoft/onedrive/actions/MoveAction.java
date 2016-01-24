@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
@@ -88,27 +87,17 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
      * @return Item moved Item
      */
     @Override
-    public Item call() throws OneDriveException {
+    public Item call() {
         return move();
     }
 
-    /**
-     * Move Item by itemId to a folder
-     * 
-     * @param ItemId String identifier of item to move
-     * @param name String name of copied reference, if {@code null} the original
-     *            name is used
-     * @param parentRef ItemReference reference to parent folder
-     * @return Item moved Item
-     */
     private Item move() {
         LOG.info("Moving item: {} to folder: {}", itemAddress, parentAddress);
         Map<String, Object> map = newParentRefBody(name,
                                                    getItemReference(parentAddress));
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress())
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
             .request()
             // https://stackoverflow.com/questions/22355235/patch-request-using-jersey-client
             .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)

@@ -43,7 +43,8 @@ import io.yucca.microsoft.onedrive.addressing.RootAddress;
 public class ListChildrenAction extends AbstractAction
     implements Callable<ItemIterable> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DriveAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(DriveAction.class);
 
     public static final String ACTION = "children";
 
@@ -109,23 +110,16 @@ public class ListChildrenAction extends AbstractAction
     /**
      * List children in folder
      * 
-     * @return ItemCollection
+     * @return ItemIterable
      * @throws NotModifiedException if an eTag was provided and matched, meaning
      *             the folder has not changed
      */
     @Override
-    public ItemIterable call() throws OneDriveException {
+    public ItemIterable call() {
         return listChildren();
     }
 
-    /**
-     * List children in folder
-     * 
-     * @return ItemCollection
-     * @throws NotModifiedException if an eTag was provided and matched, meaning
-     *             the folder has not changed
-     */
-    public ItemIterable listChildren() {
+    private ItemIterable listChildren() {
         LOG.info("Listing children in folder: {} with query parameters: {}",
                  itemAddress, parameters);
         WebTarget target = api.webTarget()

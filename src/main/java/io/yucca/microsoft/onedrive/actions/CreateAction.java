@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.RootAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
@@ -41,7 +40,8 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class CreateAction extends AbstractAction implements Callable<Item> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(CreateAction.class);
 
     public static final String ACTION = "children";
 
@@ -73,18 +73,12 @@ public class CreateAction extends AbstractAction implements Callable<Item> {
      * Create a folder
      * 
      * @return Item created folder
-     * @throws OneDriveException
      */
     @Override
-    public Item call() throws OneDriveException {
+    public Item call() {
         return create();
     }
 
-    /**
-     * Create a folder
-     * 
-     * @return Item created folder
-     */
     private Item create() {
         LOG.info("Creating new folder: {} in folder: {}", name, parentAddress);
         Map<String, Object> map = newFolderBody(name, behavior);

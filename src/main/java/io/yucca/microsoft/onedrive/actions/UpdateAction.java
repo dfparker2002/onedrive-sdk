@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
@@ -38,7 +37,8 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class UpdateAction extends AbstractAction implements Callable<Item> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UpdateAction.class);
+    private static final Logger LOG = LoggerFactory
+        .getLogger(UpdateAction.class);
 
     private final Item item;
 
@@ -77,7 +77,7 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
      * @return Item updated Item
      */
     @Override
-    public Item call() throws OneDriveException {
+    public Item call() {
         return update();
     }
 
@@ -103,8 +103,7 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
         LOG.info("Updating item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
-            .resolveTemplateFromEncoded(ITEM_ADDRESS,
-                                        itemAddress.getAddress())
+            .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
             .request().header(HEADER_IF_MATCH, createEtag(eTag))
             // patch method is not default available in jersey 2, so use a
             // workaround:

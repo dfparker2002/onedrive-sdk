@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
-import io.yucca.microsoft.onedrive.OneDriveException;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.URLAddress;
 import io.yucca.microsoft.onedrive.resources.FileFacet;
@@ -78,7 +77,7 @@ public class UploadFromURLAction extends AbstractAction
      *             the Item has not changed
      */
     @Override
-    public URI call() throws OneDriveException {
+    public URI call() {
         return upload();
     }
 
