@@ -30,11 +30,11 @@ public class LocalDriveImpl extends LocalFolderImpl implements LocalDrive {
 
     private static final long serialVersionUID = 4994605863666178424L;
 
-    public static final String LOCALDRIVE = "localdrive";
+    static final String LOCALDRIVE = "localdrive";
 
-    public static final String LOCALDRIVE_ROOT_MARKER = "localroot";
+    static final String LOCALDRIVE_ROOT_MARKER = "localroot";
 
-    private static final String LOCALDRIVE_ID_POSTFIX = "!0";
+    static final String LOCALDRIVE_ID_POSTFIX = "!0";
 
     private Drive drive;
 
