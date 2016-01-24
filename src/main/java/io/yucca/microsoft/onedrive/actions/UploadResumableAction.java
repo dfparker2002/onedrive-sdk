@@ -73,6 +73,8 @@ public class UploadResumableAction extends AbstractAction
     public static final long FRAGMENTSIZE_4MB = OPTIMAL_FRAGMENTSIZE_ALIGNMENT
                                                 * 12;
 
+    private static final int unknownFailureThreshold = 5;
+
     private final OneDriveFile content;
 
     private final ItemAddress parentAddress;
@@ -80,8 +82,6 @@ public class UploadResumableAction extends AbstractAction
     private final ConflictBehavior behavior;
 
     private final long maxFragmentSize;
-
-    private final int unknownFailureThreshold = 5;
 
     private UploadSession session;
 
