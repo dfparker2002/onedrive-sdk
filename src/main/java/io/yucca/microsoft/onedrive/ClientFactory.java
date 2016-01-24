@@ -18,11 +18,11 @@ package io.yucca.microsoft.onedrive;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
 import org.slf4j.Logger;
@@ -35,12 +35,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 /**
- * Factory creating a Jersey Client and ObjectMapper
+ * Factory for creating a Jersey Client and ObjectMapper
  * 
  * <pre>
  * based on:
- * http://www.theotherian.com/2013/08/jersey-client-2.0-httpclient-timeouts-max-
- * connections.html
+ * 1. http://www.theotherian.com/2013/08/jersey-client-2.0-httpclient-timeouts-max-connections.html
+ * 2. http://www.javaworld.com/article/2824163/application-performance/stability-patterns-applied-in-a-restful-architecture.html
  * </pre>
  * 
  * @author yucca.io
@@ -54,12 +54,18 @@ public final class ClientFactory {
     }
 
     /**
-     * Create a pooled Jersey client
+     * Create a pooled Jersey client using the Apache HTTP connector providor.
      * 
      * <pre>
-     * max connections = 100
-     * max connections per route = 20
+     * ClientProperties.READ_TIMEOUT is set through configuration
+     * ClientProperties.CONNECT_TIMEOUT is set through configuration
+     * 
+     * Pooled connection manager max connections = 25
+     * Pooled connection manager max connections per route = 5
      * </pre>
+     * <p>
+     * Support for TLS/SSL comes default from the client implementation, also no
+     * logic is needed to allow self-signed certificates.
      * 
      * @param configuration OneDriveConfiguration
      * @param providers Object... providers
@@ -68,20 +74,6 @@ public final class ClientFactory {
     public static Client create(OneDriveConfiguration configuration,
                                 Object... providers) {
         ClientConfig clientConfig = new ClientConfig(providers);
-        clientConfig.property(ClientProperties.READ_TIMEOUT,
-                              configuration.getReadTimeout());
-        clientConfig.property(ClientProperties.CONNECT_TIMEOUT,
-                              configuration.getConnectionTimeout());
-        LOG.debug("Client timeout values set, connection timeout: {}, read timeout: {}",
-                  configuration.getConnectionTimeout(),
-                  configuration.getReadTimeout());
-
-        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setMaxTotal(100);
-        connectionManager.setDefaultMaxPerRoute(20);
-        LOG.debug("Client pooling values set, maximum: {}, per-route: {}", 100,
-                  20);
-
         /**
          * Allow restricted headers to be set. Prevents a warning in
          * {@link UploadResumableAction} which specifies Content-Length
@@ -89,16 +81,29 @@ public final class ClientFactory {
          */
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 
-        Client client = ClientBuilder.newBuilder().withConfig(clientConfig)
-            .build();
-        client.register(OneDriveContentMessageBodyReader.class);
-        client.register(OneDriveContentMessageBodyWriter.class);
-        client.register(MultiPartWriter.class);
-        client.register(JacksonFeature.class);
-        client.property(ApacheClientProperties.CONNECTION_MANAGER,
-                        connectionManager);
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setMaxTotal(25);
+        connectionManager.setDefaultMaxPerRoute(5);
+        clientConfig.property(ApacheClientProperties.CONNECTION_MANAGER,
+                              connectionManager);
+        LOG.debug("Client pooling values set, maximum: {}, per-route: {}", 25,
+                  5);
+
         clientConfig.connectorProvider(new ApacheConnectorProvider());
-        return client;
+        RequestConfig reqConfig = RequestConfig.custom()
+            .setConnectTimeout(configuration.getConnectionTimeout())
+            .setSocketTimeout(configuration.getReadTimeout())
+            .setConnectionRequestTimeout(200).build();
+        clientConfig.property(ApacheClientProperties.REQUEST_CONFIG, reqConfig);
+        LOG.debug("Client timeout values set, connection timeout: {}, read timeout: {}",
+                  configuration.getConnectionTimeout(),
+                  configuration.getReadTimeout());
+
+        clientConfig.register(OneDriveContentMessageBodyReader.class);
+        clientConfig.register(OneDriveContentMessageBodyWriter.class);
+        clientConfig.register(MultiPartWriter.class);
+        clientConfig.register(JacksonFeature.class);
+        return ClientBuilder.newBuilder().withConfig(clientConfig).build();
     }
 
     /**
