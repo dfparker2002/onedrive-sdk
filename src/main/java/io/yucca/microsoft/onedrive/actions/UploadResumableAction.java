@@ -208,10 +208,8 @@ public class UploadResumableAction extends AbstractAction
     private Map<String, Object> newCreateSessionBody(OneDriveContent content,
                                                      ConflictBehavior behavior) {
         Map<String, Object> item = new HashMap<>();
-        item.put(QueryParameters.CONFLICT_BEHAVIOR,
-                 (behavior == null
-                     ? ConflictBehavior.REPLACE.getName()
-                     : behavior.getName()));
+        item.put(QueryParameters.CONFLICT_BEHAVIOR, behavior == null
+            ? ConflictBehavior.REPLACE.getName() : behavior.getName());
         item.put("name", content.getName());
         Map<String, Object> map = new HashMap<>();
         map.put("item", item);
