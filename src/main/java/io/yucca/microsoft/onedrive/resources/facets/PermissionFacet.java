@@ -15,19 +15,23 @@
  */
 package io.yucca.microsoft.onedrive.resources.facets;
 
+import io.yucca.microsoft.onedrive.resources.IdentitySet;
 import io.yucca.microsoft.onedrive.resources.ItemReference;
+import io.yucca.microsoft.onedrive.resources.Role;
 
 /**
  * PermissionFacet
- *
+ * 
  * @author yucca.io
  */
 public class PermissionFacet {
 
     private String id;
-    private String[] role;
+    private Role[] roles;
     private SharingLinkFacet link;
+    private IdentitySet grantedTo;
     private ItemReference inheritedFrom;
+    private String shareId;
 
     public String getId() {
         return id;
@@ -37,12 +41,12 @@ public class PermissionFacet {
         this.id = id;
     }
 
-    public String[] getRole() {
-        return role;
+    public Role[] getRoles() {
+        return roles;
     }
 
-    public void setRole(String[] role) {
-        this.role = role;
+    public void setRoles(Role[] roles) {
+        this.roles = roles;
     }
 
     public SharingLinkFacet getLink() {
@@ -53,12 +57,28 @@ public class PermissionFacet {
         this.link = link;
     }
 
+    public IdentitySet getGrantedTo() {
+        return grantedTo;
+    }
+
+    public void setGrantedTo(IdentitySet grantedTo) {
+        this.grantedTo = grantedTo;
+    }
+
     public ItemReference getInheritedFrom() {
         return inheritedFrom;
     }
 
     public void setInheritedFrom(ItemReference inheritedFrom) {
         this.inheritedFrom = inheritedFrom;
+    }
+
+    public String getShareId() {
+        return shareId;
+    }
+
+    public void setShareId(String shareId) {
+        this.shareId = shareId;
     }
 
 }

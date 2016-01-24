@@ -59,6 +59,18 @@ public interface ItemAddress {
     String getPathWithAddress(String action);
 
     /**
+     * Build a path with an address parameter, action and action parameter based
+     * on underlying addressing method for action, like
+     * /drive/items/{item-address}/permissions/{permission-id} or
+     * /drive/root:/{item-address}:/permissions/{permission-id}
+     * 
+     * @param action String appended to path
+     * @param parameter String appended to action path
+     * @return String path
+     */
+    String getPathWithAddress(String action, String parameter);
+
+    /**
      * Build a path with address and filename parameters based on underlying
      * addressing method for action, like
      * /drive/items/{item-address}:/{filename}:/content or

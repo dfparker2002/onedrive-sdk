@@ -40,6 +40,8 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
 public abstract class AbstractAction {
 
     public static final String ITEM_ADDRESS = "item-address";
+    
+    public static final String PERMISSION_ID = "permission-id";
 
     public static final String FILENAME = "filename";
 

@@ -120,6 +120,8 @@ public final class ClientFactory {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         // prevents mapping failure on unknown properties
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        // allows a single value to be deserialized as an array/list
+        mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
         jacksonProvider.setMapper(mapper);
         return mapper;
     }

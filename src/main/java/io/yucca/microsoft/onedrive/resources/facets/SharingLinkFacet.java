@@ -16,6 +16,7 @@
 package io.yucca.microsoft.onedrive.resources.facets;
 
 import io.yucca.microsoft.onedrive.resources.Identity;
+import io.yucca.microsoft.onedrive.resources.LinkType;
 
 /**
  * SharingLinkFacet
@@ -26,7 +27,7 @@ public class SharingLinkFacet {
 
     private String token;
     private String webUrl;
-    private String type;
+    private LinkType type;
     private Identity application;
 
     public String getToken() {
@@ -45,11 +46,11 @@ public class SharingLinkFacet {
         this.webUrl = webUrl;
     }
 
-    public String getType() {
+    public LinkType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(LinkType type) {
         this.type = type;
     }
 
