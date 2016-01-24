@@ -1,4 +1,3 @@
-package io.yucca.microsoft.onedrive.filter;
 /**
  * Copyright 2015 Rob Sessink
  * 
@@ -14,6 +13,7 @@ package io.yucca.microsoft.onedrive.filter;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.yucca.microsoft.onedrive.filter;
 
 /**
  * Operators used in filtering
