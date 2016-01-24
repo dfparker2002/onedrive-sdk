@@ -98,7 +98,8 @@ public class OneDriveError implements Serializable {
         public InnerError getInnerError() {
             return innererror;
         }
-
+        
+        @Override
         public String toString() {
             return "code: " + code + ", message: " + message;
         }
@@ -133,6 +134,7 @@ public class OneDriveError implements Serializable {
         return error.equalsError(expectedErrorCode);
     }
 
+    @Override
     public String toString() {
         return error.toString();
     }

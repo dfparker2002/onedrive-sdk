@@ -138,6 +138,7 @@ public class GroupCriteria implements Criteria {
          * 
          * @return Builder
          */
+        @Override
         public Builder end() {
             return new Filter.Builder(new LogicalCriteria(logicalCriteria,
                                                           new GroupCriteria(criteria),
