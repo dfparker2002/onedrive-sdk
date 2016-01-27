@@ -36,7 +36,7 @@ public class LocalDriveImpl extends LocalFolderImpl implements LocalDrive {
 
     static final String LOCALDRIVE_ID_POSTFIX = "!0";
 
-    private Drive drive;
+    private transient Drive drive;
 
     /**
      * Construct a LocalDrive corresponding with the root of OneDrive
