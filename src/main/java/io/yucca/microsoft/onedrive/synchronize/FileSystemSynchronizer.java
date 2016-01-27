@@ -159,7 +159,8 @@ public class FileSystemSynchronizer implements LocalDriveSynchronizer {
             try {
                 savedState = deserializeState();
             } catch (FileNotFoundException e) {
-                LOG.warn("State file could not be read, no previous state is available, therefor a full synchronization is performed.");
+                LOG.warn("State file could not be read, no previous state is available, therefor a full synchronization is performed.",
+                         e);
                 savedState = new LinkedList<>();
             }
         } else {
