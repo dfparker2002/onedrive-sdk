@@ -344,7 +344,10 @@ public class UploadResumableAction extends AbstractAction
         FileFragmentStreamingOutput ffso = new FileFragmentStreamingOutput(content
             .getFile(), range);
         return api.getClient().target(session.getUploadUrl()).request()
-            .header("Content-Length", range.getLength())
+            // 28-01-16 disable setting Content-Length as this leads to
+            // "org.apache.http.ProtocolException: Content-Length header already
+            // present"
+            // .header("Content-Length", range.getLength())
             .header("Content-Range", range.getContentRangeHeader())
             .put(Entity.json(ffso));
     }
