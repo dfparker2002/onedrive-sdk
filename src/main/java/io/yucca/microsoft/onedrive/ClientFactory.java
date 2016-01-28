@@ -21,7 +21,6 @@ import javax.ws.rs.client.ClientBuilder;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.glassfish.jersey.apache.connector.ApacheClientProperties;
-import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
@@ -62,6 +61,9 @@ public final class ClientFactory {
      * 
      * Pooled connection manager max connections = 25
      * Pooled connection manager max connections per route = 5
+     * 
+     * Using the ApacheConnectorProvider fails for MultiPart uploads because in 
+     * this connector headers may not be modified @see <a href="https://jersey.java.net/documentation/latest/client.html#d0e4832">5.5 Client Transport Connectors</a>
      * </pre>
      * <p>
      * Support for TLS/SSL comes default from the client implementation, also no
@@ -89,7 +91,8 @@ public final class ClientFactory {
         LOG.debug("Client pooling values set, maximum: {}, per-route: {}", 25,
                   5);
 
-        clientConfig.connectorProvider(new ApacheConnectorProvider());
+        // see javadoc for reason of disabling
+        // clientConfig.connectorProvider(new ApacheConnectorProvider());
         RequestConfig reqConfig = RequestConfig.custom()
             .setConnectTimeout(configuration.getConnectionTimeout())
             .setSocketTimeout(configuration.getReadTimeout())
