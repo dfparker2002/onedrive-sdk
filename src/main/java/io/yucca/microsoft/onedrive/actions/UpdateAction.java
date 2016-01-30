@@ -89,8 +89,9 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
      * </p>
      * <p>
      * FIXME: update triggers a bug when then if-match header is set with a
-     * bogus value, then "Malformed If-Match header" is returned
-     * {@link https://github.com/OneDrive/onedrive-api-docs/issues/131}
+     * bogus value, then "Malformed If-Match header" is returned @see
+     * <a href="https://github.com/OneDrive/onedrive-api-docs/issues/131">https
+     * ://github.com/OneDrive/onedrive-api-docs/issues/131</a>
      * </p>
      * 
      * @return Item updated Item
@@ -105,10 +106,6 @@ public class UpdateAction extends AbstractAction implements Callable<Item> {
             .path(itemAddress.getPathWithAddress())
             .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
             .request().header(HEADER_IF_MATCH, createEtag(eTag))
-            // patch method is not default available in jersey 2, so use a
-            // workaround:
-            // {@link
-            // https://stackoverflow.com/questions/22355235/patch-request-using-jersey-client}
             .property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true)
             .method(METHOD_PATCH, Entity.json(item));
         handleError(response, Status.OK,
