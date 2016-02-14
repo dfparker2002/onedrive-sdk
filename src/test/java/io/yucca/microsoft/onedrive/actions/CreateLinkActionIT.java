@@ -32,7 +32,7 @@ public class CreateLinkActionIT extends AbstractActionIT {
     @Test
     public void testCreateLinkById() throws URISyntaxException {
         ItemAddress itemAddress = new IdAddress(uploadedItemId);
-        CreateLink action = new CreateLink(api, itemAddress, LinkType.VIEW);
+        CreateLinkAction action = new CreateLinkAction(api, itemAddress, LinkType.VIEW);
         assertNotNull(action.call());
     }
 
@@ -41,7 +41,7 @@ public class CreateLinkActionIT extends AbstractActionIT {
         ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST
                                                   + "/"
                                                   + TestMother.ITEM_UPLOAD_1);
-        CreateLink action = new CreateLink(api, itemAddress, LinkType.VIEW);
+        CreateLinkAction action = new CreateLinkAction(api, itemAddress, LinkType.VIEW);
         assertNotNull(action.call());
     }
 

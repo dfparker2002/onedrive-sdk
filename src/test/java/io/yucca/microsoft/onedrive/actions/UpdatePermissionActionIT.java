@@ -39,7 +39,7 @@ public class UpdatePermissionActionIT extends AbstractActionIT {
     @Before
     public void testCreateLinkById() throws URISyntaxException {
         ItemAddress itemAddress = new IdAddress(uploadedItemId);
-        CreateLink action = new CreateLink(api, itemAddress, LinkType.VIEW);
+        CreateLinkAction action = new CreateLinkAction(api, itemAddress, LinkType.VIEW);
         permission = action.call();
         assertNotNull(permission);
     }

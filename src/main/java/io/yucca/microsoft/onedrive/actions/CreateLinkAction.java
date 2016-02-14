@@ -35,10 +35,10 @@ import io.yucca.microsoft.onedrive.resources.PermissionFacet;
  * 
  * @author yucca.io
  */
-public class CreateLink extends AbstractAction
+public class CreateLinkAction extends AbstractAction
     implements Callable<PermissionFacet> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateLink.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CreateLinkAction.class);
 
     public static final String ACTION = "action.createLink";
 
@@ -54,7 +54,7 @@ public class CreateLink extends AbstractAction
      * @param type LinkType view for read-only, edit for read-write links, if
      *            {@code null} defaults to {@link LinkType#VIEW}
      */
-    public CreateLink(OneDriveAPIConnection api, ItemAddress itemAddress,
+    public CreateLinkAction(OneDriveAPIConnection api, ItemAddress itemAddress,
                       LinkType type) {
         super(api);
         this.itemAddress = itemAddress;
