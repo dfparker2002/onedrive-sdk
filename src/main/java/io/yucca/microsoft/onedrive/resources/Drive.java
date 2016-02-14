@@ -23,7 +23,7 @@ package io.yucca.microsoft.onedrive.resources;
 public class Drive {
 
     private String id;
-    private String driveType;
+    private DriveType driveType;
     private IdentitySet owner;
     private QuotaFacet quota;
 
@@ -35,11 +35,11 @@ public class Drive {
         this.id = id;
     }
 
-    public String getDriveType() {
+    public DriveType getDriveType() {
         return driveType;
     }
 
-    public void setDriveType(String driveType) {
+    public void setDriveType(DriveType driveType) {
         this.driveType = driveType;
     }
 
