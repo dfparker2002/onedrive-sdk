@@ -15,13 +15,18 @@
  */
 package io.yucca.microsoft.onedrive.resources;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * The itemReference type groups data needed to reference a OneDrive item across
- * the service into a single structure.
+ * ItemReference groups data needed to reference a OneDrive item across the
+ * service into a single structure.
  * 
  * @author yucca.io
  */
 public class ItemReference {
+
+    public static final String PARENT_REFERENCE = "parentReference";
 
     private String driveId;
     private String id;
@@ -55,6 +60,22 @@ public class ItemReference {
      */
     public void setPath(String path) {
         this.path = path;
+    }
+
+    /**
+     * Create parentRef as a Map
+     * 
+     * @param name String
+     * @param parentRef ItemReference
+     * @return Map<String, Object>
+     */
+    public Map<String, Object> asMap(String name) {
+        Map<String, Object> map = new HashMap<>();
+        if (name != null && !name.isEmpty()) {
+            map.put("name", name);
+        }
+        map.put(PARENT_REFERENCE, this);
+        return map;
     }
 
 }

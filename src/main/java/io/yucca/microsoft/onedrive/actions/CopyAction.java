@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
+import io.yucca.microsoft.onedrive.resources.ItemReference;
 
 /**
  * Action to copy an Item to a folder
@@ -95,8 +96,9 @@ public class CopyAction extends AbstractAction implements Callable<URI> {
 
     private URI copy() {
         LOG.info("Copying item: {} to folder: {}", itemAddress, parentAddress);
-        Map<String, Object> map = newParentRefBody(name,
-                                                   getItemReference(parentAddress));
+        ItemReference parentRef = getItemReference(parentAddress);
+        Map<String, Object> map = parentRef.asMap(name);
+        
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())

@@ -30,6 +30,7 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.Item;
+import io.yucca.microsoft.onedrive.resources.ItemReference;
 
 /**
  * Action to move an Item to a folder
@@ -93,8 +94,8 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
 
     private Item move() {
         LOG.info("Moving item: {} to folder: {}", itemAddress, parentAddress);
-        Map<String, Object> map = newParentRefBody(name,
-                                                   getItemReference(parentAddress));
+        ItemReference parentReference = getItemReference(parentAddress);
+        Map<String, Object> map = parentReference.asMap(name);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())
             .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
