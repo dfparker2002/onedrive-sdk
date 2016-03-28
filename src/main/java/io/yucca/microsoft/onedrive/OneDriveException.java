@@ -50,14 +50,14 @@ public class OneDriveException extends RuntimeException {
     }
 
     public OneDriveException(String message, int httpStatus) {
-        super(message + ", reason: " + httpStatus + " "
+        super(message + " reason: " + httpStatus + " "
               + HttpErrorCode.getMessage(httpStatus));
         this.error = null;
     }
 
     public OneDriveException(String message, int httpStatus,
                              OneDriveError error) {
-        super(message + ", reason: " + httpStatus + " "
+        super(message + " reason: " + httpStatus + " "
               + HttpErrorCode.getMessage(httpStatus));
         this.error = error;
     }
@@ -74,7 +74,7 @@ public class OneDriveException extends RuntimeException {
     public String getMessage() {
         String msg = super.getMessage();
         if (error != null) {
-            msg += ", OneDrive errorcode:" + getCause();
+            msg += " OneDrive errorcode: " + getOneDriveErrorMessage();
         }
         return msg;
     }
