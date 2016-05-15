@@ -70,21 +70,6 @@ public class FileSystemRepository implements LocalDriveRepository {
     }
 
     /**
-     * FilesystemRepository
-     * 
-     * @param drivePath Path base path to LocalDrive
-     * @param onedrive OneDrive
-     * @throws IOException if repository initialization fails
-     */
-    public FileSystemRepository(Path drivePath, OneDrive onedrive,
-                                String itemId) throws IOException {
-        this.drivePath = drivePath;
-        this.onedrive = onedrive;
-        this.localDrive = new LocalDriveImpl(onedrive.getDrive(), this);
-        initialize(localDrive);
-    }
-
-    /**
      * Initialize the store for the LocalDrive, determines if extended
      * attributes are supported and enabled for the local filesystem
      * 
@@ -161,7 +146,8 @@ public class FileSystemRepository implements LocalDriveRepository {
         throws IOException {
         rename(resource, resource.getName());
         writeMetadataAndContent(resource, content);
-        if (!isLocalDriveRoot(resource) && !isLocalDriveRoot(resource.getParent())) {
+        if (!isLocalDriveRoot(resource)
+            && !isLocalDriveRoot(resource.getParent())) {
             resetTimestamps(resource.getParent());
         }
     }
