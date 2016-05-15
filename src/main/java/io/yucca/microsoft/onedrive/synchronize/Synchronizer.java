@@ -116,8 +116,7 @@ public class Synchronizer {
                                               ItemAddress folderAddress)
                                                   throws IOException {
         OneDriveFolder remote = oneDrive.getFolder(folderAddress);
-        LocalFolderImpl local = new LocalFolderImpl(path, remote,
-                                                     repository);
+        LocalFolderImpl local = new LocalFolderImpl(path, remote, repository);
         local.create();
         return local;
     }
@@ -324,32 +323,41 @@ public class Synchronizer {
         while (it.hasNext()) {
             Item updated = it.next();
             try {
-                LocalItem local = repository.getLocalItem(updated.getId());
-                if (local != null) {
-                    LOG.info("Item: {}, id: {} is on the delta list will be synchronized",
-                             local.getPath(), local.getId());
-                    if (updated.isDeleted()) {
-                        deleteLocaly(local, updated);
-                        break;
-                    }
-                    switch (local.lastModificationStatus(updated)) {
-                    case NOTMODIFIED:
-                        break;
-                    case NEWER:
-                        updateOneDrive(local, updated);
-                        break;
-                    case OLDER:
-                        updateLocaly(local, updated);
-                        break;
-                    }
-                } else {
-                    addLocaly(updated);
-                }
+                proccessChanged(updated);
             } catch (IOException | OneDriveException e) {
                 LOG.error("Failure processing item: {}, name: {}, skipped!",
                           updated.getId(), updated.getName(), e);
             } finally {
                 it.remove();
+            }
+        }
+    }
+
+    /**
+     * Process a changed Item
+     * 
+     * @param updated Item
+     * @throws IOException
+     */
+    private void proccessChanged(Item updated) throws IOException {
+        LocalItem local = repository.getLocalItem(updated.getId());
+        if (local == null) {
+            addLocaly(updated);
+        } else {
+            LOG.info("Item: {}, id: {} is on the delta list will be synchronized",
+                     local.getPath(), local.getId());
+            if (updated.isDeleted()) {
+                deleteLocaly(local, updated);
+            }
+            switch (local.lastModificationStatus(updated)) {
+            case NOTMODIFIED:
+                break;
+            case NEWER:
+                updateOneDrive(local, updated);
+                break;
+            case OLDER:
+                updateLocaly(local, updated);
+                break;
             }
         }
     }
