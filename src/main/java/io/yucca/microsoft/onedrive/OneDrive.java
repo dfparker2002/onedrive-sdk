@@ -163,7 +163,7 @@ public interface OneDrive {
     Drive getDrive();
 
     /**
-     * Get the available drives
+     * Get the available drives.
      * 
      * @return List<Drive>
      */
