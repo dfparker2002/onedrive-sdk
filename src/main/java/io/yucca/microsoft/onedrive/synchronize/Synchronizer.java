@@ -115,11 +115,11 @@ public class Synchronizer {
     private LocalFolder initializeLocalFolder(Path path,
                                               ItemAddress folderAddress)
                                                   throws IOException {
-        OneDriveFolder remoteFolder = oneDrive.getFolder(folderAddress);
-        LocalFolderImpl folder = new LocalFolderImpl(path, remoteFolder,
+        OneDriveFolder remote = oneDrive.getFolder(folderAddress);
+        LocalFolderImpl local = new LocalFolderImpl(path, remote,
                                                      repository);
-        folder.create();
-        return folder;
+        local.create();
+        return local;
     }
 
     /**
