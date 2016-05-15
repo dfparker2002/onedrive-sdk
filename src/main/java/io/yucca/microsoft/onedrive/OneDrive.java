@@ -155,12 +155,19 @@ public interface OneDrive {
     ItemAddress getAddress();
 
     /**
-     * Get drive resource and cache it. This will become stale over time,
+     * Get the drive resource and cache it. This will become stale over time,
      * because no eTag value if available to detect modifications of the entity.
      * 
      * @return Drive
      */
     Drive getDrive();
+
+    /**
+     * Get the available drives
+     * 
+     * @return List<Drive>
+     */
+    List<Drive> getDrives();
 
     /**
      * Get user information.

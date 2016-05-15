@@ -33,7 +33,7 @@ public class OneDriveStub implements OneDrive {
         this.identity.setId("101");
         this.quota = new QuotaFacet();
     }
-    
+
     @Override
     public OneDriveFolder createFolder(String name,
                                        ConflictBehavior behaviour) {
@@ -110,6 +110,11 @@ public class OneDriveStub implements OneDrive {
     @Override
     public Drive getDrive() {
         return drive;
+    }
+
+    @Override
+    public List<Drive> getDrives() {
+        return null;
     }
 
     @Override

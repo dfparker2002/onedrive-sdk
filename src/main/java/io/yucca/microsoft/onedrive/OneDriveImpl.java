@@ -21,6 +21,7 @@ import java.util.List;
 
 import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DriveAction;
+import io.yucca.microsoft.onedrive.actions.DrivesAction;
 import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
 import io.yucca.microsoft.onedrive.actions.MetadataAction;
 import io.yucca.microsoft.onedrive.actions.SearchAction;
@@ -193,6 +194,11 @@ public class OneDriveImpl implements OneDrive {
             drive = new DriveAction(api, driveId).call();
         }
         return drive;
+    }
+
+    @Override
+    public List<Drive> getDrives() {
+        return (new DrivesAction(api)).call();
     }
 
     @Override
