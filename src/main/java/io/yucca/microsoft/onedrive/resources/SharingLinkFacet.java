@@ -25,6 +25,7 @@ public class SharingLinkFacet {
     private String token;
     private String webUrl;
     private LinkType type;
+    private ScopeType scope;
     private Identity application;
 
     public String getToken() {
@@ -49,6 +50,14 @@ public class SharingLinkFacet {
 
     public void setType(LinkType type) {
         this.type = type;
+    }
+
+    public ScopeType getScope() {
+        return scope;
+    }
+
+    public void setScope(ScopeType scope) {
+        this.scope = scope;
     }
 
     public Identity getApplication() {
