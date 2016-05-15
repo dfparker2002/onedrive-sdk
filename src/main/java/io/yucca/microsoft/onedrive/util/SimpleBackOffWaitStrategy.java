@@ -60,6 +60,7 @@ public class SimpleBackOffWaitStrategy {
         try {
             unit.sleep(duration);
         } catch (InterruptedException e) {
+            return duration;
         }
         return increase();
     }
