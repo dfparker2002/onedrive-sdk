@@ -55,7 +55,7 @@ public class AsyncOperationStatus {
     }
 
     public boolean isDone() {
-        return ("completed".equals(this.status));
+        return "completed".equals(this.status);
     }
 
     public String getStatusDescription() {
@@ -66,6 +66,7 @@ public class AsyncOperationStatus {
         this.statusDescription = statusDescription;
     }
 
+    @Override
     public String toString() {
         return "Operation: " + this.operation + ", percentageComplete = "
                + this.percentageComplete + ", status: " + this.status.getName()
