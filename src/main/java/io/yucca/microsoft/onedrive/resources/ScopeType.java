@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Rob Sessink
+ * Copyright 2016 Rob Sessink
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
- * LinkType
+ * ScopeType
  * 
  * @author yucca.io
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum LinkType {
+public enum ScopeType {
 
-    VIEW("view"), EDIT("edit"), EMBED("embed");
+    ANONYMOUS("anonymous"), ORGANIZATION("organization");
 
     private final String type;
 
-    private LinkType(String type) {
+    private ScopeType(String type) {
         this.type = type;
     }
 
@@ -39,11 +39,11 @@ public enum LinkType {
     }
 
     @JsonCreator
-    public static LinkType create(String value) {
+    public static ScopeType create(String value) {
         if (value == null) {
             throw new IllegalArgumentException();
         }
-        for (LinkType v : values()) {
+        for (ScopeType v : values()) {
             if (v.getType().equals(value)) {
                 return v;
             }
