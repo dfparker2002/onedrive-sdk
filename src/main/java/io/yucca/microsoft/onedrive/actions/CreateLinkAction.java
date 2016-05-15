@@ -96,12 +96,12 @@ public class CreateLinkAction extends AbstractAction
     }
 
     private PermissionFacet createLink() {
-        LinkType linkType = (this.linkType == null)
+        LinkType type = (this.linkType == null)
             ? LinkType.VIEW : this.linkType;
 
         LOG.info("Creating link to item: {} of type: {}", itemAddress,
-                 linkType.name());
-        Map<String, Object> map = newCreateLinkBody(linkType, scopeType);
+                 type.name());
+        Map<String, Object> map = newCreateLinkBody(type, scopeType);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())
