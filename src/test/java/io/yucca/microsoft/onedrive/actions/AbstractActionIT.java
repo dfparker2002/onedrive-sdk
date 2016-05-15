@@ -26,6 +26,8 @@ import io.yucca.microsoft.onedrive.OneDriveAPIConnectionImpl;
 import io.yucca.microsoft.onedrive.OneDriveConfiguration;
 import io.yucca.microsoft.onedrive.TestMother;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
+import io.yucca.microsoft.onedrive.addressing.ItemAddress;
+import io.yucca.microsoft.onedrive.resources.Item;
 
 public abstract class AbstractActionIT {
 
@@ -45,6 +47,13 @@ public abstract class AbstractActionIT {
         this.api = new OneDriveAPIConnectionImpl(configuration);
         this.apiTestFolderId = TestMother.createAPITestFolder(api).getId();
         this.uploadedItemId = TestMother.uploadTestItem(api).getId();
+    }
+
+    protected Item getApiFolderMetadata() {
+        ItemAddress folder = new IdAddress(apiTestFolderId);
+        MetadataAction maction = new MetadataAction(api, folder);
+        Item item = maction.call();
+        return item;
     }
 
     @After

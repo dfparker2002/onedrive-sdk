@@ -28,7 +28,15 @@ public abstract class AbstractItemAddress implements ItemAddress {
 
     static final String DRIVE_SPECIAL = "/drive/special";
 
+    static final String DRIVE = "/drive";
+
     static final String DRIVES = "/drives";
+
+    static final String ITEMS = "items";
+
+    static final String ITEM_ADDRESS = "{item-address}";
+
+    protected static final String FILENAME = "{filename}";
 
     protected Addressing method;
 
@@ -42,6 +50,10 @@ public abstract class AbstractItemAddress implements ItemAddress {
 
     protected String addressWithFileName;
 
+    AbstractItemAddress() {
+        this.address = "";
+    }
+    
     AbstractItemAddress(String address) {
         this.address = address;
     }
@@ -69,7 +81,7 @@ public abstract class AbstractItemAddress implements ItemAddress {
 
     @Override
     public String getPathWithAddress(String action) {
-        String base = getPath() + seperatorStart + "{item-address}";
+        String base = getPath() + seperatorStart + ITEM_ADDRESS;
         return (action != null) ? base += seperatorEnd + action : base;
     }
 

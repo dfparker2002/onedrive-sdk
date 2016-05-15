@@ -66,7 +66,6 @@ public class ItemReference {
      * Create parentRef as a Map
      * 
      * @param name String
-     * @param parentRef ItemReference
      * @return Map<String, Object>
      */
     public Map<String, Object> asMap(String name) {
@@ -78,4 +77,14 @@ public class ItemReference {
         return map;
     }
 
+    /**
+     * ItemReference as parentRef to drive
+     * 
+     * @return Map<String, Object>
+     */
+    public Map<String, String> asDriveIdMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("driveId", getDriveId());
+        return map;
+    }
 }

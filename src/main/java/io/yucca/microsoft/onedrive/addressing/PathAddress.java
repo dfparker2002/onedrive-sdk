@@ -61,6 +61,7 @@ public class PathAddress extends AbstractItemAddress {
         this.seperatorStart = ":";
         this.seperatorEnd = ":/";
         this.basePath = DRIVE_ROOT;
-        this.addressWithFileName = "{item-address}/{filename}";
+        this.addressWithFileName = ITEM_ADDRESS + "/" + FILENAME;
     }
+
 }

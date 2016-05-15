@@ -22,12 +22,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The Item resource represents an item stored in OneDrive
+ * Item represents an item stored in OneDrive
  *
  * @author yucca.io
  */
 public class Item {
-
+    
     @JsonIgnore
     private String id;
     @JsonIgnore
@@ -39,16 +39,20 @@ public class Item {
     @JsonIgnore
     private IdentitySet createdBy;
     @JsonIgnore
-    private IdentitySet lastModifiedBy;
-    @JsonIgnore
     private String createdDateTime;
+    @JsonIgnore
+    private IdentitySet lastModifiedBy;
     @JsonIgnore
     private String lastModifiedDateTime;
     @JsonIgnore
     private Long size;
-    private ItemReference parentReference;
     @JsonIgnore
     private URL webUrl;
+    @JsonIgnore
+    private String description;
+    private ItemReference parentReference;
+    @JsonIgnore
+    private List<Item> children;
     @JsonIgnore
     private FolderFacet folder;
     @JsonIgnore
@@ -66,9 +70,15 @@ public class Item {
     @JsonIgnore
     private LocationFacet location;
     @JsonIgnore
+    private RemoteItemFacet remoteItem;
+    @JsonIgnore
+    private SearchResultFacet searchResult;
+    @JsonIgnore
     private DeletedFacet deleted;
     @JsonIgnore
     private SpecialFolderFacet specialFolder;
+    @JsonIgnore
+    private List<ThumbnailSet> thumbnails;
 
     // Instance attributes
     @JsonIgnore
@@ -81,12 +91,6 @@ public class Item {
     // Relationships
     @JsonIgnore
     private Byte[] content;
-    // A collection of the children of this item. Only set if getMetadata is
-    // used with expand=true query parameter
-    @JsonIgnore
-    private List<Item> children;
-    @JsonIgnore
-    private List<ThumbnailSet> thumbnails;
 
     public Item() {
     }
@@ -146,16 +150,6 @@ public class Item {
     }
 
     @JsonIgnore // only read on deserialization
-    public IdentitySet getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    @JsonProperty
-    public void setLastModifiedBy(IdentitySet lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    @JsonIgnore // only read on deserialization
     public String getCreatedDateTime() {
         return createdDateTime;
     }
@@ -163,6 +157,16 @@ public class Item {
     @JsonProperty
     public void setCreatedDateTime(String createdDateTime) {
         this.createdDateTime = createdDateTime;
+    }
+
+    @JsonIgnore // only read on deserialization
+    public IdentitySet getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    @JsonProperty
+    public void setLastModifiedBy(IdentitySet lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 
     @JsonIgnore // only read on deserialization
@@ -203,6 +207,15 @@ public class Item {
     @JsonProperty
     public void setWebUrl(URL webUrl) {
         this.webUrl = webUrl;
+    }
+
+    @JsonProperty
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @JsonIgnore // only read on deserialization
@@ -283,6 +296,26 @@ public class Item {
     @JsonProperty
     public void setLocation(LocationFacet location) {
         this.location = location;
+    }
+
+    @JsonIgnore // only read on deserialization
+    public RemoteItemFacet getRemoteItem() {
+        return remoteItem;
+    }
+
+    @JsonProperty
+    public void setRemoteItem(RemoteItemFacet remoteItem) {
+        this.remoteItem = remoteItem;
+    }
+
+    @JsonIgnore // only read on deserialization
+    public SearchResultFacet getSearchResult() {
+        return searchResult;
+    }
+
+    @JsonProperty
+    public void setSearchResult(SearchResultFacet searchResult) {
+        this.searchResult = searchResult;
     }
 
     @JsonIgnore // only read on deserialization

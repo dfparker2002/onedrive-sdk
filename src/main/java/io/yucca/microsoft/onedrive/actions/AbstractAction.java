@@ -15,7 +15,6 @@
  */
 package io.yucca.microsoft.onedrive.actions;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.core.EntityTag;
@@ -40,7 +39,7 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
 public abstract class AbstractAction {
 
     public static final String ITEM_ADDRESS = "item-address";
-    
+
     public static final String PERMISSION_ID = "permission-id";
 
     public static final String FILENAME = "filename";
@@ -163,22 +162,11 @@ public abstract class AbstractAction {
     }
 
     /**
-     * Create parentRef POST body
+     * XXX move to Address?, specialized by type
      * 
-     * @param name String
-     * @param parentRef ItemReference
-     * @return Map<String, Object>
+     * @param address ItemAddress
+     * @return ItemReference
      */
-    protected Map<String, Object> newParentRefBody(String name,
-                                                   ItemReference parentRef) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(PARENT_REFERENCE, parentRef);
-        if (name != null && !name.isEmpty()) {
-            map.put("name", name);
-        }
-        return map;
-    }
-
     protected ItemReference getItemReference(ItemAddress address) {
         ItemReference ref = new ItemReference();
         ref.setPath(address.absolutePath());
@@ -196,7 +184,7 @@ public abstract class AbstractAction {
     }
 
     /**
-     * Maps a Map<String, Object> to JSON
+     * Convert a Map<String, Object> to JSON
      * 
      * @param map Map<String, Object>
      * @return String json
@@ -208,4 +196,5 @@ public abstract class AbstractAction {
             throw new OneDriveException("Failure mapping to JSON", e);
         }
     }
+
 }

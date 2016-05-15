@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Rob Sessink
+ * Copyright 2016 Rob Sessink
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.yucca.microsoft.onedrive.addressing;
+package io.yucca.microsoft.onedrive.resources;
 
 /**
- * Methods for adressing an Item
+ * SearchResultFacet
  *
  * @author yucca.io
  */
-public enum Addressing {
+public class SearchResultFacet {
 
-    ID, PATH, ROOT, SPECIAL, SHARED, URL;
+    private String onClickTelemetryUrl;
+
+    public String getOnClickTelemetryUrl() {
+        return onClickTelemetryUrl;
+    }
+
+    public void setOnClickTelemetryUrl(String onClickTelemetryUrl) {
+        this.onClickTelemetryUrl = onClickTelemetryUrl;
+    }
 }
