@@ -71,7 +71,7 @@ public abstract class AbstractItemAddress implements ItemAddress {
     @Override
     public String getPath(String action) {
         String base = basePath;
-        return (action != null) ? base += "/" + action : base;
+        return action != null ? base += "/" + action : base;
     }
 
     @Override
@@ -82,19 +82,19 @@ public abstract class AbstractItemAddress implements ItemAddress {
     @Override
     public String getPathWithAddress(String action) {
         String base = getPath() + seperatorStart + ITEM_ADDRESS;
-        return (action != null) ? base += seperatorEnd + action : base;
+        return action != null ? base += seperatorEnd + action : base;
     }
 
     @Override
     public String getPathWithAddress(String action, String parameter) {
         String base = getPathWithAddress(action);
-        return (parameter != null) ? base += "/" + parameter : base;
+        return parameter != null ? base += "/" + parameter : base;
     }
 
     @Override
     public String getPathWithAddressAndFilename(String action) {
         String base = getPath() + seperatorStart + addressWithFileName;
-        return (action != null) ? base += ":/" + action : base;
+        return action != null ? base += ":/" + action : base;
     }
 
     @Override
