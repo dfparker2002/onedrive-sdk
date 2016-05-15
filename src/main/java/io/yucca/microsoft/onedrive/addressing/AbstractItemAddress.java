@@ -36,7 +36,7 @@ public abstract class AbstractItemAddress implements ItemAddress {
 
     static final String ITEM_ADDRESS = "{item-address}";
 
-    protected static final String FILENAME = "{filename}";
+    static final String FILENAME = "{filename}";
 
     protected Addressing method;
 
@@ -53,7 +53,7 @@ public abstract class AbstractItemAddress implements ItemAddress {
     AbstractItemAddress() {
         this.address = "";
     }
-    
+
     AbstractItemAddress(String address) {
         this.address = address;
     }
