@@ -101,6 +101,7 @@ public abstract class LocalItemImpl implements LocalItem {
         return this.id != null;
     }
 
+    @Override
     public String toString() {
         return "LocalFile: " + getPath() + " id: " + getId();
     }
@@ -175,6 +176,11 @@ public abstract class LocalItemImpl implements LocalItem {
         this.lastModifiedDateTime = fromISO8601(item.getLastModifiedDateTime());
     }
 
+    /**
+     * Update the properties of Item based on folder
+     * 
+     * @param item Item
+     */
     @Override
     public void updateItem(Item item) {
         item.setName(name);

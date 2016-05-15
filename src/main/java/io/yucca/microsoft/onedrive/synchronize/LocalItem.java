@@ -89,10 +89,4 @@ public interface LocalItem extends LocalResource {
      */
     void relateWith(Item item);
 
-    /**
-     * Update the properties of Item based on folder
-     * 
-     * @param item Item
-     */
-    void updateItem(Item item);
 }
