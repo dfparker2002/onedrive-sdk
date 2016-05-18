@@ -122,7 +122,7 @@ public class CreateLinkAction extends AbstractAction
     Map<String, Object> newCreateLinkBody(LinkType linkType,
                                           ScopeType scopeType) {
         Map<String, Object> map = new HashMap<>();
-        map.put("link", linkType.getType());
+        map.put("type", linkType.getType());
         if (scopeType != null) {
             map.put("scope", scopeType.getType());
         }
