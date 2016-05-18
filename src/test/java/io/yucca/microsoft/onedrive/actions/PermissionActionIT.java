@@ -37,7 +37,8 @@ public class PermissionActionIT extends AbstractActionIT {
     @Before
     public void createPermission() {
         ItemAddress itemAddress = new IdAddress(uploadedItemId);
-        CreateLinkAction action = new CreateLinkAction(api, itemAddress, LinkType.VIEW);
+        CreateLinkAction action = new CreateLinkAction(api, itemAddress,
+                                                       LinkType.VIEW);
         permission = action.call();
         assertNotNull(permission);
     }
@@ -45,8 +46,7 @@ public class PermissionActionIT extends AbstractActionIT {
     @Test
     public void testGetPermissionsById() throws NotModifiedException {
         ItemAddress itemAddress = new IdAddress(uploadedItemId);
-        PermissionAction action = new PermissionAction(api, itemAddress,
-                                                         null);
+        PermissionAction action = new PermissionAction(api, itemAddress, null);
         List<PermissionFacet> permissions = action.call();
         assertNotNull(permissions);
     }
@@ -56,8 +56,7 @@ public class PermissionActionIT extends AbstractActionIT {
         ItemAddress itemAddress = new PathAddress(TestMother.FOLDER_APITEST
                                                   + "/"
                                                   + TestMother.ITEM_UPLOAD_1);
-        PermissionAction action = new PermissionAction(api, itemAddress,
-                                                         null);
+        PermissionAction action = new PermissionAction(api, itemAddress, null);
         List<PermissionFacet> permissions = action.call();
         assertNotNull(permissions);
     }
@@ -66,8 +65,8 @@ public class PermissionActionIT extends AbstractActionIT {
     public void testGetPermissionsSelect() throws NotModifiedException {
         ItemAddress itemAddress = new IdAddress(uploadedItemId);
         String[] select = new String[] { "link" };
-        PermissionAction action = new PermissionAction(api, itemAddress,
-                                                         select, null);
+        PermissionAction action = new PermissionAction(api, itemAddress, select,
+                                                       null);
         List<PermissionFacet> permissions = action.call();
         assertNotNull(permissions);
     }
