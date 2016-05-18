@@ -66,7 +66,8 @@ public class SharedWithMeAction extends AbstractAction
             .request(MediaType.APPLICATION_JSON_TYPE).get();
         handleNotModified(response);
         handleError(response, Status.OK, "Failed to items shared with user");
-        return response.readEntity(ItemCollection.class).setApi(api);
+        return response.readEntity(ItemCollection.class)
+            .setProvider(new ItemProviderImpl(api));
     }
 
 }

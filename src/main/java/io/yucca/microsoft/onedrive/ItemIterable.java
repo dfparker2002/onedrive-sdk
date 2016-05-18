@@ -50,13 +50,12 @@ public interface ItemIterable extends Iterable<Item> {
     Iterator<Item> innerIterator();
 
     /**
-     * Inject the OneDriveAPIConnection.
+     * Inject the ItemProvider
      * 
-     * @param api OneDriveAPIConnection connection to the OneDrive API used in
-     *            fetching next pages
+     * @param provider ItemProvider to fetching next pages of collection
      * @return ItemIterable
      */
-    ItemIterable setApi(OneDriveAPIConnection api);
+    ItemIterable setProvider(ItemProvider provider);
 
     /**
      * Determine if collection has a next page

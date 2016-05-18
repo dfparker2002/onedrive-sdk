@@ -39,7 +39,7 @@ public class ItemCollection implements ItemIterable {
      * </pre>
      */
     @JsonIgnore
-    protected OneDriveAPIConnection api;
+    protected ItemProvider provider;
 
     @JsonDeserialize(as = LinkedList.class)
     private List<Item> value;
@@ -66,17 +66,17 @@ public class ItemCollection implements ItemIterable {
 
     @JsonIgnore
     @Override
-    public ItemIterable setApi(OneDriveAPIConnection api) {
-        this.api = api;
+    public ItemIterable setProvider(ItemProvider provider) {
+        this.provider = provider;
         return this;
     }
 
     @Override
     public ItemIterator iterator() {
-        if (api == null) {
-            throw new IllegalStateException("OneDriveAPIConnection must be set");
+        if (provider == null) {
+            throw new IllegalStateException("ItemProvider must be set");
         }
-        return new ItemIterator(api, this);
+        return new ItemIterator(provider, this);
     }
 
     @Override

@@ -82,7 +82,8 @@ public class ListSharedAction extends AbstractAction
         handleNotModified(response);
         handleError(response, Status.OK,
                     "Failed to list shared item:" + address);
-        return response.readEntity(ItemCollection.class).setApi(api);
+        return response.readEntity(ItemCollection.class)
+            .setProvider(new ItemProviderImpl(api));
     }
 
 }

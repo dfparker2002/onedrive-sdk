@@ -116,7 +116,7 @@ public class SyncAction extends AbstractAction
         handleError(response, Status.OK,
                     "Failure enumerating changes for folder: " + parentAddress);
         return (SyncResponse)response.readEntity(SyncResponse.class)
-            .setApi(api);
+            .setProvider(new ItemProviderImpl(api));
     }
 
     /**
@@ -135,7 +135,7 @@ public class SyncAction extends AbstractAction
                                         + uri, response.getStatus());
         }
         return (SyncResponse)response.readEntity(SyncResponse.class)
-            .setApi(api);
+            .setProvider(new ItemProviderImpl(api));
     }
 
 }

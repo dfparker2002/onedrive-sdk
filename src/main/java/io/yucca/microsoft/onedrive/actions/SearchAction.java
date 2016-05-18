@@ -133,7 +133,8 @@ public class SearchAction extends AbstractAction
         handleError(response, Status.OK,
                     "Failure searching for items that match query: " + query
                                          + " within folder: " + parentAddress);
-        return response.readEntity(ItemCollection.class).setApi(api);
+        return response.readEntity(ItemCollection.class)
+            .setProvider(new ItemProviderImpl(api));
     }
 
 }

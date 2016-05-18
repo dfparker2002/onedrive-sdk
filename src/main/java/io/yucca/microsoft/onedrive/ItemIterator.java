@@ -19,7 +19,6 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
 import io.yucca.microsoft.onedrive.resources.Item;
 
 /**
@@ -36,7 +35,7 @@ import io.yucca.microsoft.onedrive.resources.Item;
  */
 public class ItemIterator implements Iterator<Item> {
 
-    private final OneDriveAPIConnection api;
+    private final ItemProvider provider;
 
     private ItemIterable page;
 
@@ -45,19 +44,18 @@ public class ItemIterator implements Iterator<Item> {
     /**
      * Construct an ItemIterator
      * 
-     * @param api OneDriveAPIConnection connection to the OneDrive API, used for
-     *            fetching next pages
+     * @param api ItemProvider, used for fetching next pages
      * @param collection ItemIterable initial collection
      */
-    public ItemIterator(final OneDriveAPIConnection api,
+    public ItemIterator(final ItemProvider provider,
                         final ItemIterable collection) {
-        if (api == null) {
-            throw new IllegalArgumentException("OneDriveAPIConnection is null");
+        if (provider == null) {
+            throw new IllegalArgumentException("ItemProvider is null");
         }
         if (collection == null) {
             throw new IllegalArgumentException("ItemCollection is null");
         }
-        this.api = api;
+        this.provider = provider;
         this.page = collection;
         this.innerIterator = collection.innerIterator();
     }
@@ -92,8 +90,7 @@ public class ItemIterator implements Iterator<Item> {
 
     private void loadNextCollection(final ItemIterable collection) {
         try {
-            this.page = ListChildrenAction
-                .byURI(api, collection.getNextLink().toURI());
+            this.page = provider.byURI(collection.getNextLink().toURI());
         } catch (URISyntaxException e) {
             throw new NoSuchElementException("URL for next collection is invalid. "
                                              + e.getMessage());
