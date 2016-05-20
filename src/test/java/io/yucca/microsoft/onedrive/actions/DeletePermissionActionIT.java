@@ -24,11 +24,11 @@ import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.LinkType;
-import io.yucca.microsoft.onedrive.resources.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.Permission;
 
 public class DeletePermissionActionIT extends AbstractActionIT {
 
-    private PermissionFacet permission;
+    private Permission permission;
 
     @Before
     public void createPermission() {

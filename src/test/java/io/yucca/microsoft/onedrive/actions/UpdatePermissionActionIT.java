@@ -29,12 +29,12 @@ import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.LinkType;
-import io.yucca.microsoft.onedrive.resources.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.Permission;
 import io.yucca.microsoft.onedrive.resources.Role;
 
 public class UpdatePermissionActionIT extends AbstractActionIT {
 
-    private PermissionFacet permission;
+    private Permission permission;
 
     @Before
     public void testCreateLinkById() throws URISyntaxException {

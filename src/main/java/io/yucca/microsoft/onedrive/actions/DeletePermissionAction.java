@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
-import io.yucca.microsoft.onedrive.resources.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.Permission;
 
 /**
  * Action to delete a permission on an Item
@@ -44,7 +44,7 @@ public class DeletePermissionAction extends AbstractAction
 
     private final ItemAddress itemAddress;
 
-    private final PermissionFacet permission;
+    private final Permission permission;
 
     private final String eTag;
 
@@ -57,7 +57,7 @@ public class DeletePermissionAction extends AbstractAction
      */
     public DeletePermissionAction(OneDriveAPIConnection api,
                                   ItemAddress itemAddress,
-                                  PermissionFacet permission) {
+                                  Permission permission) {
         super(api);
         this.itemAddress = itemAddress;
         this.permission = permission;
@@ -76,7 +76,7 @@ public class DeletePermissionAction extends AbstractAction
      */
     public DeletePermissionAction(OneDriveAPIConnection api,
                                   ItemAddress itemAddress,
-                                  PermissionFacet permission, String eTag) {
+                                  Permission permission, String eTag) {
         super(api);
         this.itemAddress = itemAddress;
         this.permission = permission;

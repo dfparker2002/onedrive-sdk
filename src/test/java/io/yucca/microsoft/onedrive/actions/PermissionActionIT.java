@@ -28,11 +28,11 @@ import io.yucca.microsoft.onedrive.addressing.IdAddress;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.addressing.PathAddress;
 import io.yucca.microsoft.onedrive.resources.LinkType;
-import io.yucca.microsoft.onedrive.resources.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.Permission;
 
 public class PermissionActionIT extends AbstractActionIT {
 
-    private PermissionFacet permission;
+    private Permission permission;
 
     @Before
     public void createPermission() {
@@ -47,7 +47,7 @@ public class PermissionActionIT extends AbstractActionIT {
     public void testGetPermissionsById() throws NotModifiedException {
         ItemAddress itemAddress = new IdAddress(uploadedItemId);
         PermissionAction action = new PermissionAction(api, itemAddress, null);
-        List<PermissionFacet> permissions = action.call();
+        List<Permission> permissions = action.call();
         assertNotNull(permissions);
     }
 
@@ -57,7 +57,7 @@ public class PermissionActionIT extends AbstractActionIT {
                                                   + "/"
                                                   + TestMother.ITEM_UPLOAD_1);
         PermissionAction action = new PermissionAction(api, itemAddress, null);
-        List<PermissionFacet> permissions = action.call();
+        List<Permission> permissions = action.call();
         assertNotNull(permissions);
     }
 
@@ -67,7 +67,7 @@ public class PermissionActionIT extends AbstractActionIT {
         String[] select = new String[] { "link" };
         PermissionAction action = new PermissionAction(api, itemAddress, select,
                                                        null);
-        List<PermissionFacet> permissions = action.call();
+        List<Permission> permissions = action.call();
         assertNotNull(permissions);
     }
 

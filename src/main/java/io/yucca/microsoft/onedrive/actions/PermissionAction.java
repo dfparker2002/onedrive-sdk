@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.QueryParameters;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
-import io.yucca.microsoft.onedrive.resources.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.Permission;
 
 /**
  * Action to get an Item permission
@@ -39,7 +39,7 @@ import io.yucca.microsoft.onedrive.resources.PermissionFacet;
  * @author yucca.io
  */
 public class PermissionAction extends AbstractAction
-    implements Callable<List<PermissionFacet>> {
+    implements Callable<List<Permission>> {
 
     private static final Logger LOG = LoggerFactory
         .getLogger(PermissionAction.class);
@@ -88,7 +88,7 @@ public class PermissionAction extends AbstractAction
      * 
      * @param api OneDriveAPIConnection
      * @param itemAddress ItemAddress of item for which to get permissions
-     * @param select String[] Optional properties of {@link PermissionFacet} be
+     * @param select String[] Optional properties of {@link Permission} be
      *            included for each item in the response.
      * @param eTag String an optional etag value of the cached item, if set and
      *            the tag matches the upstream item an NotModifiedException is
@@ -108,11 +108,11 @@ public class PermissionAction extends AbstractAction
      * @return List<PermissionFacet>
      */
     @Override
-    public List<PermissionFacet> call() {
+    public List<Permission> call() {
         return get();
     }
 
-    private List<PermissionFacet> get() {
+    private List<Permission> get() {
         LOG.info("Getting permissions for item: {}", itemAddress);
         EntityTag tag = createEtag(eTag);
         WebTarget target = api.webTarget()
@@ -128,7 +128,7 @@ public class PermissionAction extends AbstractAction
             .header(HEADER_IF_NONE_MATCH, tag).get();
         handleError(response, Status.OK,
                     "Failure getting permissions for item: " + itemAddress);
-        return response.readEntity(new GenericType<List<PermissionFacet>>() {
+        return response.readEntity(new GenericType<List<Permission>>() {
         });
     }
 

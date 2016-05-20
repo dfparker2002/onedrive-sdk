@@ -16,17 +16,18 @@
 package io.yucca.microsoft.onedrive.resources;
 
 /**
- * PermissionFacet
+ * Permission
  * 
  * @author yucca.io
  */
-public class PermissionFacet {
+public class Permission {
 
     private String id;
     private Role[] roles;
     private SharingLinkFacet link;
     private IdentitySet grantedTo;
     private ItemReference inheritedFrom;
+    
     private String shareId;
 
     public String getId() {

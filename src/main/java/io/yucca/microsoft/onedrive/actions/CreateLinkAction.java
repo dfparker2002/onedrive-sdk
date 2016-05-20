@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.LinkType;
-import io.yucca.microsoft.onedrive.resources.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.Permission;
 import io.yucca.microsoft.onedrive.resources.ScopeType;
 
 /**
@@ -39,7 +39,7 @@ import io.yucca.microsoft.onedrive.resources.ScopeType;
  * @author yucca.io
  */
 public class CreateLinkAction extends AbstractAction
-    implements Callable<PermissionFacet> {
+    implements Callable<Permission> {
 
     private static final Logger LOG = LoggerFactory
         .getLogger(CreateLinkAction.class);
@@ -91,11 +91,11 @@ public class CreateLinkAction extends AbstractAction
      * @return PermissionFacet facet with the link information
      */
     @Override
-    public PermissionFacet call() {
+    public Permission call() {
         return createLink();
     }
 
-    private PermissionFacet createLink() {
+    private Permission createLink() {
         LinkType type = (this.linkType == null)
             ? LinkType.VIEW : this.linkType;
 
@@ -109,7 +109,7 @@ public class CreateLinkAction extends AbstractAction
         Status[] successCodes = { Status.CREATED, Status.OK };
         handleError(response, successCodes,
                     "Failure creating sharing link for item: " + itemAddress);
-        return response.readEntity(PermissionFacet.class);
+        return response.readEntity(Permission.class);
     }
 
     /**

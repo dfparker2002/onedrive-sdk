@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
-import io.yucca.microsoft.onedrive.resources.PermissionFacet;
+import io.yucca.microsoft.onedrive.resources.Permission;
 
 /**
  * Action to update an permission on an Item.
@@ -37,7 +37,7 @@ import io.yucca.microsoft.onedrive.resources.PermissionFacet;
  * @author yucca.io
  */
 public class UpdatePermissionAction extends AbstractAction
-    implements Callable<PermissionFacet> {
+    implements Callable<Permission> {
 
     public static final String ACTION = "permissions";
 
@@ -46,7 +46,7 @@ public class UpdatePermissionAction extends AbstractAction
 
     private final ItemAddress itemAddress;
 
-    private final PermissionFacet permission;
+    private final Permission permission;
 
     private final String eTag;
 
@@ -60,7 +60,7 @@ public class UpdatePermissionAction extends AbstractAction
      */
     public UpdatePermissionAction(OneDriveAPIConnection api,
                                   ItemAddress itemAddress,
-                                  PermissionFacet permission) {
+                                  Permission permission) {
         super(api);
         this.itemAddress = itemAddress;
         this.permission = permission;
@@ -80,7 +80,7 @@ public class UpdatePermissionAction extends AbstractAction
      */
     public UpdatePermissionAction(OneDriveAPIConnection api,
                                   ItemAddress itemAddress,
-                                  PermissionFacet permission, String eTag) {
+                                  Permission permission, String eTag) {
         super(api);
         this.itemAddress = itemAddress;
         this.permission = permission;
@@ -93,11 +93,11 @@ public class UpdatePermissionAction extends AbstractAction
      * @return PermissionFacet updated permission
      */
     @Override
-    public PermissionFacet call() {
+    public Permission call() {
         return update();
     }
 
-    private PermissionFacet update() {
+    private Permission update() {
         LOG.info("Updating permission: {} on item: {}", itemAddress);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION, "{permission-id}"))
@@ -109,7 +109,7 @@ public class UpdatePermissionAction extends AbstractAction
         handleError(response, Status.OK,
                     "Failure updating permissions: " + permission + " on item: "
                                          + itemAddress);
-        return response.readEntity(PermissionFacet.class);
+        return response.readEntity(Permission.class);
     }
 
     /**
@@ -118,7 +118,7 @@ public class UpdatePermissionAction extends AbstractAction
      * @param permission PermissionFacet
      * @return Map<String, Object>
      */
-    private Map<String, Object> newRolesBody(PermissionFacet permission) {
+    private Map<String, Object> newRolesBody(Permission permission) {
         Map<String, Object> map = new HashMap<>();
         map.put("roles", permission.getRoles());
         return map;
