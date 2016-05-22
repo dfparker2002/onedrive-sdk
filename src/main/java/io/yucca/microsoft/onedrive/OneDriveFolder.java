@@ -16,7 +16,6 @@
 package io.yucca.microsoft.onedrive;
 
 import java.util.Collection;
-import java.util.List;
 
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.ConflictBehavior;
@@ -158,7 +157,7 @@ public interface OneDriveFolder extends OneDriveItem {
      *            the result is returned
      * @return Collection<OneDriveItem> results
      */
-    List<OneDriveItem> search(String query, QueryParameters parameters);
+    Collection<OneDriveItem> search(String query, QueryParameters parameters);
 
     /**
      * Upload the content into this folder.
