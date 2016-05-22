@@ -87,6 +87,21 @@ public class OneDriveStub implements OneDrive {
     }
 
     @Override
+    public Collection<OneDriveItem> listRecent() {
+        return null;
+    }
+
+    @Override
+    public Collection<OneDriveItem> listShared() {
+        return null;
+    }
+
+    @Override
+    public Collection<OneDriveItem> sharedWithMe() {
+        return null;
+    }
+
+    @Override
     public List<OneDriveItem> search(String query, QueryParameters parameters) {
         return null;
     }

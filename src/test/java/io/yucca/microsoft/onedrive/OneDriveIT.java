@@ -47,7 +47,6 @@ public class OneDriveIT {
         this.configuration = ConfigurationUtil.read(CONFIGURATIONFILE);
         this.api = new OneDriveAPIConnectionImpl(configuration);
 
-        // create test directory and file
         TestMother.createAPITestFolder(api);
         TestMother.uploadTestItem(api);
 
@@ -69,6 +68,13 @@ public class OneDriveIT {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
         assertNotNull(drive);
         assertNotNull(drive.getDrive());
+    }
+
+    @Test
+    public void testGetDrives() {
+        Collection<OneDrive> drives = OneDriveImpl.drives(api);
+        assertNotNull(drives);
+        assertTrue(drives.size() > 0);
     }
 
     @Test
@@ -106,7 +112,6 @@ public class OneDriveIT {
     @Test
     public void testGetSpecialFolder() {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
-        assertNotNull(drive);
         OneDriveFolder folder = drive.getSpecialFolder(SpecialFolder.DOCUMENTS,
                                                        null);
         assertNotNull(folder);
@@ -115,7 +120,6 @@ public class OneDriveIT {
     @Test
     public void testGetRootFolder() {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
-        assertNotNull(drive);
         OneDriveFolder folder = drive.getRootFolder();
         assertNotNull(folder);
     }
@@ -123,9 +127,33 @@ public class OneDriveIT {
     @Test
     public void testListChildren() {
         OneDrive drive = OneDriveImpl.defaultDrive(api);
-        assertNotNull(drive);
         Collection<OneDriveItem> children = drive
             .listChildren(TestMother.listChildrenQueryParameters());
+        assertNotNull(children);
+        assertTrue(children.size() > 0);
+    }
+
+    @Test
+    public void testListRecentlyUsed() {
+        OneDrive drive = OneDriveImpl.defaultDrive(api);
+        Collection<OneDriveItem> children = drive.listRecent();
+        assertNotNull(children);
+        assertTrue(children.size() > 0);
+    }
+
+    @Test
+    public void testListShared() {
+        OneDrive drive = OneDriveImpl.defaultDrive(api);
+        Collection<OneDriveItem> children = drive.listShared();
+        assertNotNull(children);
+        assertTrue(children.size() > 0);
+    }
+
+    @Test
+    public void testSharedWithMe() {
+        OneDrive drive = OneDriveImpl.defaultDrive(api);
+        assertNotNull(drive);
+        Collection<OneDriveItem> children = drive.sharedWithMe();
         assertNotNull(children);
         assertTrue(children.size() > 0);
     }

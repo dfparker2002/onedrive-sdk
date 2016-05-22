@@ -23,8 +23,11 @@ import io.yucca.microsoft.onedrive.actions.CreateAction;
 import io.yucca.microsoft.onedrive.actions.DriveAction;
 import io.yucca.microsoft.onedrive.actions.DrivesAction;
 import io.yucca.microsoft.onedrive.actions.ListChildrenAction;
+import io.yucca.microsoft.onedrive.actions.ListSharedAction;
 import io.yucca.microsoft.onedrive.actions.MetadataAction;
+import io.yucca.microsoft.onedrive.actions.RecentAction;
 import io.yucca.microsoft.onedrive.actions.SearchAction;
+import io.yucca.microsoft.onedrive.actions.SharedWithMeAction;
 import io.yucca.microsoft.onedrive.actions.SpecialFolderAction;
 import io.yucca.microsoft.onedrive.actions.UploadAction;
 import io.yucca.microsoft.onedrive.addressing.ItemAddress;
@@ -38,7 +41,7 @@ import io.yucca.microsoft.onedrive.resources.QuotaFacet;
 import io.yucca.microsoft.onedrive.resources.SpecialFolder;
 
 /**
- * OneDrive represents a drive in OneDrive
+ * Represents a drive in OneDrive
  *
  * @author yucca.io
  */
@@ -81,6 +84,21 @@ public class OneDriveImpl implements OneDrive {
     public static OneDrive defaultDrive(OneDriveAPIConnection api) {
         DriveAction action = new DriveAction(api);
         return new OneDriveImpl(api, action.call());
+    }
+
+    /**
+     * Get all available drives for the user
+     * 
+     * @param api OneDriveAPIConnection connection to the OneDrive API
+     * @return Collection<OneDrive>
+     */
+    public static Collection<OneDrive> drives(OneDriveAPIConnection api) {
+        DrivesAction action = new DrivesAction(api);
+        List<OneDrive> drives = new LinkedList<>();
+        for (Drive drive : action.call()) {
+            drives.add(new OneDriveImpl(api, drive));
+        }
+        return drives;
     }
 
     /**
@@ -146,12 +164,8 @@ public class OneDriveImpl implements OneDrive {
 
     @Override
     public Collection<OneDriveItem> listChildren(QueryParameters parameters) {
-        List<OneDriveItem> children = new LinkedList<>();
         ListChildrenAction action = new ListChildrenAction(api, parameters);
-        for (Item item : action.call()) {
-            children.add(OneDriveItemFactory.newInstance(api, item));
-        }
-        return children;
+        return asCollection(action.call());
     }
 
     @Override
@@ -160,14 +174,29 @@ public class OneDriveImpl implements OneDrive {
     }
 
     @Override
-    public List<OneDriveItem> search(String query, QueryParameters parameters) {
-        List<OneDriveItem> children = new LinkedList<>();
+    public Collection<OneDriveItem> listRecent() {
+        RecentAction action = new RecentAction(api);
+        return asCollection(action.call());
+    }
+
+    @Override
+    public Collection<OneDriveItem> listShared() {
+        ListSharedAction action = new ListSharedAction(api);
+        return asCollection(action.call());
+    }
+
+    @Override
+    public Collection<OneDriveItem> sharedWithMe() {
+        SharedWithMeAction action = new SharedWithMeAction(api);
+        return asCollection(action.call());
+    }
+
+    @Override
+    public Collection<OneDriveItem> search(String query,
+                                           QueryParameters parameters) {
         SearchAction action = new SearchAction(api, getAddress(), query,
                                                parameters);
-        for (Item item : action.call()) {
-            children.add(OneDriveItemFactory.newInstance(api, item));
-        }
-        return children;
+        return asCollection(action.call());
     }
 
     @Override
@@ -214,6 +243,14 @@ public class OneDriveImpl implements OneDrive {
     @Override
     public String getDriveId() {
         return driveId;
+    }
+
+    private Collection<OneDriveItem> asCollection(ItemIterable iterable) {
+        List<OneDriveItem> items = new LinkedList<>();
+        for (Item item : iterable) {
+            items.add(OneDriveItemFactory.newInstance(api, item));
+        }
+        return items;
     }
 
     @Override

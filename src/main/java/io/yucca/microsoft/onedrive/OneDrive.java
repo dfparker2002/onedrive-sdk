@@ -119,6 +119,27 @@ public interface OneDrive {
     Collection<OneDriveItem> listChildren();
 
     /**
+     * Get all files recently used by the used.
+     * 
+     * @return Collection<OneDriveItem>
+     */
+    Collection<OneDriveItem> listRecent();
+
+    /**
+     * Get all shared files in this drive.
+     * 
+     * @return Collection<OneDriveItem>
+     */
+    Collection<OneDriveItem> listShared();
+
+    /**
+     * Get all files shared with the user.
+     * 
+     * @return Collection<OneDriveItem>
+     */
+    Collection<OneDriveItem> sharedWithMe();
+
+    /**
      * Search for items in this drive matching the query.
      * 
      * @param query String search query
@@ -126,7 +147,7 @@ public interface OneDrive {
      *            the result is returned
      * @return Collection<OneDriveItem> results
      */
-    List<OneDriveItem> search(String query, QueryParameters parameters);
+    Collection<OneDriveItem> search(String query, QueryParameters parameters);
 
     /**
      * Upload the content into the drive root.
@@ -163,7 +184,7 @@ public interface OneDrive {
     Drive getDrive();
 
     /**
-     * Get the available drives.
+     * Get all the available drives.
      * 
      * @return List<Drive>
      */
