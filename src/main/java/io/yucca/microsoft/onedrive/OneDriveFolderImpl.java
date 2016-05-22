@@ -109,13 +109,9 @@ public class OneDriveFolderImpl extends OneDriveItemImpl
 
     @Override
     public Collection<OneDriveItem> listChildren(QueryParameters parameters) {
-        List<OneDriveItem> children = new LinkedList<>();
         ListChildrenAction action = new ListChildrenAction(api, getAddress(),
                                                            null, parameters);
-        for (Item item : action.call()) {
-            children.add(OneDriveItemFactory.newInstance(api, item));
-        }
-        return children;
+        return asCollection(action.call());
     }
 
     @Override
@@ -155,14 +151,11 @@ public class OneDriveFolderImpl extends OneDriveItemImpl
     }
 
     @Override
-    public List<OneDriveItem> search(String query, QueryParameters parameters) {
-        List<OneDriveItem> children = new LinkedList<>();
+    public Collection<OneDriveItem> search(String query,
+                                           QueryParameters parameters) {
         SearchAction action = new SearchAction(api, getAddress(), query,
                                                parameters);
-        for (Item item : action.call()) {
-            children.add(OneDriveItemFactory.newInstance(api, item));
-        }
-        return children;
+        return asCollection(action.call());
     }
 
     @Override
@@ -176,6 +169,14 @@ public class OneDriveFolderImpl extends OneDriveItemImpl
     @Override
     public OneDriveItem upload(OneDriveContent content) {
         return upload(content, ConflictBehavior.FAIL);
+    }
+
+    private Collection<OneDriveItem> asCollection(ItemIterable iterable) {
+        List<OneDriveItem> items = new LinkedList<>();
+        for (Item item : iterable) {
+            items.add(OneDriveItemFactory.newInstance(api, item));
+        }
+        return items;
     }
 
 }
