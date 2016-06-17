@@ -53,11 +53,11 @@ public final class ClientFactory {
     }
 
     /**
-     * Create a pooled Jersey client using the Apache HTTP connector providor.
+     * Create a pooled Jersey client using the Apache HTTP connector provider.
      * 
      * <pre>
-     * ClientProperties.READ_TIMEOUT is set through configuration
-     * ClientProperties.CONNECT_TIMEOUT is set through configuration
+     * ClientProperties.READ_TIMEOUT is set through the configuration
+     * ClientProperties.CONNECT_TIMEOUT is set through the configuration
      * 
      * Pooled connection manager max connections = 25
      * Pooled connection manager max connections per route = 5
@@ -66,8 +66,7 @@ public final class ClientFactory {
      * this connector headers may not be modified @see <a href="https://jersey.java.net/documentation/latest/client.html#d0e4832">5.5 Client Transport Connectors</a>
      * </pre>
      * <p>
-     * Support for TLS/SSL comes default from the client implementation, also no
-     * logic is needed to allow self-signed certificates.
+     * Support for TLS/SSL comes default from the client implementation.
      * 
      * @param configuration OneDriveConfiguration
      * @param providers Object... providers

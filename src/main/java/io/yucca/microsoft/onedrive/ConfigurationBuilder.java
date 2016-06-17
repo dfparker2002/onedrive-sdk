@@ -66,23 +66,27 @@ public class ConfigurationBuilder {
             LOG.info("* Lets start creating the OneDrive configuration file. *");
             LOG.info("*                                                      *");
             LOG.info("********************************************************");
-            LOG.info("1. Enter the Client ID created for your application.");
+            LOG.info("1. Enter the OneDrive platform to connect to: PERSONAL, BUSINESS or SHAREPOINTONLINE.");
+            System.out.print(">> ");
+            configuration.setPlatform(br.readLine());
+
+            LOG.info("2. Enter the Client ID created for your application.");
             System.out.print(">> ");
             configuration.setClientId(br.readLine());
 
-            LOG.info("2. Enter the Client secret (v1) created for your application.");
+            LOG.info("3. Enter the Client secret (v1) created for your application.");
             System.out.print(">> ");
             configuration.setClientSecret(br.readLine());
             ClientIdentifier id = new ClientIdentifier(configuration
                 .getClientId(), configuration.getClientSecret());
             OAuth2CodeGrantFlow flow = OneDriveSession.buildFlow(id);
 
-            LOG.info("3. Enter the following URL in a browser and accept the permissions question.");
+            LOG.info("4. Enter the following URL in a browser and accept the permissions question.");
             System.out.println(flow.start());
             LOG.info(">> [hit a key to proceed]");
             br.readLine();
 
-            LOG.info("4. Now Paste the redirection URL code you received in the browser to extract the authorization code.");
+            LOG.info("5. Now Paste the redirection URL code you received in the browser to extract the authorization code.");
             System.out.print(">> ");
 
             configuration.setAuthorizationCode(OneDriveSession

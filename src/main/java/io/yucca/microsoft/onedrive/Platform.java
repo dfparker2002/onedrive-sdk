@@ -66,7 +66,7 @@ public enum Platform {
      */
     public static Platform create(String name) {
         for (Platform p : values()) {
-            if (p.name.equals(name)) {
+            if (p.name().equals(name)) {
                 return p;
             }
         }

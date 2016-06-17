@@ -33,6 +33,8 @@ public final class ConfigurationUtil {
     private static final Logger LOG = LoggerFactory
         .getLogger(ConfigurationUtil.class);
 
+    public static final String PLATFORM = "platform";
+
     public static final String CLIENT_ID = "clientId";
 
     public static final String CLIENT_SECRET = "clientSecret";
@@ -74,6 +76,7 @@ public final class ConfigurationUtil {
         config.setBasePath(file.getParent());
         config.load(file.getName());
         OneDriveConfiguration odc = new OneDriveConfiguration(configurationFile);
+        odc.setPlatform(config.getString(PLATFORM));
         odc.setClientId(config.getString(CLIENT_ID));
         odc.setClientSecret(config.getString(CLIENT_SECRET));
         odc.setAuthorizationCode(config.getString(AUTHORIZATION_CODE));
@@ -92,6 +95,10 @@ public final class ConfigurationUtil {
 
     private static void setProperties(OneDriveConfiguration configuration) {
         config.clear();
+        config.getLayout()
+            .setComment(PLATFORM,
+                        "The OneDrive platform to which you connect, this can be: PERSONAL, BUSINESS or SHAREPOINTONLINE.");
+        config.setProperty(PLATFORM, configuration.getPlatform());
         config.getLayout()
             .setComment(CLIENT_ID,
                         "The Client ID created for your application.");

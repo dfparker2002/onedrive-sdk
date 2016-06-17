@@ -30,6 +30,8 @@ public class OneDriveConfiguration {
 
     private final String configurationFile;
 
+    private String platform;
+
     private String clientId;
 
     private String clientSecret;
@@ -48,6 +50,14 @@ public class OneDriveConfiguration {
 
     public OneDriveConfiguration(String configurationFile) {
         this.configurationFile = configurationFile;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
     public String getClientId() {

@@ -27,7 +27,7 @@ import org.junit.After;
 import org.junit.Test;
 
 public class ConfigurationUtilTest {
-    
+
     private static final String TEST_ONEDRIVE_PROPERTIES = "src/test/resources/onedrive-config-test.properties";
 
     private static final String TEST_ONEDRIVE_PROPERTIES_SAVED = "onedrive-config-test-saved.properties";
@@ -38,6 +38,7 @@ public class ConfigurationUtilTest {
         OneDriveConfiguration config = ConfigurationUtil
             .read(TEST_ONEDRIVE_PROPERTIES);
         assertNotNull(config);
+        assertEquals("PERSONAL", config.getPlatform());
         assertEquals("000000010101", config.getClientId());
         assertEquals("randompassphrase", config.getClientSecret());
         assertEquals("xxxxxx-xxxx-xxxx-xxx-deadbeaf",

@@ -55,6 +55,8 @@ public class OneDriveAPIConnectionImpl
 
     private OneDriveSession session;
 
+    private Platform platform;
+
     /**
      * Constructs the connection to the OneDrive API, the authorization is
      * delayed until the first API request.
@@ -78,6 +80,7 @@ public class OneDriveAPIConnectionImpl
         LOG.info("Initializing Jersey client");
         JacksonJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
         this.mapper = ClientFactory.createMapper(jacksonProvider);
+        this.platform = Platform.create(configuration.getPlatform());
         this.client = ClientFactory.create(configuration, jacksonProvider);
         this.session = new OneDriveSession(configuration, client);
         if (configuration.isDebugLogging()) {
@@ -97,7 +100,7 @@ public class OneDriveAPIConnectionImpl
 
     @Override
     public WebTarget webTarget() {
-        return session.getClient().target(ONEDRIVE_URL);
+        return session.getClient().target(platform.getUrl());
     }
 
     @Override
