@@ -20,7 +20,7 @@ package io.yucca.microsoft.onedrive.addressing;
  * 
  * @author yucca.io
  */
-public abstract class AbstractItemAddress implements ItemAddress {
+abstract class AbstractItemAddress implements ItemAddress {
 
     static final String DRIVE_ROOT = "/drive/root";
 
