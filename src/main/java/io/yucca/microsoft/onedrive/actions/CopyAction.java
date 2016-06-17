@@ -96,9 +96,9 @@ public class CopyAction extends AbstractAction implements Callable<URI> {
 
     private URI copy() {
         LOG.info("Copying item: {} to folder: {}", itemAddress, parentAddress);
-        ItemReference parentRef = getItemReference(parentAddress);
+        ItemReference parentRef = parentAddress.getItemReference();
         Map<String, Object> map = parentRef.asMap(name);
-        
+
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress(ACTION))
             .resolveTemplateFromEncoded(ITEM_ADDRESS, itemAddress.getAddress())

@@ -94,7 +94,7 @@ public class MoveAction extends AbstractAction implements Callable<Item> {
 
     private Item move() {
         LOG.info("Moving item: {} to folder: {}", itemAddress, parentAddress);
-        ItemReference parentReference = getItemReference(parentAddress);
+        ItemReference parentReference = parentAddress.getItemReference();
         Map<String, Object> map = parentReference.asMap(name);
         Response response = api.webTarget()
             .path(itemAddress.getPathWithAddress())

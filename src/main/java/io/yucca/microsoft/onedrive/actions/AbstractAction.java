@@ -26,9 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.yucca.microsoft.onedrive.NotModifiedException;
 import io.yucca.microsoft.onedrive.OneDriveAPIConnection;
 import io.yucca.microsoft.onedrive.OneDriveException;
-import io.yucca.microsoft.onedrive.addressing.ItemAddress;
 import io.yucca.microsoft.onedrive.resources.HttpErrorCode;
-import io.yucca.microsoft.onedrive.resources.ItemReference;
 import io.yucca.microsoft.onedrive.resources.OneDriveError;
 
 /**
@@ -36,7 +34,7 @@ import io.yucca.microsoft.onedrive.resources.OneDriveError;
  * 
  * @author yucca.io
  */
-public abstract class AbstractAction {
+abstract class AbstractAction {
 
     public static final String ITEM_ADDRESS = "item-address";
 
@@ -159,18 +157,6 @@ public abstract class AbstractAction {
     protected String formatError(int status, String message) {
         throw new OneDriveException(message + ", reason: " + status + " "
                                     + HttpErrorCode.getMessage(status));
-    }
-
-    /**
-     * XXX move to Address?, specialized by type
-     * 
-     * @param address ItemAddress
-     * @return ItemReference
-     */
-    protected ItemReference getItemReference(ItemAddress address) {
-        ItemReference ref = new ItemReference();
-        ref.setPath(address.absolutePath());
-        return ref;
     }
 
     /**

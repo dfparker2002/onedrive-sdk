@@ -15,6 +15,8 @@
  */
 package io.yucca.microsoft.onedrive.addressing;
 
+import io.yucca.microsoft.onedrive.resources.ItemReference;
+
 /**
  * ItemAdress, defines an Item address and method of adressing like id, path,
  * root or specialfolder based.
@@ -95,4 +97,10 @@ public interface ItemAddress {
      */
     String absolutePath();
 
+    /**
+     * Get ItemReference
+     * 
+     * @return ItemReference
+     */
+    ItemReference getItemReference();
 }

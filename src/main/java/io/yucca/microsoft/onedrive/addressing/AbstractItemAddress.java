@@ -15,6 +15,8 @@
  */
 package io.yucca.microsoft.onedrive.addressing;
 
+import io.yucca.microsoft.onedrive.resources.ItemReference;
+
 /**
  * AbstractItemAddress
  * 
@@ -101,6 +103,13 @@ abstract class AbstractItemAddress implements ItemAddress {
     public String absolutePath() {
         return (address == null || address.isEmpty())
             ? getPath() : getPath() + seperatorStart + address;
+    }
+
+    @Override
+    public ItemReference getItemReference() {
+        ItemReference ref = new ItemReference();
+        ref.setPath(absolutePath());
+        return ref;
     }
 
     @Override
