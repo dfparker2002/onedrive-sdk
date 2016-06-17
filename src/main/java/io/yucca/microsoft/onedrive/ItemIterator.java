@@ -44,7 +44,7 @@ public class ItemIterator implements Iterator<Item> {
     /**
      * Construct an ItemIterator
      * 
-     * @param api ItemProvider, used for fetching next pages
+     * @param provider ItemProvider, used for fetching next pages
      * @param collection ItemIterable initial collection
      */
     public ItemIterator(final ItemProvider provider,
