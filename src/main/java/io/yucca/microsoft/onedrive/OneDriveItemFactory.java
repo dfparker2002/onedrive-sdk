@@ -43,9 +43,8 @@ public final class OneDriveItemFactory {
         } else if (item.isDirectory()) {
             return new OneDriveFolderImpl(api, item);
         } else {
-            throw new OneDriveException("Unsupported type for item : "
-                                        + item.getId() + ", name: "
-                                        + item.getName());
+            // fallback for recently used items
+            return new OneDriveItemImpl(api, item);
         }
     }
 }
